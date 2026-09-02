@@ -1,11 +1,15 @@
-import { TelaDeLogin } from "./componentes/login"; 
+import { AppRoutes } from "./routes/index.tsx"; 
+import { BrowserRouter } from 'react-router-dom'; 
 import "./style/global.css";
 
 export function App() {
   return (
     <>
-      {/* 2. Substitua o h2 pela sua nova tela de login */}
-      <TelaDeLogin />
+      <BrowserRouter>
+      
+        <AppRoutes />
+      </BrowserRouter>
+      
     </>
   );
 }
