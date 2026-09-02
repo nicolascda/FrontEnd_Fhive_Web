@@ -1,0 +1,470 @@
+/* =========================================================
+   TELA PRINCIPAL
+   ========================================================= */
+
+.tela-de-login {
+  width: 100%;
+  height: 100vh;
+
+  display: flex;
+
+  overflow: hidden;
+
+  box-sizing: border-box;
+
+  background-color: #c9580c;
+}
+
+
+/* =========================================================
+   ÁREA DO FORMULÁRIO
+   ========================================================= */
+
+.container-formulario {
+  width: 58%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 30px;
+
+  box-sizing: border-box;
+
+  background-color: #c9580c;
+
+  position: relative;
+
+  z-index: 2;
+}
+
+
+/* =========================================================
+   CARD DE LOGIN
+   ========================================================= */
+
+.div {
+  width: 650px;
+  height: 600px;
+
+  max-width: none;
+
+  padding: 42px 36px 32px;
+
+  display: flex;
+  flex-direction: column;
+
+  box-sizing: border-box;
+
+  background-color: #ffffff;
+
+  border: none;
+
+  border-radius: 15px;
+
+  overflow: hidden;
+
+  flex-shrink: 0;
+}
+
+
+/* =========================================================
+   TÍTULO
+   ========================================================= */
+
+.text-wrapper {
+  margin: 0 0 48px;
+
+  color: #a85b16;
+
+  font-family: Arial, Helvetica, sans-serif;
+
+  font-size: 27px;
+
+  font-weight: 700;
+
+  line-height: 1.2;
+
+  text-align: left;
+}
+
+
+/* =========================================================
+   CAMPOS
+   ========================================================= */
+
+.group-2,
+.group-3 {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+
+  margin: 0 0 16px;
+}
+
+
+/* =========================================================
+   LABELS
+   ========================================================= */
+
+.text-wrapper-5,
+.text-wrapper-7 {
+  padding-left: 1px;
+
+  color: #a85b16;
+
+  font-family: Arial, Helvetica, sans-serif;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  line-height: 1.2;
+}
+
+
+/* =========================================================
+   INPUT
+   ========================================================= */
+
+.input-wrapper {
+  width: 100%;
+}
+
+
+.input-nativo {
+  width: 100%;
+  height: 48px;
+
+  padding: 0 12px;
+
+  box-sizing: border-box;
+
+  background-color: #ffffff;
+
+  border: 1px solid #d2d2d2;
+
+  border-radius: 8px;
+
+  outline: none;
+
+  color: #a85b16;
+
+  font-family: Arial, Helvetica, sans-serif;
+
+  font-size: 16px;
+
+  font-weight: 400;
+}
+
+
+.input-nativo::placeholder {
+  color: #cda783;
+
+  opacity: 1;
+}
+
+
+.input-nativo:focus {
+  border-color: #b96a27;
+}
+
+
+/* =========================================================
+   ESQUECEU A SENHA
+   ========================================================= */
+
+.group {
+  width: 270px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  margin-top: 2px;
+  margin-bottom: 55px;
+  margin-left: 7px;
+
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  text-align: left;
+}
+
+
+.text-wrapper-2 {
+  color: #a85b16;
+
+  font-family: Arial, Helvetica, sans-serif;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  line-height: 1.2;
+}
+
+
+.line {
+  width: 100%;
+  height: 2px;
+
+  margin-top: 6px;
+
+  background-color: #a85b16;
+}
+
+
+/* =========================================================
+   BOTÃO ENTRAR
+   ========================================================= */
+
+.group-4 {
+  width: 100%;
+  height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  margin: 0 0 32px;
+
+  padding: 0;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background-color: #f47700;
+
+  color: #ffffff;
+
+  font-family: Arial, Helvetica, sans-serif;
+
+  font-size: 24px;
+
+  font-weight: 700;
+
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition: background-color 0.2s ease;
+}
+
+
+.group-4:hover {
+  background-color: #ff850f;
+}
+
+
+/* =========================================================
+   CRIAR CONTA
+   ========================================================= */
+
+.n-o-tem-conta-crie {
+  margin: 0;
+
+  color: #a85b16;
+
+  font-family: Arial, Helvetica, sans-serif;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  line-height: 1.2;
+
+  text-align: center;
+}
+
+
+.span {
+  color: #a85b16;
+}
+
+
+.text-wrapper-4 {
+  padding: 0;
+
+  border: none;
+
+  background: transparent;
+
+  color: #914b0c;
+
+  font-family: inherit;
+
+  font-size: inherit;
+
+  font-weight: inherit;
+
+  text-decoration: underline;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   ÁREA DA FOTO
+   ========================================================= */
+
+.container-visual {
+  width: 42%;
+  height: 100%;
+
+  position: relative;
+
+  overflow: hidden;
+
+  background-color: #c9580c;
+}
+
+
+/* =========================================================
+   FOTO
+   ========================================================= */
+
+.image-colorized {
+  position: absolute;
+
+  top: 0;
+  right: 0;
+
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  object-position: center;
+
+  z-index: 1;
+
+  /*
+   * Curva no lado esquerdo.
+   * Quanto maior o segundo valor,
+   * mais suave fica a curva.
+   */
+
+  clip-path: ellipse(
+    100% 82%
+    at 100% 50%
+  );
+}
+
+
+/* =========================================================
+   TELAS MENORES
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+  .container-formulario {
+    width: 60%;
+  }
+
+  .container-visual {
+    width: 40%;
+  }
+
+  .div {
+    width: 600px;
+    height: 570px;
+  }
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .container-formulario {
+    width: 100%;
+
+    padding: 20px;
+  }
+
+  .container-visual {
+    display: none;
+  }
+
+  .div {
+    width: min(650px, 100%);
+    height: 600px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .container-formulario {
+    padding: 15px;
+  }
+
+  .div {
+    width: 100%;
+    height: auto;
+
+    min-height: 520px;
+
+    padding: 30px 24px 25px;
+
+    border-radius: 12px;
+  }
+
+  .text-wrapper {
+    font-size: 22px;
+
+    margin-bottom: 35px;
+  }
+
+  .text-wrapper-5,
+  .text-wrapper-7 {
+    font-size: 14px;
+  }
+
+  .input-nativo {
+    height: 42px;
+
+    font-size: 14px;
+  }
+
+  .group {
+    width: 250px;
+
+    margin-bottom: 40px;
+  }
+
+  .text-wrapper-2 {
+    font-size: 14px;
+  }
+
+  .group-4 {
+    height: 44px;
+
+    font-size: 21px;
+  }
+
+  .n-o-tem-conta-crie {
+    font-size: 11px;
+  }
+}

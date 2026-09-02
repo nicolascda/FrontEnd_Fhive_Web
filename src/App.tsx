@@ -1,8 +1,11 @@
-export function App() {
+import { TelaDeLogin } from "./componentes/login"; 
+import "./style/global.css";
 
+export function App() {
   return (
     <>
-      <h2>Oi</h2>
+      {/* 2. Substitua o h2 pela sua nova tela de login */}
+      <TelaDeLogin />
     </>
-  )
+  );
 }
