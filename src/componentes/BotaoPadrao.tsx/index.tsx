@@ -8,12 +8,12 @@ type BotaoPadraoProps = {
 
 export function BotaoPadrao({
     textoBotao,
-    color = 'Marrom',
+    cor = 'Marrom',
     ...props
 }: BotaoPadraoProps) {
     return (
         <>
-            <button type="button" className={`${styles.BotaoEntrar} ${styles.Marrom}`} {...props}>
+            <button type="button" className={`${styles.BotaoEntrar} ${styles[cor]}`} {...props}>
                 {textoBotao}
             </button>
         </>

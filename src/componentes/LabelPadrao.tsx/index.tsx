@@ -5,7 +5,7 @@ type LabelPadraoProps = {
     textoLabel?: string;
     textoTitulo: string;
     tipo: string;
-} & React.ComponentProps<'div'>
+} & React.ComponentProps<'input'>
 
 export function LabelPadrao({
     id,
