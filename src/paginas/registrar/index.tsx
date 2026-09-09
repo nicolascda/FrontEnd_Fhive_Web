@@ -149,7 +149,7 @@ export function TelaDeRegistrar() {
           />
 
           <p className={styles.NaoTenhoConta}>
-            <Link to="/" className={styles.CriarConta}>
+            <Link to="/login" className={styles.CriarConta}>
               Voltar ao login
             </Link>
           </p>

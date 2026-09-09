@@ -9,7 +9,7 @@
 .divCheckBox {
   display: flex;
   position: relative;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -17,7 +17,7 @@
 }
 
 .divCheckBox p {
-  font-size: 1.8rem;
+  font-size: 1.2rem;
   font-family: Arial, Helvetica, sans-serif;
   color: grey;
   align-items: center;
@@ -28,8 +28,8 @@
 .checkBoxRegistrar {
   appearance: none;
   -webkit-appearance: none;
-  height: 2rem;
-  width: 2rem;
+  height: 1.5em;
+  width: 1.4rem;
   border-radius: 10px;
   background-color: white;
   border: 1px solid black;
@@ -61,8 +61,8 @@
 
 
 .div {
-  width: 55rem;
-  height: 50rem;
+  width: 35rem;
+  height: 35rem;
   padding: 3rem 2.5rem 1rem;
   display: flex;
   flex-direction: column;
@@ -76,10 +76,10 @@
   text-align: center;
   align-items: center;
   justify-content: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.25rem;
   color: #a85b16;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: 700;
 }
 
@@ -98,22 +98,12 @@
   text-align: left;
 }
 
-.EsqueceuASenha {
-  color: #a85b16;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 1.5rem;
-  font-weight: 700;
-  line-height: 1.2;
-  text-decoration: underline;
-}
-
 .NaoTenhoConta {
   margin: 0;
   color: #a85b16;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  line-height: 1.2;
   text-align: left;
 }
 
