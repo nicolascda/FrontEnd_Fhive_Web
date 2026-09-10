@@ -1,0 +1,21 @@
+:root {
+    /* Cores principais */
+    --cor-marrom: #964900;
+    --cor-marrom-claro: #C35800;
+    --cor-cinza-claro: #9D9D9D;
+    --cor-cinza: #7A7A7A;
+    --cor-cinza-footer: #5C5959;
+    --cor-laranja: #EA7303;
+
+
+    /* Cores de texto */
+    --cor-texto-amarelo: #FFCF67;
+    --cor-texto-padrao: #000000;
+    --cor-texto-cinza: rgb(56, 49, 49);
+    --cor-texto-branco: #FFFFFF;
+
+    /* Tamanho Texto */
+    --titulo: 2.25rem;
+    --subtitulo: 1.15rem;
+   
+}

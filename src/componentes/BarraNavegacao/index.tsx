@@ -20,7 +20,7 @@ export function BarraNavegacao() {
                     />
                 </svg>
 
-                <span className={`${styles.LogoTitulo}`}>Fhive2</span>
+                <span className={`${styles.LogoTitulo}`}>Fhive</span>
             </Link>
 
             {/* Divisória */}

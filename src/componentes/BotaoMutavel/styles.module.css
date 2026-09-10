@@ -1,0 +1,32 @@
+.BotoesMutavel {
+  padding: 13px 18px 13px 18px;
+  border-radius: 50px;
+  margin-right: 4rem;
+  border: none;
+  font-size: 1.15rem;
+  background-color: var(--cor-marrom-claro);
+  color: var(--cor-texto-amarelo);
+  cursor: pointer;
+  transition: background-color 0.5s ease,
+  color 0.5s ease,
+  transform 0.5s ease;
+}
+
+.BotoesMutavel:hover,
+.BotoesMutavelAtivo:hover {
+  transform: translateY(-3px);
+}
+
+.BotoesMutavelAtivo{
+  padding: 13px 18px 13px 18px;
+  border-radius: 50px;
+  margin-right: 4rem;
+  border: none;
+  font-size: 1.15rem;
+  background-color: var(--cor-texto-amarelo);
+  color: var(--cor-marrom-claro);
+  cursor: pointer;
+  transition: background-color 0.5s ease,
+  color 0.5s ease,
+  transform 0.5s ease;
+}
