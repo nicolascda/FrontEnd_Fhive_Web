@@ -1,0 +1,120 @@
+/* Segunda Seção */
+
+.SegundaSecaoTexto {
+    padding: 4rem 20px 10px 4.25rem;
+}
+
+.SegundaSecaoTexto h2 {
+    font-family: var(--fonte-texto);
+    font-weight: normal;
+}
+
+.SegundaSecaoTexto h1 {
+    font-family: var(--fonte-texto);
+    font-size: var(--titulo);
+}
+
+.divCarrousel {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    height: 17rem;
+    width: 100%;
+    background-color: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-sizing: border-box;
+
+    box-shadow: 0px 8px 42px rgba(0, 0, 0, 0.05);
+
+}
+
+.divCarrousel h2 {
+    font-family: var(--fonte-texto);
+    font-weight: bold;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.divCarrousel p {
+    font-family: var(--fonte-texto);
+    color: var(--cor-texto-cinza);
+    flex-grow: 1;
+}
+
+.divCarrousel svg {
+    width: 3rem;
+    height: 3rem;
+}
+
+.botaoInicial {
+    font-size: 1.2rem;
+    width: fit-content;
+    margin-top: 1.5rem;
+    padding: 0.55rem 1rem;
+    border-radius: 0.45rem;
+    background-color: #EA7303;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.5s ease, filter 1s ease;
+}
+
+.botaoInicial:hover {
+    transform: translateY(-1px);
+    filter: brightness(110%);
+}
+
+.divCarrousel .botaoInicial {
+    border-radius: 10px;
+    width: 10rem;
+    height: 3rem;
+    text-align: center;
+    font-family: var(--fonte-texto);
+    font-weight: normal;
+}
+
+:global(.swiper-button-prev) {
+    color: #96520e !important;
+    background-color: #ffffff;
+    border: 2px solid #96520e !important;
+    width: 45px !important;
+    height: 45px !important;
+    border-radius: 50%;
+    transition: all 0.3s ease-in-out;
+    align-items: center !important;
+    /* margin-left: 20px !important;  */
+    padding-right: 3px !important;
+}
+
+:global(.swiper-button-next) {
+    color: #96520e !important;
+    background-color: #ffffff;
+    border: 2px solid #96520e !important;
+    width: 45px !important;
+    height: 45px !important;
+    border-radius: 50%;
+    transition: all 0.3s ease-in-out;
+    align-items: center !important;
+    /* margin-left: 20px !important;  */
+    padding-left: 5px !important;
+}
+
+:global(.swiper-button-next) svg,
+:global(.swiper-button-prev) svg {
+    height: 26px !important;
+}
+
+/* Remove o estilo antigo de fonte caso o Swiper tente injetar por compatibilidade */
+:global(.swiper-button-next::after),
+:global(.swiper-button-prev::after) {
+    display: none !important;
+}
+
+/* Mantém o efeito de hover invertido */
+:global(.swiper-button-next:hover),
+:global(.swiper-button-prev:hover) {
+    color: #ffffff !important;
+    background-color: #96520e !important;
+    border-color: #96520e !important;
+}

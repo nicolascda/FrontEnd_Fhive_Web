@@ -6,6 +6,7 @@
     --cor-cinza: #7A7A7A;
     --cor-cinza-footer: #5C5959;
     --cor-laranja: #EA7303;
+    --cor-fundo: #fff1d5;
 
 
     /* Cores de texto */
@@ -17,5 +18,8 @@
     /* Tamanho Texto */
     --titulo: 2.25rem;
     --subtitulo: 1.15rem;
+
+    /* Extras */
+    --fonte-texto: 'Montserrat', sans-serif;
    
 }

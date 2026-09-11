@@ -1,0 +1,162 @@
+.SecaoGestao {
+  padding: 0 2.5rem 3rem;
+
+  background: linear-gradient(to bottom, #fff1d5 70%, #FFB968 100%);
+  
+  /* Garante um espaçamento interno na base para o card não colar no fim do degradê */
+  padding-bottom: 40px; 
+}
+
+
+.TextoGestao {
+  display: block;
+  text-align: left;
+  margin-top: 4rem;
+  margin-left: 1.5rem
+
+}
+
+
+.TituloCard {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2.1rem;
+}
+
+
+.SubtituloCard {
+  margin-top: 1.2rem;
+  font-size: 1.2rem;
+  color: rgb(56, 49, 49);
+  font-family: sans-serif;
+  font-weight: 100;
+  margin-bottom: 2rem;
+}
+
+
+.BotoesGestao {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 8rem;
+}
+
+
+.CardMutavel {
+  display: flex;
+  gap: 2.5rem;
+  width: 100%;
+  margin-top: 2.5rem;
+}
+
+
+.CardMutavelTexto {
+  width: 2000rem;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 25px;
+  font-family: 'Montserrat', sans-serif;
+  box-sizing: border-box;
+}
+
+
+.CardMutavelTexto h2 {
+  margin-top: 0;
+  font-size: 1.4rem;
+  font-weight:normal;
+}
+
+
+.CardMutavelTexto p {
+  margin-top: 1rem;
+  font-family: sans-serif;
+  font-size: var(--sub-titulo);
+  line-height: 1.1;
+  color: var(--cor-texto-cinza);
+  margin-bottom: 1rem;
+}
+
+
+.CardMutavelTexto hr {
+  border: none;
+  border-top: 1px solid #999;
+  margin: 1.5rem 0;
+}
+
+
+.CardMutavelTexto h3 {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+
+.ImagemMutavel {
+  width: 35rem;
+  height: 30rem;
+  object-fit: cover;
+  border-radius: 25px;
+}
+
+
+.CardMutavelTitulo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.setaCima {
+  margin-left: 1rem;
+  width: 16px;
+  height: 16px;
+  display: block;
+  border-right: 3px solid var(--cor-cinza);
+  border-bottom: 3px solid var(--cor-cinza);
+  transform: rotate(225deg) translateY(-5px);
+  transition: transform 0.3s ease;
+  /* transform: translateY(-1px); */
+
+}
+
+.CardMutavelTitulo:hover .setaCimaMovimento {
+  transform: rotate(225deg) translate(2px, -3px);
+}
+
+.setaBaixo {
+  margin-left: 1rem;
+  width: 16px;
+  height: 16px;
+  display: block;
+  border-right: 3px solid var(--cor-cinza);
+  border-bottom: 3px solid var(--cor-cinza);
+  transform: rotate(45deg) translateY(-5px);
+  transition: transform 0.3s ease;
+
+}
+
+.itemFechado {
+  padding-left: 0;
+  border-left: 4px solid transparent;
+  transition: all 0.25s ease;
+}
+
+.itemAberto {
+  border-left: 4px solid var(--cor-texto-amarelo); 
+  padding-left: 16px; 
+  transition: all 0.25s ease;
+}
+
+.CardMutavelTitulo:hover .setaBaixoMovimento {
+  transform: rotate(45deg) translate(2px, -3px);
+}
+
+.TextoAnimado {
+  animation: fadeIn 1s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
