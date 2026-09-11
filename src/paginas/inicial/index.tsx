@@ -2,32 +2,21 @@ import styles from "./styles.module.css";
 import { BarraNavegacao } from "../../componentes/BarraNavegacao/index.tsx";
 import { CardInicial } from "../../componentes/CardInicial/index.tsx";
 import { Link } from 'react-router-dom';
-// import { BotaoMutavel } from "../../componentes/BotaoMutavel/index.tsx";
 import { PrimeiraSecaoInicial } from "../../secoes/PrimeiraSecaoInicial/index.tsx";
 import { SegundaSecaoInicial } from "../../secoes/SegundaSecaoInicial/index.tsx";
-// import { useState } from "react";
+import PessoaEscrevendo from "../../imagens/PessoaEscrevendo.png";
+import { CardComposto } from "../../componentes/CardComposto/index.tsx";
+import { FooterBar } from "../../componentes/FooterBar/index.tsx";
 
 
-// import PessoaSentadaComputador from "../../imagens/PessoaNoComputador.jpg";
-// import { dadosGestao } from "../../dados/dadoMockado.tsx";
 
 export function TelaInicial() {
-
-  // const [botaoSelecionado, setBotaoSelecionado] = useState(0);
-  // const [itemAtivo, setItemAtivo] = useState<number | null>(1);
-
-  // const alternarItem = (id: number) => {
-  //   setItemAtivo(itemAtivo === id ? null : id);
-  // };
-
-  // const dadosAtuais = dadosGestao[botaoSelecionado];
 
   return (
     <div className={styles.telaInicial}>
 
       <BarraNavegacao />
 
-      {/* PRIMEIRA PARTE DA PÁGINA */}
       <section className={styles.FundoMarrom}>
 
         <div className={styles.FundoMarromTexto}>
@@ -73,12 +62,39 @@ export function TelaInicial() {
 
       <PrimeiraSecaoInicial />
 
-      <SegundaSecaoInicial/>
+      <SegundaSecaoInicial />
 
-      <br></br>
+      <CardComposto
+        titulo="Escolha a conta Fhive essencial para você"
+        subtitulo="Desbloqueie diversas funções do Fhive por 1 mês inteiro."
+        textoPequeno="Como comprar plano Fhive" img={PessoaEscrevendo}
+        botaoTexto="Ir para planos"
+        caminhoBotao="/rota"
+        isTrue={true}
+      />
 
-      
+      <section className={`${styles.QuartaSection}`}>
+        <h1> Conheça a eficiência e vantagens que o Fhive  pode disponibilizar no mercado como um Todo </h1>
 
-    </div>
+        <div className={`${styles.QuartaSectionDiv}`}>
+          <div className={`${styles.QuartaSectionMiniDiv}`}>
+            <h2>82%</h2>
+            <p>Velocidade dos processos autonomos e configuração de maquinas</p>
+          </div>
+          <div className={`${styles.QuartaSectionMiniDiv}`}>
+            <h2>42%</h2>
+            <p>Impregação dos dados para ambiente online</p>
+          </div>
+          <div className={`${styles.QuartaSectionMiniDiv}`}>
+            <h2>32%</h2>
+            <p>Eficiência na produção e tratamento de dados para melhorar dos aparelhos IoT</p>
+          </div>
+        </div>
+
+      </section>
+
+      <FooterBar/>
+
+    </div >
   );
 }

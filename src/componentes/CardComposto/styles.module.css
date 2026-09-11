@@ -1,0 +1,124 @@
+/* Terceira Seção */
+
+.TerceiraSecaoCardTrue {
+  display: flex;
+  /* cima, direita, baixo, esquerda */
+  justify-content: space-between;
+  margin: 5rem 3rem 5rem 3rem;
+  width: auto;
+  height: 30rem;
+  background-color: white;
+  border-radius: 25px;
+  /* padding: 25px; */
+  border: 2px solid var(--cor-cinza-claro);
+}
+
+.TerceiraSecaoImg {
+  height: 100%; 
+  width: auto;
+  border-radius: 24px;
+}
+
+.TerceiraSecaoTextoTrue {
+  padding: 1.5rem;
+}
+
+.TerceiraSecaoTextoTrue p {
+  color: var(--cor-texto-cinza);
+  font-family: var(--fonte-texto);
+  font-size: var(--subtitulo);
+}
+
+.TerceiraSecaoTextoCardTrue {
+  padding: 2rem;
+  margin-top: 4rem;
+}
+
+.TerceiraSecaoTextoCardTrue h1 {
+  font-family: var(--fonte-texto);
+  color: var(--cor-texto-padrao);
+  font-size: 1.95rem;
+  font-weight: normal;
+  margin-bottom: 0.4rem;
+}
+
+.TerceiraSecaoTextoCardTrue h2 {
+  font-family: var(--fonte-texto);
+  color: var(--cor-texto-cinza);
+  font-size: 1.5rem;
+  font-weight: normal;
+  margin-bottom: 8rem;
+}
+
+.botaoInicialTerceiraSection {
+  font-size: 1.2rem;
+  width: fit-content;
+  font-family: var(--fonte-texto);
+  margin-top: 1.5rem;
+  padding:  0.9rem 2.5rem;
+  border-radius: 0.45rem;
+  background-color: #EA7303;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: normal;
+  transition: padding 0.5s ease;
+  font-family: var(--fonte-texto);
+}
+
+
+.botaoInicialTerceiraSection:hover {
+  padding: 1.2rem 2.8rem;
+}
+
+
+.TerceiraSecaoCardFalse {
+  display: flex;
+  /* cima, direita, baixo, esquerda */
+  justify-content: space-between;
+  margin: 5rem 3rem 5rem 3rem;
+  width: auto;
+  height: 35rem;
+  background-color: white;
+  border-radius: 25px;
+  padding: 20px;
+  border: 2px solid var(--cor-cinza-claro);
+}
+
+.TerceiraSecaoTextoFalse {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.TerceiraSecaoTextoFalse p {
+  font-family: var(--fonte-texto);
+  color: var(--cor-texto-cinza);
+}
+
+.TerceiraSecaoTextoCardFalse {
+  text-align: center;
+  font-family: var(--fonte-texto);
+  /* font-weight: normal; */
+}
+
+.TerceiraSecaoTextoCardFalse h1 {
+  font-weight: normal;
+  color: var(--cor-texto-padrao);
+  font-size: 2.5rem;
+}
+
+.TerceiraSecaoTextoCardFalse h2  {
+  text-align: left;
+  padding-left: 3rem;
+  padding-right: 3rem;
+  margin-top: 4rem;
+  margin-bottom: 11rem;
+  /* font-family: var(--fonte-texto); */
+  font-weight: normal;
+  color: var(--cor-texto-cinza);
+  
+}
+
+.TerceiraSecaoTextoCardFalse .botaoInicialTerceiraSection {
+  align-items: center;
+}

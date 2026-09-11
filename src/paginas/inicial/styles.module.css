@@ -73,3 +73,51 @@
   grid-row: 3;
 }
 
+.QuartaSection {
+  background: linear-gradient(to top, #fff1d5 75%, #FFB968 100%);
+  display: flex;
+  flex-direction: column;
+  padding: 5rem;
+  padding-top: 10rem;
+}
+
+.QuartaSection h1 {
+  text-align: center;
+  padding-left: 15rem;
+  padding-right: 15rem;
+  font-family: var(--fonte-texto);
+  font-size: var(--titulo);
+  margin-bottom: 5rem;
+}
+
+.QuartaSectionDiv {
+  display: flex;
+  margin-left: 3rem;
+  justify-content: center; 
+  gap: 6rem;
+}
+
+.QuartaSectionMiniDiv {
+  display: flex;
+  flex-direction: column;
+  padding-right: 3rem;
+}
+
+.QuartaSectionMiniDiv h2 {
+  border-left: 4px solid var(--cor-texto-amarelo); 
+  padding-left: 16px;
+  margin-bottom: 1rem;
+  font-family: var(--fonte-texto);
+  font-size: 1.8rem;
+  font-weight: normal;
+}
+
+.QuartaSectionMiniDiv p {
+  /* border-left: 4px solid var(--cor-texto-amarelo);  */
+  padding-left: 16px;
+  font-family: var(--fonte-texto);
+  color: var(--cor-cinza);
+  font-size: 1.3rem;
+  font-weight: normal;
+}
+

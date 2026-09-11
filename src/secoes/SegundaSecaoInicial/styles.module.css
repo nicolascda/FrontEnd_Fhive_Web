@@ -74,6 +74,9 @@
     font-weight: normal;
 }
 
+.Carrousel {
+    margin-top: 3rem;
+}
 :global(.swiper-button-prev) {
     color: #96520e !important;
     background-color: #ffffff;
@@ -105,7 +108,7 @@
     height: 26px !important;
 }
 
-/* Remove o estilo antigo de fonte caso o Swiper tente injetar por compatibilidade */
+
 :global(.swiper-button-next::after),
 :global(.swiper-button-prev::after) {
     display: none !important;

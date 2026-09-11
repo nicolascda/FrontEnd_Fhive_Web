@@ -1,0 +1,125 @@
+/* Footer */
+
+.footerContainer {
+  margin-top: 10rem;
+  background-color: #f8f9fa; 
+  padding: 1.5rem 3rem 1rem 3rem;
+  font-family: var(--fonte-texto);
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem; 
+}
+
+.footerLinhaSuperior {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; 
+  width: 100%;
+}
+
+.footerLogo h2 {
+  margin: 0;
+  font-size: var(--titulo);
+  color: var(--cor-cinza-footer);
+  font-weight: bold;
+}
+
+.footerLinksGrid {
+  display: flex;
+  gap: 4rem; 
+}
+
+.footerColunaLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem; 
+}
+
+.footerColunaLinks h4 {
+  margin: 0 0 0.2rem 0; 
+  font-size: var(--subtitulo);
+  color: var(--cor-cinza-footer); 
+  font-weight: normal;
+}
+
+.footerColunaLinks a {
+  font-size: 1rem;
+  color: var(--cor-texto-padrao);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footerColunaLinks a:hover {
+  color: var(--cor-marrom-claro);
+}
+
+.footerDireitaBloco {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; 
+  gap: 0.5rem; 
+}
+
+.footerRedesSociais {
+  display: flex;
+  gap: 1rem;
+}
+
+.footerRedesSociais a {
+  color: var(--cor-texto-padrao);
+  font-size: 1.7rem; 
+  transition: color 0.3s;
+}
+
+.footerRedesSociais a:hover {
+  color: var(--cor-marrom-claro);
+}
+
+.googlePlayBtn {
+  height: 3.5rem; 
+  width: 9rem;
+  cursor: pointer;
+}
+
+.footerDivisor {
+  border: 0;
+  border-top: 1px solid #e5e5e5;
+  margin: 0;
+}
+
+.footerLinhaInferior {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--cor-cinza);
+  margin-top: 0.2rem;
+}
+
+.footerDireitos span {
+  color: var(--cor-cinza-footer);
+}
+
+.footerIdiomaEtermos {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+.footerIdioma {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--cor-cinza-footer);
+}
+
+.TermosEPrivacidadeFooter  {
+  color: var(--cor-cinza-footer);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.TermosEPrivacidadeFooter:hover {
+  text-decoration: underline;
+  color: blue
+}

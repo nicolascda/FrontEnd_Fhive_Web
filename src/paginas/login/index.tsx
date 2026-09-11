@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import styles from './styles.module.css';
 import PessoasSentadas from '../../imagens/PessoasSentadas.jpg';
-import { LabelPadrao } from "../../componentes/LabelPadrao.tsx";
-import { BotaoPadrao } from "../../componentes/BotaoPadrao.tsx";
+import { LabelPadrao } from "../../componentes/LabelPadrao/index.tsx";
+import { BotaoPadrao } from "../../componentes/BotaoPadrao/index.tsx";
 import { Link, useNavigate } from 'react-router-dom';
 
 export function TelaDeLogin() {
