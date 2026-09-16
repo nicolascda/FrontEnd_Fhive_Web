@@ -33,7 +33,7 @@ export function TelaDeRegistrar() {
       setCarregando(true);
 
       const resposta = await fetch(
-        "/api/usuarios",
+        "/usuarios",
         {
           method: "POST",
           headers: {
