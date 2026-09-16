@@ -33,7 +33,7 @@ export function TelaDeRegistrar() {
       setCarregando(true);
 
       const resposta = await fetch(
-        "http://10.0.1.10:3000/usuarios",
+        "http://10.0.1.20:3000/usuarios",
         {
           method: "POST",
           headers: {
