@@ -26,7 +26,7 @@ export function TelaDeLogin() {
       setCarregando(true);
 
       const resposta = await fetch(
-        "http://10.0.1.10:3000/usuarios/login",
+        "http://10.0.1.20:3000/usuarios/login",
         {
           method: "POST",
 
