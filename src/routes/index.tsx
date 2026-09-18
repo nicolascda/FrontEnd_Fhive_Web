@@ -3,6 +3,7 @@ import { Routes, Route} from 'react-router-dom';
 import { TelaDeLogin } from "../paginas/login";
 import { TelaDeRegistrar} from "../paginas/registrar";
 import { TelaInicial} from "../paginas/inicial";
+import { TelaProdutos } from "../paginas/produtos";
 
 export function AppRoutes() {
     return (
@@ -10,6 +11,7 @@ export function AppRoutes() {
             <Route path="/login" element={<TelaDeLogin/>} />
             <Route path="/registrar" element={<TelaDeRegistrar/>} />
             <Route path="/" element={<TelaInicial/>} />
+            <Route path="/produtos" element={<TelaProdutos/>}/>
         </Routes>
     );
 };

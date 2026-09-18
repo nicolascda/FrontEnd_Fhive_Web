@@ -1,0 +1,73 @@
+.SecaoProdutos {
+    align-items: center;
+    text-align: center;
+    margin-top: 6rem;
+    font-family: var(--fonte-texto);
+}
+
+.TituloCard {
+    font-size: 2.5rem;
+}
+
+.SubtituloCard {
+    font-size: 1.25rem;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.BotoesGestao {
+    display: flex;
+    justify-content: space-around;
+    padding-left: 5rem;
+    padding-right: 5rem;
+    margin-bottom: 2rem;
+}
+
+.CardMutavel {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    margin: 0rem 5rem 0 5rem;
+    width: auto;
+    min-height: 25rem;
+    background-color: var(--cor-texto-branco);
+    border-radius: 25px;
+    overflow: hidden;
+}
+
+.CardControleTexto {
+    grid-column-start: 1;
+    grid-column-end: 7;
+    min-width: 0;
+}
+
+
+.CardProtudosTexto h3 {
+    margin-top: 2rem;
+    font-size: 1.65rem;
+    font-weight: normal;
+    display: inline-block;
+    border-bottom: 3px solid #d95f00;
+    padding-bottom: 0.2rem;
+    width: 28rem;
+}
+
+.CardProtudosTexto p {
+    text-align: left;
+    margin-top: 1rem;
+    font-size: 1.25rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    color: var(--cor-texto-cinza);
+    margin-bottom: 1rem;
+    
+}
+
+.ImgProdutos {
+    grid-column-start: 7;
+    grid-column-end: 11;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    object-fit: cover;
+    display: block;
+}

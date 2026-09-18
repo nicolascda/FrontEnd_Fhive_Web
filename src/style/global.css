@@ -11,6 +11,7 @@ body{
     background: var(--cor-fundo-tela);
     overflow-y: scroll; 
     overflow-x: hidden; 
+    background-color: var(--cor-fundo);
     /* scrollbar-width: auto;  */
 
 }

@@ -1,5 +1,6 @@
 import PessoaSentadaComputador from "../imagens/PessoaNoComputador.jpg";
 import AutomatizacaoImagem from "../imagens/AutomatizacaoImagem.jpg";
+import AmbienteVirtualEmpresa3D from "../imagens/Empresa3D.png";
 
 export const dadosGestao = [
   {
@@ -20,3 +21,37 @@ export const dadosGestao = [
   }
 ];
 
+export const dadosProdutos = [
+  {
+    imagem: AmbienteVirtualEmpresa3D,
+    itens:  [
+      { id: 1, titulo: "Otimização e customização", texto: "Através de um modelo 3d pré-customizado, é possível reparar e comparar a performance das máquinas registradas, vendo de forma intuitiva" },
+      { id: 2, titulo: "Gerenciamento fácil", texto: "Analisar os dados disponibilizados dos aparelhos IoT,  capacidade e habilidade de mudar a automação presetada do aparelho, além de adquirir os dados tratados." }
+    ]
+  },
+
+  {
+    imagem: PessoaSentadaComputador,
+    itens:  [
+      { id: 1, titulo: "Otimização e customização", texto: "Através de um modelo 3d pré-customizado, é possível reparar e comparar a performance das máquinas registradas, vendo de forma intuitiva" },
+      { id: 2, titulo: "Gerenciamento fácil", texto: "Analisar os dados disponibilizados dos aparelhos IoT,  capacidade e habilidade de mudar a automação presetada do aparelho, além de adquirir os dados tratados." }
+    ]
+  },
+
+  {
+    imagem: AutomatizacaoImagem,
+    itens:  [
+      { id: 1, titulo: "Otimização e customização", texto: "Através de um modelo 3d pré-customizado, é possível reparar e comparar a performance das máquinas registradas, vendo de forma intuitiva" },
+      { id: 2, titulo: "Gerenciamento fácil", texto: "Analisar os dados disponibilizados dos aparelhos IoT,  capacidade e habilidade de mudar a automação presetada do aparelho, além de adquirir os dados tratados." },
+      { id: 3, titulo: "Facilidade no entendimento", texto: "Analisar os dados disponibilizados dos aparelhos IoT,  capacidade e habilidade de mudar a automação presetada do aparelho, além de adquirir os dados tratados." }
+    ]
+  },
+
+  {
+    imagem: AmbienteVirtualEmpresa3D,
+    itens:  [
+      { id: 1, titulo: "Otimização e customização", texto: "Através de um modelo 3d pré-customizado, é possível reparar e comparar a performance das máquinas registradas, vendo de forma intuitiva" },
+      { id: 2, titulo: "Gerenciamento fácil", texto: "Analisar os dados disponibilizados dos aparelhos IoT,  capacidade e habilidade de mudar a automação presetada do aparelho, além de adquirir os dados tratados." }
+    ]
+  }
+]
