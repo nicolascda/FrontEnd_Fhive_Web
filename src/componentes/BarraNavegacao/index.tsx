@@ -1,7 +1,28 @@
 import styles from './styles.module.css';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
+
+type Usuario = {
+    nome?: string;
+};
 
 export function BarraNavegacao() {
+
+    const [usuario] = useState<Usuario | null>(() => {
+        const usuarioSalvo = localStorage.getItem("usuario");
+
+        if (!usuarioSalvo) {
+            return null;
+        }
+
+        try {
+            return JSON.parse(usuarioSalvo);
+        } catch {
+            return null;
+        }
+    });
+
+
     return (
         <header className={styles['barra-navegacao']}>
 
@@ -52,10 +73,10 @@ export function BarraNavegacao() {
 
             {/* CTA */}
             <Link
-                to="/login"
+                to={usuario?.nome ? "/" : "/login"}
                 className={styles['comece-agora']}
             >
-                Comece Agora
+                {usuario?.nome || "Comece Agora"}
             </Link>
 
         </header >
