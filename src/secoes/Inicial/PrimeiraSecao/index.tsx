@@ -1,7 +1,7 @@
 import styles from "./styles.module.css";
 import { useState } from "react";
-import { dadosGestao } from "../../dados/dadoMockado.tsx";
-import { BotaoMutavel } from "../../componentes/BotaoMutavel";
+import { dadosGestao } from "../../../dados/dadoMockado.tsx";
+import { BotaoMutavel } from "../../../componentes/BotaoMutavel/index.tsx";
 
 export function PrimeiraSecaoInicial() {
 

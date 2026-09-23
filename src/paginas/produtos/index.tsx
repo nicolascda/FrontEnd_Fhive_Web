@@ -2,9 +2,10 @@ import styles from "./styles.module.css";
 import { BarraNavegacao } from "../../componentes/BarraNavegacao/index.tsx";
 import { Link } from 'react-router-dom';
 import { ProdutosPrimeiraSecao } from "../../secoes/Produtos/PrimeiraSecao";
-import { GiHoneycomb } from "react-icons/gi";
-import { FaPlus } from "react-icons/fa6";
-import { FaRobot } from "react-icons/fa";
+import { SegundaSecaoProdutos } from "../../secoes/Produtos/SegundaSecao/index.tsx";
+import { FooterBar } from "../../componentes/FooterBar/index.tsx";
+import { CardComposto } from "../../componentes/CardComposto/index.tsx";
+import PessoaOlhandoTablet from "../../imagens/PessoaOlhandoTablet.jpg";
 
 export function TelaProdutos() {
     return (
@@ -37,31 +38,20 @@ export function TelaProdutos() {
 
             <ProdutosPrimeiraSecao />
 
-            <section className={styles.SecaoCompraProdutos}>
-                <h1> Planos Disponíveis</h1>
+            <SegundaSecaoProdutos/>
 
-                <div className={styles.MultiplosCardsProdutos}>
-                    <div className={styles.CardCompra}>
-                        <div className={styles.CardCompraIcone}>
-                            <div className={styles.CardCompraFhive}> <GiHoneycomb  className={styles.IconeColmeia}/> <span> Fhive</span> </div>
-                            <FaPlus className={styles.IconeMais}/>
-                            <FaRobot className={styles.IconeRobo}/>
-                        </div>
+            <CardComposto
+                titulo="Próximos Passos"
+                subtitulo="Após escolher o plano que vai ser utilizado, é necessário saber como utilizar as funções presentes do Fhive"
+                textoPequeno="Guia" 
+                img={PessoaOlhandoTablet}
+                botaoTexto="Tutorial ao Fhive"
+                caminhoBotao="/rota"
+                isTrue={false}
+            />
 
-                        <div className={styles.CardCompraTexto}>
-                            <h2>Plano Tecnologico</h2>
-                            <p>Funções extras de automação</p>
-                            <p>Gerenciamento personalizado de aparelhos</p>
-                            <p>Comparação autumática entre múltiplos aparelhos</p>
 
-                            <button className={styles.CardCompraBotao}> R$ 132,92</button>
-
-                        </div>
-                    </div>
-
-                </div>
-            </section>
-
+            <FooterBar/>
         </>
 
     )
