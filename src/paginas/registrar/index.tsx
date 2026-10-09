@@ -71,7 +71,7 @@ export function TelaDeRegistrar() {
       setAceitouTermos(false);
 
       // Redireciona para o login
-      navigate("/");
+      navigate("/login");
 
     }
     catch (error) {

@@ -35,7 +35,7 @@ export function TelaDeLogin() {
           },
 
           body: JSON.stringify({
-            identificador: usuarioDados.trim(),
+            email: usuarioDados.trim(),
             senha: senha,
           }),
         }
@@ -73,15 +73,15 @@ export function TelaDeLogin() {
       );
 
       // Apenas para você verificar no console
-      console.log("Token:", dados.token);
-      console.log("Usuário:", dados.usuario);
+      // console.log("Token:", dados.token);
+      // console.log("Usuário:", dados.usuario);
 
       // Limpa os campos
       setUsuarioDados("");
       setSenha("");
 
       // Vai para a página inicial
-      navigate("/");
+      navigate("/configuracoes-equipe");
 
     } catch (error) {
 
