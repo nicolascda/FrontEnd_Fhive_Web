@@ -16,6 +16,8 @@
     box-shadow: 0 12px 45px rgba(0, 0, 0, 0.15);
     font-family: var(--fonte-texto);
     overflow: hidden;
+    z-index: 100;
+    
 }
 
 .modalEquipe {
@@ -50,7 +52,7 @@
 
 .modalEquipe::-webkit-scrollbar-thumb:hover {
     background-color: #ffffff;
-    
+
 }
 
 .modalEquipe::-webkit-scrollbar-button:single-button {
@@ -113,4 +115,502 @@
     height: auto;
     background-color: var(--cor-texto-branco);
     border-radius: 15px;
+    padding: 1.5rem;
+    color: var(--cor-marrom-claro);
+}
+
+/* Primeiro bloco */
+
+.NomeDescricaoEquipe {
+    display: flex;
+    flex-direction: column;
+    /* gap: 20rem; */
+    color: var(--cor-marrom-claro);
+}
+
+.NomeDescricaoEquipe h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.NomeDescricaoEquipe input {
+    /* font-size: 1.5rem; */
+    margin-bottom: 0.75rem;
+    border: 2px solid var(--cor-marrom-claro);
+    border-radius: 5px;
+    min-height: 2rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.NomeDescricaoEquipe textarea {
+    font-family: var(--fonte-texto);
+    margin-bottom: 0.75rem;
+    border: 2px solid var(--cor-marrom-claro);
+    border-radius: 5px;
+    min-height: 2rem;
+    max-height: 5rem;
+    padding-top: 0.25rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    overflow: hidden;
+    max-width: 100%;
+    min-width: 100%;
+}
+
+.NomeDescricaoEquipe textarea:focus {
+    border-color: var(--cor-marrom-claro);
+    outline: none;
+    box-shadow: 0 0 8px var(--cor-marrom-claro);
+}
+
+.NomeDescricaoEquipe input:focus {
+    border-color: var(--cor-marrom-claro);
+    outline: none;
+    box-shadow: 0 0 8px var(--cor-marrom-claro);
+}
+
+/* Segundo bloco */
+
+.ImagemEquipe {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 1rem;
+    /* max-height: 100%; */
+}
+
+.ImagemEquipe hr {
+    height: 25vh;
+    width: 3px;
+    background-color: var(--cor-cinza-claro);
+    border: 2px solid var(--cor-cinza-claro);
+    border-radius: 25px;
+}
+
+.ImagemEquipeDiv {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.ImagemEquipeFotoDiv {
+    /* color: white; */
+    display: flex;
+    background-color: var(--cor-cinza-claro);
+    border-radius: 15px;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out, box-shadow 0.5s ease-in-out;
+}
+
+.ImagemEquipeFotoDiv:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 12px var(--cor-cinza-claro);
+}
+
+.ImagemEquipeFoto {
+    color: white;
+    width: 10vw;
+    height: 15vh;
+}
+
+/* Terceiro bloco */
+
+.Planos {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    gap: 1rem;
+}
+
+.TituloPlano {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.TituloPlano h2 {
+    font-size: 2rem;
+}
+
+.TituloPlano button {
+    background-color: var(--cor-marrom-claro);
+    border: none;
+    border-radius: 100rem;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+}
+
+.TituloPlano button:hover {
+    transform: translateY(-2px);
+}
+
+.botaoAtivar {
+    /* margin-left: auto; */
+    background-color: var(--cor-marrom-claro);
+    color: var(--cor-texto-branco);
+    padding: 0.5rem;
+    border-radius: 15px;
+    font-size: 1.5rem;
+    /* column-gap: 20px; */
+}
+
+.PlanoComprar {
+    display: flex;
+    flex-direction: flex;
+    justify-content: space-around;
+    gap: 1rem;
+}
+
+.PlanoComprarIndividual {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #C3C3C3;
+    border-radius: 15px;
+    padding: 1rem;
+    width: 20vw;
+    gap: 0.5rem;
+}
+
+.PlanoComprarIndividual:active {
+    border: 1px solid #C3C3C3;
+}
+
+.PlanoComprarIndividual h3 {
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.PlanoComprarIndividual p {
+    font-weight: bolder;
+}
+
+.PlanoComprarIndividual ul {
+    padding-left: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .PlanoComprarIndividual h3 {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 680px) {
+    .PlanoComprarIndividual h3 {
+        font-size: 0.8rem;
+    }
+}
+
+.escolhaIntegrantes {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+    gap: 0.5rem;
+
+}
+
+.escolhaIntegrantes label {
+    font-size: 1.75rem;
+    font-weight: bolder;
+}
+
+.MinimoMaximo {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    font-size: 1.25rem;
+    font-weight: bolder;
+}
+
+
+.controleIntegrantes {
+    position: relative;
+    width: 100%;
+    height: 55px;
+    margin-top: 0.25rem;
+}
+
+.trilhoIntegrantes {
+    position: absolute;
+    top: 10px;
+    left: 11px;
+    right: 11px;
+    height: 14px;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+}
+
+.marcadorIntegrante {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    box-sizing: border-box;
+    background-color: #ffffff;
+    border: 1px solid #d0d0d0;
+    border-radius: 50%;
+}
+
+.marcadorAtivo {
+    background-color: #c25e00;
+    border-color: #c25e00;
+}
+
+.sliderIntegrantes {
+    position: absolute;
+    top: 5px;
+    left: 0;
+    z-index: 2;
+    width: 100%;
+    height: 24px;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.sliderIntegrantes::-webkit-slider-thumb {
+    width: 22px;
+    height: 22px;
+    appearance: none;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    background-color: #c25e00;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.valoresMarcos {
+    position: absolute;
+    top: 37px;
+    left: 11px;
+    right: 11px;
+}
+
+.valoresMarcos span {
+    position: absolute;
+    transform: translateX(-50%);
+    color: #c25e00;
+    font-size: 1.25rem;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1.5;
+}
+
+/* Quarto bloco */
+
+.setores {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 2rem;
+    box-sizing: border-box;
+}
+
+.setores>h2 {
+    font-size: 2rem;
+    margin: 0;
+}
+
+.setoresDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 1rem;
+    width: 100%;
+}
+
+.botaoSelecionado,
+.botaoNaoSelecionado {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 45vh;
+    min-height: 30vh;
+    overflow: hidden;
+    border: 1px solid #b8b8b8;
+    border-radius: 15px;
+    background-color: #ffffff;
+    cursor: pointer;
+}
+
+.botaoSelecionado {
+    border-color: #efc5a0;
+}
+
+.botaoSelecionado img,
+.botaoNaoSelecionado img {
+    display: block;
+    flex: 1 1 auto;
+    width: 100%;
+    /* height: auto; */
+    min-height: 0;
+    padding: 0.5rem;
+    box-sizing: border-box;
+    object-fit: contain;
+}
+
+.botaoSelecionado h2,
+.botaoNaoSelecionado h2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 3rem;
+    border-top: 1px solid #c7c7c7;
+    background-color: #ffffff;
+    color: #c25e00;
+    font-size: 1.5rem;
+}
+
+@media (max-width: 768px) {
+
+    .botaoSelecionado h2,
+    .botaoNaoSelecionado h2 {
+        font-size: 1rem;
+    }
+}
+
+.botaoSelecionado h2 {
+    background-color: var(--cor-marrom-claro);
+    border-top-color: var(--cor-marrom-claro);
+    color: #ffffff;
+}
+
+.botaoNaoSelecionado:hover {
+    border-color: var(--cor-marrom-claro);
+}
+
+/* Quinto bloco */
+
+.InformacaoExtra {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.InformacaoExtra h2 {
+    font-size: 1.5rem;
+}
+
+.InformacaoExtra ul {
+    display: flex;
+    flex-direction: column;
+    padding-left: 1rem;
+    gap: 1rem;
+    font-size: 1rem;
+    padding-right: 10rem;
+}
+
+.centralAjuda {
+    text-decoration: underline;
+    cursor: pointer;
+    transition: filter 0.2s ease-in-out;
+}
+.centralAjuda:hover {
+    filter: brightness(120%);
+}
+
+.divCheckBox {
+  display: flex;
+  position: relative;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.divCheckBox p {
+  font-size: 1.2rem;
+  font-family: var(--fonte-texto);
+  font-weight: bolder;
+  color: var(--cor-marrom-claro);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.checkBoxRegistrar {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 1.5em;
+  width: 1.4rem;
+  border-radius: 8px;
+  background-color: white;
+  border: 1px solid var(--cor-cinza-claro);
+  cursor: pointer;
+  margin-right: 0.5rem;
+}
+
+.checkBoxRegistrar:checked {
+  background-color: var(--cor-marrom-claro); 
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='68' height='68' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-check-icon lucide-check'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Ultimo bloco */
+
+.blocoFinal {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 3rem;
+}
+
+.botaoFinal {
+    padding: 1rem;
+    background-color: var(--cor-marrom-claro);
+    width: 20vw;
+    font-size: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    border: none;
+    color: var(--cor-texto-branco);
+    cursor: pointer;
+    transition: filter 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.botaoFinal:hover {
+    filter: brightness(120%);
+    transform: translateY(-3px);
+}
+
+@media (max-width: 768px)
+{
+    .botaoFinal {
+        font-size: 1.5rem;
+    }
+}
+
+.fundoBlur {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 99;
 }
