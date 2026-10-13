@@ -1,0 +1,134 @@
+.card-equipe {
+  position: relative;
+  width: calc((100% - 3rem) / 4);
+  min-height: 14.2rem;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border: 1px solid #c85c0a;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.8rem rgb(0 0 0 / 8%);
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.logo-equipe {
+  position: absolute;
+  top: 4.25rem;
+  right: 0.85rem;
+  width: 3.2rem;
+  height: 3.2rem;
+  background-color: #ffffff;
+  border-radius: 50%;
+  padding: 0.25rem;
+  box-sizing: border-box;
+  background-repeat:no-repeat;
+  background-size: contain;
+}
+
+.imagem-equipe {
+  width: 100%;
+  height: 6rem;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 0.45rem 0.45rem 0 0;
+}
+
+.informacoes-equipe {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.65rem 0.75rem 0.3rem;
+  font-family: var(--fonte-texto)
+}
+
+.informacoes-equipe h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.informacoes-equipe p {
+  font-size: 0.9rem;
+  line-height: 1.25;
+}
+
+
+.Botoes {
+  height: 2rem;
+  display: flex;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+
+.botao-ambiente {
+  width: fit-content;
+  padding: 0.32rem 0.55rem;
+  border: none;
+  border-radius: 0.2rem;
+  background-color: var(--cor-marrom-claro);
+  color: #ffffff;
+  font-family: var(--fonte-texto);
+  font-size: 0.65rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.botao-ambiente:hover {
+  background-color: #aa4b00;
+}
+
+.acoesEquipe {
+  border: none;
+  background-color: transparent;
+  color: gray;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
+}
+
+.acoesEquipe:hover {
+  color: #c85c0a;
+}
+
+
+.menu-acoes {
+  position: absolute;
+  right: 0.25rem;
+  bottom: 2.6rem;
+  width: 11rem;
+  display: flex;
+  flex-direction: column;
+  padding: 0.35rem 0;
+  background-color: #d86600;
+  border-radius: 0.3rem;
+  box-shadow: 0 0.35rem 0.9rem rgb(0 0 0 / 18%);
+  z-index: 20;
+}
+
+.menu-acoes::after {
+  content: '';
+  position: absolute;
+  right: 0.8rem;
+  bottom: -0.35rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  background-color: #d86600;
+  transform: rotate(45deg);
+}
+
+.menu-acoes button {
+  width: 100%;
+  border: none;
+  padding: 0.65rem 0.75rem;
+  background-color: transparent;
+  color: #ffffff;
+  font-family: var(--fonte-texto);
+  font-size: 0.63rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.menu-acoes button:hover {
+  background-color: #bd5500;
+}

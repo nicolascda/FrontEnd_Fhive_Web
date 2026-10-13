@@ -173,3 +173,20 @@
   height: 20px;
   flex-shrink: 0;
 }
+
+.comece-agora {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.foto-perfil-navbar {
+    display: block;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    object-fit: cover;
+}

@@ -136,7 +136,12 @@ export function TelaDeLogin() {
 
 
           <span className={`${styles['EsqueceuASenha']} ${styles['group']}`}>
-            <a>Esqueceu a senha?</a>
+              <Link
+                  to="/recuperar-senha"
+                  className={`${styles['link-recuperar-senha']}`}
+              >
+                  Esqueceu a senha?
+              </Link>
           </span>
 
 

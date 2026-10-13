@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
-import { MoreVertical, Settings } from 'lucide-react';
+import { Settings } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Empresa3D from '../../imagens/Empresa3D.png';
 import QualquerImagem from '../../imagens/AutomatizacaoImagem.jpg';
 import { BarraNavegacaoLogado } from '../../componentes/BarraNavegacaoLogado';
 import { FooterBar } from '../../componentes/FooterBar';
 import styles from './styles.module.css';
+import { CardEquipe } from "../../componentes/CardEquipe";
+import { ModalCriarEquipe } from '../../componentes/ModalCriarEquipe';
 
 type Equipe = {
     id: string;
@@ -16,17 +18,40 @@ type Equipe = {
     logo: string;
 };
 
-const equipeModelo: Equipe = {
-    id: 'equipe-modelo',
-    nome: "Nicolas's Team",
-    setor: 'Industrial',
-    integrantes: 20,
-    imagem: Empresa3D,
-    logo: QualquerImagem
-};
+const equipeModelo: Equipe[] = [
+    {
+        id: 'equipe-modelo',
+        nome: "Nicolas's Team",
+        setor: 'Industrial',
+        integrantes: 20,
+        imagem: Empresa3D,
+        logo: QualquerImagem
+    },
+
+    {
+        id: 'equipe-modelo2',
+        nome: "Nicolas's Team",
+        setor: 'Industrial',
+        integrantes: 20,
+        imagem: Empresa3D,
+        logo: QualquerImagem
+    },
+
+    {
+        id: 'equipe-modelo3',
+        nome: "Nicolas's Team",
+        setor: 'Industrial',
+        integrantes: 20,
+        imagem: Empresa3D,
+        logo: QualquerImagem
+    }
+];
 
 export function TelaConfiguracoesEquipe() {
     const navigate = useNavigate();
+
+    const [menuConfiguracaoAberto, setMenuConfiguracaoAberto] = useState(false);
+    const [modalCriarEquipeAberto, setModalCriarEquipeAberto] = useState(false);
 
     const [equipes, setEquipes] = useState<Equipe[]>(() => {
         const equipesSalvas = localStorage.getItem('equipes');
@@ -42,21 +67,24 @@ export function TelaConfiguracoesEquipe() {
                 return [];
             }
 
-            return equipesConvertidas.map((equipe: Equipe) =>
-                equipe.id === 'equipe-modelo'
+            return equipesConvertidas.map((equipe: Equipe) => {
+                const equipeOriginal = equipeModelo.find(
+                    (modelo) => modelo.id === equipe.id
+                );
+
+                return equipeOriginal
                     ? {
                         ...equipe,
-                        imagem: equipeModelo.imagem,
-                        logo: equipeModelo.logo
+                        imagem: equipeOriginal.imagem,
+                        logo: equipeOriginal.logo
                     }
-                    : equipe
-            );
+                    : equipe;
+            });
         } catch {
             return [];
         }
     });
 
-    const [menuEquipeId, setMenuEquipeId] = useState<string | null>(null);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -79,7 +107,7 @@ export function TelaConfiguracoesEquipe() {
                 return equipesAtuais;
             }
 
-            return [equipeModelo];
+            return equipeModelo;
         });
     };
 
@@ -89,8 +117,6 @@ export function TelaConfiguracoesEquipe() {
                 (equipe) => equipe.id !== id
             )
         );
-
-        setMenuEquipeId(null);
     };
 
     return (
@@ -104,18 +130,75 @@ export function TelaConfiguracoesEquipe() {
                     Configurações de Equipe
                 </h1>
 
-                <div className={styles.configuracao}>
-                    <Settings
-                        size={32}
-                        strokeWidth={2}
-                    />
+                <div className={styles['configuracao-container']}>
+
+                    <button
+                        type="button"
+                        className={styles.configuracao}
+                        aria-label="Abrir menu de configurações"
+                        aria-expanded={menuConfiguracaoAberto}
+                        onClick={() =>
+                            setMenuConfiguracaoAberto((aberto) => !aberto)
+                        }
+                    >
+                        <Settings
+                            size={32}
+                            strokeWidth={2}
+                        />
+                    </button>
+
+                    {menuConfiguracaoAberto && (
+                        <div
+                            className={styles['menu-configuracao']}
+                            onClick={(evento) => evento.stopPropagation()}
+                        >
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setMenuConfiguracaoAberto(false);
+                                    setModalCriarEquipeAberto(true);
+                                }}
+                            >
+                                Criar uma Equipe
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setMenuConfiguracaoAberto(false);
+                                }}
+                            >
+                                Configurações de Equipe
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setMenuConfiguracaoAberto(false);
+                                    navigate('/automacoes');
+                                }}
+                            >
+                                Automações
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setMenuConfiguracaoAberto(false);
+                                    navigate('/entrar-equipe');
+                                }}
+                            >
+                                Entrar numa equipe
+                            </button>
+                        </div>
+                    )}
+
                 </div>
 
             </section>
 
             <main
                 className={styles.conteudo}
-                onClick={() => setMenuEquipeId(null)}
             >
 
                 {equipes.length === 0 ? (
@@ -150,164 +233,59 @@ export function TelaConfiguracoesEquipe() {
 
                 ) : (
 
+
                     <section className={styles['lista-equipes']}>
 
                         {equipes.map((equipe) => (
-
-                            <article
+                            <CardEquipe
                                 key={equipe.id}
-                                className={styles['card-equipe']}
-                                onClick={(evento) =>
-                                    evento.stopPropagation()
-                                }
-                            >
+                                id={equipe.id}
+                                imagem={equipe.imagem}
+                                imagemalt="Ambiente industrial da equipe"
+                                imagemLogo={equipe.logo}
+                                equipeNome={equipe.nome}
+                                equipeSetor={equipe.setor}
+                                equipeIntegrantes={equipe.integrantes}
 
-                                <img
-                                    src={equipe.imagem}
-                                    alt="Ambiente industrial da equipe"
-                                    className={
-                                        styles['imagem-equipe']
+                                onEntrar={() => navigate('/')}
+
+                                onConfiguracoes={(id) => {
+                                    window.alert(`Configurações da equipe: ${id}`);
+                                }}
+
+                                onGerenciarIntegrantes={(id) => {
+                                    window.alert(`Gerenciar integrantes da equipe: ${id}`);
+                                }}
+
+                                onExcluir={(id) => {
+                                    const equipeExcluir = equipes.find(
+                                        (item) => item.id === id
+                                    );
+
+                                    if (!equipeExcluir) return;
+
+                                    const confirmar = window.confirm(
+                                        `Deseja excluir a equipe ${equipeExcluir.nome}?`
+                                    );
+
+                                    if (confirmar) {
+                                        removerEquipeModelo(id);
                                     }
-                                />
-
-                                <img
-                                    src={equipe.logo}
-                                    alt={`Logo da ${equipe.nome}`}
-                                    className={
-                                        styles['logo-equipe']
-                                    }
-                                />
-
-                                <div
-                                    className={
-                                        styles['informacoes-equipe']
-                                    }
-                                >
-
-                                    <strong>
-                                        {equipe.nome}
-                                    </strong>
-
-                                    <span>
-                                        Setor: {equipe.setor}
-                                    </span>
-
-                                    <span>
-                                        Integrantes:{' '}
-                                        {equipe.integrantes} pessoas
-                                    </span>
-
-                                    <button
-                                        type="button"
-                                        className={
-                                            styles['botao-ambiente']
-                                        }
-                                        onClick={() =>
-                                            navigate('/')
-                                        }
-                                    >
-                                        Entrar no Ambiente Virtual
-                                    </button>
-
-                                </div>
-
-                                <div
-                                    className={
-                                        styles['acoes-equipe']
-                                    }
-                                >
-
-                                    <button
-                                        type="button"
-                                        aria-label="Configurações da equipe"
-                                        onClick={() =>
-                                            setMenuEquipeId(
-                                                (id) =>
-                                                    id === equipe.id
-                                                        ? null
-                                                        : equipe.id
-                                            )
-                                        }
-                                    >
-                                        <Settings
-                                            size={13}
-                                            strokeWidth={2}
-                                        />
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        aria-label="Mais opções"
-                                        onClick={() =>
-                                            setMenuEquipeId(
-                                                (id) =>
-                                                    id === equipe.id
-                                                        ? null
-                                                        : equipe.id
-                                            )
-                                        }
-                                    >
-                                        <MoreVertical
-                                            size={13}
-                                            strokeWidth={2}
-                                        />
-                                    </button>
-
-                                </div>
-
-                                {menuEquipeId === equipe.id && (
-
-                                    <div
-                                        className={
-                                            styles['menu-acoes']
-                                        }
-                                        onClick={(evento) =>
-                                            evento.stopPropagation()
-                                        }
-                                    >
-
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                setMenuEquipeId(null)
-                                            }
-                                        >
-                                            Configurações da Equipe
-                                        </button>
-
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                setMenuEquipeId(null)
-                                            }
-                                        >
-                                            Gerenciar integrantes
-                                        </button>
-
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                removerEquipeModelo(
-                                                    equipe.id
-                                                )
-                                            }
-                                        >
-                                            Excluir equipe
-                                        </button>
-
-                                    </div>
-
-                                )}
-
-                            </article>
-
+                                }}
+                            />
                         ))}
 
                     </section>
-
                 )}
 
             </main>
+
+            {modalCriarEquipeAberto && (
+                <ModalCriarEquipe
+                    onFechar={() => setModalCriarEquipeAberto(false)}
+                />
+            )}
+
 
             <FooterBar />
 

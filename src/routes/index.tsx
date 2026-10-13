@@ -5,6 +5,7 @@ import { TelaDeRegistrar} from "../paginas/registrar";
 import { TelaInicial} from "../paginas/inicial";
 import { TelaProdutos } from "../paginas/produtos";
 import { TelaConfiguracoesEquipe } from "../paginas/configuracaoEquipe";
+import { TelaRecuperarSenha } from "../paginas/recuperarSenha";
 
 export function AppRoutes() {
     return (
@@ -14,6 +15,7 @@ export function AppRoutes() {
             <Route path="/" element={<TelaInicial/>} />
             <Route path="/produtos" element={<TelaProdutos/>}/>
             <Route path="/configuracoes-equipe" element={<TelaConfiguracoesEquipe/>}/>
+            <Route path="/recuperar-senha" element={<TelaRecuperarSenha/>} />
         </Routes>
     );
 };

@@ -148,30 +148,19 @@
 }
 
 
-/* =========================================================
-   TABLET
-   ========================================================= 
-
-@media (max-width: 900px) {
-
-  .container-formulario {
-    width: 100%;
-
-    padding: 20px;
-  }
-
-  .container-visual {
-    display: none;
-  }
-
-  .div {
-    width: min(650px, 100%);
-    height: 600px;
-  }
+.link-recuperar-senha,
+.link-recuperar-senha:visited {
+    color: #a85b16;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    text-decoration: underline;
+    cursor: pointer;
 }
 
-* /
-
+.link-recuperar-senha:hover {
+    color: #914b0c;
+}
 /* Tela - Mobile */
 @media (max-width: 600px) {
 
