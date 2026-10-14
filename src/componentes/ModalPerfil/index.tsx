@@ -10,6 +10,7 @@ import {
 
 import {
     Bell,
+    Camera,
     ChevronRight,
     Pencil,
     Save,
@@ -21,6 +22,7 @@ import {
 import styles from './styles.module.css';
 
 type UsuarioPerfil = {
+    id?: string;
     nome?: string;
     email?: string;
     fotoPerfil?: string;
@@ -87,6 +89,48 @@ export function ModalPerfil({
         email.trim() !== (usuario.email ?? '') ||
         fotoPerfil !== (usuario.fotoPerfil ?? '') ||
         Boolean(senhaAtual || novaSenha || confirmarSenha);
+
+    useEffect(() => {
+        let ativo = true;
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            setErro('Sua sessão não foi encontrada. Entre novamente.');
+            return;
+        }
+
+        const carregarPerfil = async () => {
+            try {
+                const resposta = await fetch('/usuarios/perfil', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const dados = await resposta.json().catch(() => ({})) as RespostaAPI;
+
+                if (!resposta.ok || !dados.usuario) {
+                    throw new Error(dados.mensagem || dados.erro || 'Não foi possível carregar seu perfil.');
+                }
+
+                if (!ativo) return;
+
+                const perfil = dados.usuario;
+                setNome(perfil.nome ?? '');
+                setEmail(perfil.email ?? '');
+                setFotoPerfil(perfil.fotoPerfil ?? '');
+                localStorage.setItem('usuario', JSON.stringify(perfil));
+                onUsuarioAtualizado(perfil);
+            } catch (error) {
+                if (ativo) {
+                    setErro(error instanceof Error ? error.message : 'Não foi possível carregar seu perfil.');
+                }
+            }
+        };
+
+        void carregarPerfil();
+
+        return () => {
+            ativo = false;
+        };
+    }, [onUsuarioAtualizado]);
 
     useEffect(() => {
         const handleTecla = (evento: KeyboardEvent) => {
@@ -293,7 +337,7 @@ export function ModalPerfil({
                                     alt="Foto de perfil"
                                 />
                             ) : (
-                                <UserRound size={25} />
+                                <Camera size={22} />
                             )}
                         </button>
 

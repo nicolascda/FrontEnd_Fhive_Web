@@ -1,119 +1,113 @@
-import { useState } from 'react';
-import styles from './styles.module.css';
-import PessoasSentadas from '../../imagens/PessoasSentadas.jpg';
+import { useState, type SubmitEvent } from "react";
+import styles from "./styles.module.css";
+import PessoasSentadas from "../../imagens/PessoasSentadas.jpg";
 import { LabelPadrao } from "../../componentes/LabelPadrao/index.tsx";
 import { BotaoPadrao } from "../../componentes/BotaoPadrao/index.tsx";
-import { Link, useNavigate } from 'react-router-dom';
+import { useNotificacao } from "../../componentes/ModalMensagem/index.tsx";
+import { Link, useNavigate } from "react-router-dom";
+
+type RespostaLogin = {
+  mensagem?: string;
+  erro?: string;
+  token?: string;
+  usuario?: unknown;
+};
 
 export function TelaDeLogin() {
-
   const navigate = useNavigate();
+  const { mostrarMensagem } = useNotificacao();
 
-  const [usuarioDados, setUsuarioDados] = useState('');
-  const [senha, setSenha] = useState('');
+  const [usuarioDados, setUsuarioDados] = useState("");
+  const [senha, setSenha] = useState("");
   const [carregando, setCarregando] = useState(false);
 
-  const handleLogin = async () => {
+  const handleLogin = async (
+    evento: SubmitEvent<HTMLFormElement>
+  ) => {
+    evento.preventDefault();
 
-    // Verifica se os campos foram preenchidos
     if (!usuarioDados.trim() || !senha) {
-      alert("Preencha o nome ou e-mail e a senha.");
+      mostrarMensagem({
+        tipo: "erro",
+        titulo: "Campos obrigatórios",
+        mensagem: "Preencha o nome ou e-mail e a senha.",
+      });
       return;
     }
 
     try {
-
       setCarregando(true);
 
-      const resposta = await fetch(
-        "/usuarios/login",
-        {
-          method: "POST",
+      const resposta = await fetch("/usuarios/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: usuarioDados.trim(),
+          senha,
+        }),
+      });
 
-          headers: {
-            "Content-Type": "application/json",
-          },
+      const dados = (await resposta
+        .json()
+        .catch(() => ({}))) as RespostaLogin;
 
-          body: JSON.stringify({
-            email: usuarioDados.trim(),
-            senha: senha,
-          }),
-        }
-      );
-
-      const dados = await resposta.json();
-
-      // Backend retornou erro
       if (!resposta.ok) {
-
-        alert(
-          dados.mensagem ||
-          dados.erro ||
-          "Nome ou e-mail ou senha inválidos."
-        );
-
+        mostrarMensagem({
+          tipo: "erro",
+          titulo: "Não foi possível entrar",
+          mensagem:
+            dados.mensagem ||
+            dados.erro ||
+            "Nome, e-mail ou senha inválidos.",
+        });
         return;
       }
 
-      alert(
-        dados.mensagem ||
-        "Login realizado com sucesso!"
-      );
-
-      // Salva o token
-      localStorage.setItem(
-        "token",
-        dados.token
-      );
-
-      // Salva os dados do usuário
+      localStorage.setItem("token", dados.token ?? "");
       localStorage.setItem(
         "usuario",
-        JSON.stringify(dados.usuario)
+        JSON.stringify(dados.usuario ?? {})
       );
 
-      // Apenas para você verificar no console
-      // console.log("Token:", dados.token);
-      // console.log("Usuário:", dados.usuario);
-
-      // Limpa os campos
       setUsuarioDados("");
       setSenha("");
 
-      // Vai para a página inicial
-      navigate("/configuracoes-equipe");
-
+      mostrarMensagem({
+        tipo: "sucesso",
+        titulo: "Login realizado!",
+        mensagem:
+          dados.mensagem ||
+          "Acesso realizado com sucesso. Seja bem-vindo ao Fhive!",
+        textoBotao: "Continuar",
+        aoFechar: () => navigate("/configuracoes-equipe"),
+      });
     } catch (error) {
+      console.error("Erro ao realizar login:", error);
 
-      console.error(
-        "Erro ao realizar login:",
-        error
-      );
-
-      alert(
-        "Não foi possível conectar ao backend.\n\n" +
-        "Verifique se o servidor está rodando."
-      );
-
+      mostrarMensagem({
+        tipo: "erro",
+        titulo: "Falha na conexão",
+        mensagem:
+          "Não foi possível conectar ao servidor. Verifique se o backend está funcionando e tente novamente.",
+        textoBotao: "Entendi",
+      });
     } finally {
-
       setCarregando(false);
-
     }
   };
 
-
   return (
-    <main className={styles['tela-de-login']}>
-
-      <section className={styles['container-formulario']}>
-
-        <div className={styles.div}>
-
-          <h1 className={styles['Titulo']}>
+    <main className={styles["tela-de-login"]}>
+      <section className={styles["container-formulario"]}>
+        <form
+          className={styles.div}
+          onSubmit={handleLogin}
+        >
+          <h1 className={styles["Titulo"]}>
             Bem-vindo de volta!
           </h1>
-
 
           <LabelPadrao
             id="email"
@@ -121,9 +115,10 @@ export function TelaDeLogin() {
             textoTitulo="Email"
             tipo="email"
             value={usuarioDados}
-            onChange={(e) => setUsuarioDados(e.target.value)}
+            onChange={(evento) =>
+              setUsuarioDados(evento.target.value)
+            }
           />
-
 
           <LabelPadrao
             id="senha"
@@ -131,61 +126,53 @@ export function TelaDeLogin() {
             textoTitulo="Senha"
             tipo="password"
             value={senha}
-            onChange={(e) => setSenha(e.target.value)}
+            onChange={(evento) =>
+              setSenha(evento.target.value)
+            }
           />
 
-
-          <span className={`${styles['EsqueceuASenha']} ${styles['group']}`}>
-              <Link
-                  to="/recuperar-senha"
-                  className={`${styles['link-recuperar-senha']}`}
-              >
-                  Esqueceu a senha?
-              </Link>
+          <span
+            className={`${styles["EsqueceuASenha"]} ${styles["group"]}`}
+          >
+            <Link
+              to="/recuperar-senha"
+              className={styles["link-recuperar-senha"]}
+            >
+              Esqueceu a senha?
+            </Link>
           </span>
 
-
           <BotaoPadrao
-            textoBotao={
-              carregando
-                ? "Entrando..."
-                : "Entrar"
-            }
-            onClick={handleLogin}
+            textoBotao={carregando ? "Entrando..." : "Entrar"}
+            onClick={(evento) => {
+              evento.preventDefault();
+              evento.currentTarget.form?.requestSubmit();
+            }}
             disabled={carregando}
           />
 
-
-          <p className={styles['NaoTenhoConta']}>
-
+          <p className={styles["NaoTenhoConta"]}>
             <span className={styles.span}>
-              Não tem conta?{' '}
+              Não tem conta?{" "}
             </span>
 
             <Link
               to="/registrar"
-              className={styles['CriarConta']}
+              className={styles["CriarConta"]}
             >
               Crie uma agora
             </Link>
-
           </p>
-
-        </div>
-
+        </form>
       </section>
 
-
-      <section className={styles['container-visual']}>
-
+      <section className={styles["container-visual"]}>
         <img
           src={PessoasSentadas}
           alt="Pessoas em uma reunião"
-          className={styles['image-colorized']}
+          className={styles["image-colorized"]}
         />
-
       </section>
-
     </main>
   );
 }

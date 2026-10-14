@@ -1,17 +1,20 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
-// https://vite.dev/config/
+const backendTarget = 'http://127.0.0.1:3000'
+
 export default defineConfig({
   plugins: [react()],
-
   server: {
     proxy: {
-        "/usuarios": {
-            target: "http://localhost:3000",
-            changeOrigin: true,
-        },
+      "/usuarios": {
+        target: backendTarget,
+        changeOrigin: true,
+      },
+      "/equipes": {
+        target: backendTarget,
+        changeOrigin: true,
+      },
     },
-  }
+  },
 })
-

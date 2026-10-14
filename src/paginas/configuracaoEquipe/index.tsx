@@ -12,40 +12,20 @@ import { ModalCriarEquipe } from '../../componentes/ModalCriarEquipe';
 type Equipe = {
     id: string;
     nome: string;
+    descricao?: string | null;
     setor: string;
-    integrantes: number;
-    imagem: string;
-    logo: string;
+    limiteIntegrantes: number;
+    imagemFundo?: string | null;
+    logo?: string | null;
+    plano: string;
+    codigo: string;
 };
 
-const equipeModelo: Equipe[] = [
-    {
-        id: 'equipe-modelo',
-        nome: "Nicolas's Team",
-        setor: 'Industrial',
-        integrantes: 20,
-        imagem: Empresa3D,
-        logo: QualquerImagem
-    },
-
-    {
-        id: 'equipe-modelo2',
-        nome: "Nicolas's Team",
-        setor: 'Industrial',
-        integrantes: 20,
-        imagem: Empresa3D,
-        logo: QualquerImagem
-    },
-
-    {
-        id: 'equipe-modelo3',
-        nome: "Nicolas's Team",
-        setor: 'Industrial',
-        integrantes: 20,
-        imagem: Empresa3D,
-        logo: QualquerImagem
-    }
-];
+type RespostaAPI = {
+    mensagem?: string;
+    erro?: string;
+    equipe?: Equipe;
+};
 
 export function TelaConfiguracoesEquipe() {
     const navigate = useNavigate();
@@ -53,70 +33,69 @@ export function TelaConfiguracoesEquipe() {
     const [menuConfiguracaoAberto, setMenuConfiguracaoAberto] = useState(false);
     const [modalCriarEquipeAberto, setModalCriarEquipeAberto] = useState(false);
 
-    const [equipes, setEquipes] = useState<Equipe[]>(() => {
-        const equipesSalvas = localStorage.getItem('equipes');
-
-        if (!equipesSalvas) {
-            return [];
-        }
-
-        try {
-            const equipesConvertidas = JSON.parse(equipesSalvas);
-
-            if (!Array.isArray(equipesConvertidas)) {
-                return [];
-            }
-
-            return equipesConvertidas.map((equipe: Equipe) => {
-                const equipeOriginal = equipeModelo.find(
-                    (modelo) => modelo.id === equipe.id
-                );
-
-                return equipeOriginal
-                    ? {
-                        ...equipe,
-                        imagem: equipeOriginal.imagem,
-                        logo: equipeOriginal.logo
-                    }
-                    : equipe;
-            });
-        } catch {
-            return [];
-        }
-    });
-
+    const [equipes, setEquipes] = useState<Equipe[]>([]);
+    const [carregandoEquipes, setCarregandoEquipes] = useState(true);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
 
         if (!token) {
             navigate('/login', { replace: true });
+            return;
         }
+
+        const carregarEquipes = async () => {
+            try {
+                const resposta = await fetch('/equipes', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const dados = await resposta.json().catch(() => []);
+
+                if (!resposta.ok) {
+                    const mensagem = Array.isArray(dados)
+                        ? 'Não foi possível carregar suas equipes.'
+                        : dados.mensagem || dados.erro || 'Não foi possível carregar suas equipes.';
+                    throw new Error(mensagem);
+                }
+
+                setEquipes(Array.isArray(dados) ? dados : []);
+            } catch (error) {
+                console.error('Erro ao carregar equipes:', error);
+            } finally {
+                setCarregandoEquipes(false);
+            }
+        };
+
+        void carregarEquipes();
     }, [navigate]);
 
-    useEffect(() => {
-        localStorage.setItem(
-            'equipes',
-            JSON.stringify(equipes)
-        );
-    }, [equipes]);
-
-    const criarEquipeModelo = () => {
-        setEquipes((equipesAtuais) => {
-            if (equipesAtuais.length > 0) {
-                return equipesAtuais;
-            }
-
-            return equipeModelo;
-        });
+    const adicionarEquipe = (equipe: Equipe) => {
+        setEquipes((atuais) => [equipe, ...atuais]);
     };
 
-    const removerEquipeModelo = (id: string) => {
-        setEquipes((equipesAtuais) =>
-            equipesAtuais.filter(
-                (equipe) => equipe.id !== id
-            )
-        );
+    const removerEquipeModelo = async (id: string) => {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            navigate('/login', { replace: true });
+            return;
+        }
+
+        try {
+            const resposta = await fetch(`/equipes/${id}`, {
+                method: 'DELETE',
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const dados = await resposta.json().catch(() => ({})) as RespostaAPI;
+
+            if (!resposta.ok) {
+                throw new Error(dados.mensagem || dados.erro || 'Não foi possível excluir a equipe.');
+            }
+
+            setEquipes((atuais) => atuais.filter((equipe) => equipe.id !== id));
+        } catch (error) {
+            window.alert(error instanceof Error ? error.message : 'Não foi possível excluir a equipe.');
+        }
     };
 
     return (
@@ -201,7 +180,13 @@ export function TelaConfiguracoesEquipe() {
                 className={styles.conteudo}
             >
 
-                {equipes.length === 0 ? (
+                {carregandoEquipes ? (
+                    <section className={styles['estado-vazio']}>
+                        <div className={styles['estado-vazio-conteudo']}>
+                            <h2>Carregando equipes...</h2>
+                        </div>
+                    </section>
+                ) : equipes.length === 0 ? (
 
                     <section className={styles['estado-vazio']}>
 
@@ -222,7 +207,7 @@ export function TelaConfiguracoesEquipe() {
 
                             <button
                                 type="button"
-                                onClick={criarEquipeModelo}
+                                onClick={() => setModalCriarEquipeAberto(true)}
                             >
                                 Criar minha equipe
                             </button>
@@ -240,12 +225,12 @@ export function TelaConfiguracoesEquipe() {
                             <CardEquipe
                                 key={equipe.id}
                                 id={equipe.id}
-                                imagem={equipe.imagem}
-                                imagemalt="Ambiente industrial da equipe"
-                                imagemLogo={equipe.logo}
+                                imagem={equipe.imagemFundo || Empresa3D}
+                                imagemalt="Ambiente da equipe"
+                                imagemLogo={equipe.logo || QualquerImagem}
                                 equipeNome={equipe.nome}
                                 equipeSetor={equipe.setor}
-                                equipeIntegrantes={equipe.integrantes}
+                                equipeIntegrantes={equipe.limiteIntegrantes}
 
                                 onEntrar={() => navigate('/')}
 
@@ -283,6 +268,7 @@ export function TelaConfiguracoesEquipe() {
             {modalCriarEquipeAberto && (
                 <ModalCriarEquipe
                     onFechar={() => setModalCriarEquipeAberto(false)}
+                    onCriada={adicionarEquipe}
                 />
             )}
 

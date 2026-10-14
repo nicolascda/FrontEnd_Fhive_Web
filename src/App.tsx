@@ -1,5 +1,7 @@
-import { AppRoutes } from "./routes/index.tsx"; 
-import { BrowserRouter } from 'react-router-dom'; 
+import { AppRoutes } from "./routes/index.tsx";
+import { BrowserRouter } from 'react-router-dom';
+import { NotificacaoProvider } from "./componentes/ModalMensagem";;
+
 import "./style/global.css";
 import "./style/theme.css";
 
@@ -7,10 +9,12 @@ export function App() {
   return (
     <>
       <BrowserRouter>
-      
-        <AppRoutes />
+
+        <NotificacaoProvider>
+          <AppRoutes />
+        </NotificacaoProvider>
       </BrowserRouter>
-      
+
     </>
   );
 }
