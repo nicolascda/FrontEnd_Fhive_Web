@@ -257,7 +257,7 @@ export function TelaDeRegistrar() {
             <>
               <p className={styles.textoEtapa}>
                 Informe o código de 6 dígitos enviado para{" "}
-                <strong>{email}</strong>. O código expira em 10 minutos.
+                <strong>{email}</strong>O código expira em 10 minutos.
               </p>
 
               <label
@@ -267,6 +267,7 @@ export function TelaDeRegistrar() {
                 Código de confirmação
 
                 <input
+                  className={`${styles.labelEsqueceuSenha}`}
                   id="codigo-confirmacao"
                   type="text"
                   inputMode="numeric"
@@ -286,14 +287,6 @@ export function TelaDeRegistrar() {
                 />
               </label>
 
-              <button
-                type="button"
-                className={styles.linkEtapa}
-                onClick={() => setEtapa("dados")}
-                disabled={carregando}
-              >
-                Voltar e revisar os dados
-              </button>
             </>
           )}
 

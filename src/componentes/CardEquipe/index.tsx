@@ -121,10 +121,6 @@ export function CardEquipe({
                             Entrar no Ambiente Virtual
                         </button>
 
-                        {/* <div
-                            className={styles['acoes-equipe']}
-                        >
-                        </div> */}
 
                         <button className={`${styles.acoesEquipe}`}
                             type="button"
