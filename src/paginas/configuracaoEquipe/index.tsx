@@ -232,7 +232,14 @@ export function TelaConfiguracoesEquipe() {
                                 equipeSetor={equipe.setor}
                                 equipeIntegrantes={equipe.limiteIntegrantes}
 
-                                onEntrar={() => navigate('/')}
+                                onEntrar={(id) => {
+                                    const equipeSelecionada = equipes.find((item) => item.id === id);
+                                    if (!equipeSelecionada) return;
+
+                                    navigate(`/rotina-aparelhos/${encodeURIComponent(id)}`, {
+                                        state: { equipe: equipeSelecionada },
+                                    });
+                                }}
 
                                 onConfiguracoes={(id) => {
                                     window.alert(`Configurações da equipe: ${id}`);

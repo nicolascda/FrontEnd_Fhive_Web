@@ -9,7 +9,12 @@ type Usuario = {
     fotoPerfil?: string;
 };
 
-export function BarraNavegacaoLogado() {
+type BarraNavegacaoLogadoProps = {
+    equipeAtualNome?: string;
+    equipeAtualId?: string;
+};
+
+export function BarraNavegacaoLogado({ equipeAtualNome, equipeAtualId }: BarraNavegacaoLogadoProps) {
 
     const [modalPerfilAberto, setModalPerfilAberto] = useState(false);
 
@@ -64,10 +69,10 @@ export function BarraNavegacaoLogado() {
                 {/* Menu */}
                 <nav className={styles['menu']}>
 
-                    <Link to="/produtos" className={styles['menu-item']}>
+                    <Link to="/configuracoes-equipe" className={styles['menu-item']}>
                         <span className={styles['equipe-texto']}>
                             <span>Equipe Atual</span>
-                            <span>Nicolas's Team</span>
+                            <span>{equipeAtualNome || "Nicolas's Team"}</span>
                         </span>
 
                         <span className={styles['seta']} />
@@ -80,7 +85,7 @@ export function BarraNavegacaoLogado() {
                     </Link>
 
                     <Link
-                        to="/quem-somos"
+                        to={equipeAtualId ? `/rotina-aparelhos/${encodeURIComponent(equipeAtualId)}` : "/rotina-aparelhos/demo-equipe"}
                         className={`${styles['menu-item']} ${styles['rotina']}`}
                     >
                         Rotina dos Aparelhos
