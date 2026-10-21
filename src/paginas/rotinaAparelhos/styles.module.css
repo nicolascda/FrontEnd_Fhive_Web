@@ -1,7 +1,7 @@
 .pagina {
   width: 100%;
   height: 100vh;
-  height: 100dvh;
+  /* height: 100dvh; */
   min-height: 600px;
   display: flex;
   flex-direction: column;
@@ -58,7 +58,7 @@
   align-items: center;
   justify-content: flex-end;
   gap: 15px;
-  font-size: 11px;
+  font-size: 0.85rem;
   font-weight: 650;
 }
 
@@ -70,9 +70,9 @@
 }
 
 .seloLocal {
-  padding: 5px 8px;
+  padding: 8px;
   border: 1px solid #ffffff52;
-  border-radius: 999px;
+  border-radius: 25px;
   background: #ffffff1a;
 }
 
@@ -80,8 +80,6 @@
   position: relative;
   flex: 1;
   min-height: 0;
-  overflow: hidden;
-  background: #f7f6f3;
 }
 
 .areaCena {
@@ -115,22 +113,21 @@
 }
 
 .botaoFlutuante {
-  width: 44px;
-  height: 44px;
-  display: grid;
-  place-items: center;
-  border: 1.5px solid #181818;
+  width: 2.6rem;
+  height: 2.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--cor-marrom-claro);
   border-radius: 50%;
-  color: #101010;
-  background: #fff;
-  box-shadow: 0 2px 6px #00000014;
+  color: var(--cor-marrom-claro);
+  background-color: #fff;
   cursor: pointer;
-  transition: background 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+  transition: background-color 160ms ease, transform 160ms ease;
 }
 
-.botaoFlutuante:hover {
-  background: #fff1e6;
-  box-shadow: 0 5px 14px #0000001b;
+.botaoFlutuante:hover, .botaoVoltar:hover{
+  background-color: #faece2;
   transform: translateY(-1px);
 }
 
@@ -142,11 +139,7 @@
 .botaoExcluir:focus-visible {
   outline: 3px solid #2f86ff;
   outline-offset: 3px;
-}
-
-.botaoVoltar:hover {
-  background: #fff1e6;
-  transform: translateY(-1px);
+  
 }
 
 .avisoDadosLocais {
@@ -156,17 +149,14 @@
   bottom: 14px;
   display: flex;
   align-items: center;
-  gap: 7px;
-  max-width: min(540px, calc(100% - 30px));
+  gap: 0.8rem;
   padding: 9px 12px;
   border: 1px solid #ddd8d1;
   border-radius: 10px;
   color: #66615b;
   background: #ffffffd9;
   box-shadow: 0 2px 9px #0000000b;
-  font-size: 11px;
-  line-height: 1.4;
-  backdrop-filter: blur(5px);
+  font-size: 0.8rem;
 }
 
 .avisoDadosLocais svg {
@@ -176,26 +166,23 @@
 
 .painelLateral {
   position: absolute;
-  z-index: 8;
+  z-index:  950;
   top: 0;
   right: 0;
   bottom: 0;
   width: min(420px, calc(100vw - 20px));
   padding: 22px 22px 18px;
   overflow-x: hidden;
-  overflow-y: auto;
+  scrollbar-width: none;
   border: 1px solid #9a9690;
   border-right: 0;
   border-radius: 43px 0 0 43px;
-  background: #fff;
+  background: #ffffff;
   box-shadow: -8px 0 28px #00000012;
-  overscroll-behavior: contain;
-  scrollbar-color: #b9b5af transparent;
-  scrollbar-width: thin;
 }
 
 .painelAdicionar {
-  width: min(430px, calc(100vw - 20px));
+  min-width: 20rem;
 }
 
 .topoPainel,
@@ -209,25 +196,25 @@
 .topoPainel h2,
 .topoModal h2 {
   margin: 4px 0 5px;
-  color: #252422;
-  font-size: 21px;
+  color: var(--cor-texto-padrao);
+  font-size: 1.5rem;
   font-weight: 750;
   line-height: 1.2;
-  overflow-wrap: anywhere;
 }
 
 .topoPainel p,
 .topoModal p {
   margin: 0;
-  color: #68645f;
-  font-size: 13px;
+  color: var(--cor-cinza);
+  font-size: 0.95rem;
   line-height: 1.45;
 }
 
 .miniTituloPainel {
   display: block;
   color: #aa5819;
-  font-size: 9px;
+  font-family: var(--fonte-texto);
+  font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: 1px;
 }
@@ -452,6 +439,54 @@
   font-size: 11px;
 }
 
+/* Resumo visual da sequência de ações da rotina no painel lateral. */
+.listaAcoesResumo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.listaAcoesResumo li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.numeroAcaoResumo {
+  width: 21px;
+  height: 21px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  color: #9a4a10;
+  background: #ffead8;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.detalhesAcaoResumo {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 1px;
+}
+
+.detalhesAcaoResumo strong {
+  color: #49423b;
+  font-size: 11px;
+}
+
+.detalhesAcaoResumo small {
+  color: #81776d;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
 .diasSemana {
   display: flex;
   flex-wrap: wrap;
@@ -496,7 +531,7 @@
   padding: 10px 13px;
   border-radius: 9px;
   font-family: inherit;
-  font-size: 12px;
+  font-size: 0.85rem;
   font-weight: 750;
   cursor: pointer;
   transition: background 150ms ease, border-color 150ms ease, transform 150ms ease;
@@ -577,6 +612,17 @@
   transition: border-color 150ms ease, color 150ms ease, background 150ms ease;
 }
 
+.modeloCardIcone {
+  width: 1.8rem;
+  height: auto;
+  transition: width 0.3s ease-in-out, height 0.3s ease-in-out;
+}
+
+.modeloCardRotulo {
+  font-size: 1rem;
+  transition: font-size 0.3s ease-in-out;
+}
+
 .modeloCard svg {
   color: #9f571b;
 }
@@ -585,6 +631,16 @@
   border-color: #d7a276;
   background: #fff6ed;
 }
+
+.modeloCard:hover .modeloCardIcone {
+  width: 2.2rem;
+  height: auto;
+}
+
+.modeloCard:hover .modeloCardRotulo {
+  font-size: 1.25rem;
+}
+
 
 .modeloSelecionado {
   border-color: #bd500d;
@@ -607,7 +663,7 @@
   flex-direction: column;
   gap: 7px;
   color: #3e3934;
-  font-size: 12px;
+  font-size: 0.9rem;
   font-weight: 750;
 }
 
@@ -653,7 +709,7 @@
   border-radius: 9px;
   color: #71695f;
   background: #f7f4ef;
-  font-size: 10px;
+  font-size: 0.85rem;
   line-height: 1.5;
 }
 
@@ -686,8 +742,8 @@
 }
 
 .modalRotina {
-  width: min(510px, 100%);
-  max-height: min(90vh, 760px);
+  width: min(760px, 100%);
+  max-height: min(92vh, 900px);
   padding: 24px;
   overflow-y: auto;
   border: 1px solid #d5cec5;
@@ -704,6 +760,215 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
+}
+
+/* Seleção dos dias em formato de chips, para a pessoa enxergar rapidamente o calendário ativo. */
+.campoDiasSemana {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.campoDiasSemana legend {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 9px;
+  color: #3e3934;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.campoDiasSemana legend svg {
+  color: #a85b16;
+}
+
+.seletorDiasSemana {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.opcaoDiaSemana {
+  position: relative;
+  min-width: 43px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 10px;
+  border: 1px solid #d8d1c8;
+  border-radius: 8px;
+  color: #625b53;
+  background: #faf8f5;
+  font-size: 11px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+}
+
+.opcaoDiaSemana input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.opcaoDiaSemana:focus-within {
+  outline: 2px solid #bd6b2d;
+  outline-offset: 2px;
+}
+
+.opcaoDiaSelecionada {
+  border-color: #bd500d;
+  color: #fff;
+  background: #bd500d;
+}
+
+/* Editor de múltiplas etapas, com ordem visível e horário associado a cada ação. */
+.editorAcoesRotina {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  padding-top: 4px;
+}
+
+.cabecalhoAcoesRotina {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cabecalhoAcoesRotina h3 {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  color: #39342f;
+  font-size: 13px;
+}
+
+.cabecalhoAcoesRotina h3 svg {
+  color: #a85b16;
+}
+
+.cabecalhoAcoesRotina p {
+  margin: 4px 0 0;
+  color: #82796f;
+  font-size: 10px;
+}
+
+.botaoAdicionarAcao {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px 10px;
+  border: 1px solid #d9b392;
+  border-radius: 8px;
+  color: #984b12;
+  background: #fff6ee;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.botaoAdicionarAcao:hover {
+  border-color: #bd500d;
+  background: #ffead8;
+}
+
+.listaEditorAcoes {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.cartaoAcaoRotina {
+  display: grid;
+  grid-template-columns: 35px minmax(0, 1fr) 28px;
+  align-items: start;
+  gap: 9px;
+  padding: 11px;
+  border: 1px solid #e6dfd7;
+  border-radius: 11px;
+  background: #fbfaf8;
+}
+
+.controlesOrdemAcao {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.controlesOrdemAcao > span {
+  width: 25px;
+  height: 25px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 2px;
+  border-radius: 50%;
+  color: #fff;
+  background: #bd500d;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.controlesOrdemAcao button,
+.botaoRemoverAcao {
+  width: 27px;
+  height: 27px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #e1d9d0;
+  border-radius: 7px;
+  color: #655d55;
+  background: #fff;
+  cursor: pointer;
+}
+
+.controlesOrdemAcao button:hover:not(:disabled) {
+  border-color: #cb8a57;
+  color: #a3480a;
+}
+
+.controlesOrdemAcao button:disabled {
+  opacity: 0.32;
+  cursor: not-allowed;
+}
+
+.camposAcaoRotina {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(115px, 0.42fr) minmax(0, 1fr);
+  gap: 10px 12px;
+}
+
+.descricaoAcaoRotina {
+  grid-column: 1 / -1;
+}
+
+.botaoRemoverAcao {
+  border-color: #f0d4cf;
+  color: #a43e31;
+  background: #fff7f5;
+}
+
+.botaoRemoverAcao:hover {
+  border-color: #d8a39a;
+  background: #ffebe7;
+}
+
+.ajudaAcoesRotina {
+  margin: 0;
+  color: #82796f;
+  font-size: 10px;
+  line-height: 1.5;
 }
 
 .botoesModal {
@@ -776,9 +1041,35 @@
   user-select: none;
 }
 
+/* O alerta vermelho permanece bem legível sobre o modelo e ganha um pequeno ponto de atenção. */
 .indicadorErro {
-  border-color: #1686f8;
-  color: #101010;
+  position: relative;
+  border-color: #fff;
+  color: #fff;
+  background: #d72f2f;
+  box-shadow: 0 3px 12px #9f1e1e66;
+  animation: pulsarIndicadorErro 1.8s ease-in-out infinite;
+}
+
+.indicadorErro span {
+  position: relative;
+  z-index: 1;
+}
+
+.indicadorErro i {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 10px;
+  height: 10px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #ffc34d;
+}
+
+@keyframes pulsarIndicadorErro {
+  0%, 100% { box-shadow: 0 3px 12px #9f1e1e55; }
+  50% { box-shadow: 0 3px 16px #d72f2f99; }
 }
 
 .indicadorSelecionado {
@@ -926,5 +1217,24 @@
 
   .camposHorario {
     grid-template-columns: 1fr;
+  }
+
+  .cabecalhoAcoesRotina {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .cartaoAcaoRotina {
+    grid-template-columns: 30px minmax(0, 1fr) 27px;
+    gap: 7px;
+    padding: 8px;
+  }
+
+  .camposAcaoRotina {
+    grid-template-columns: 1fr;
+  }
+
+  .descricaoAcaoRotina {
+    grid-column: auto;
   }
 }
