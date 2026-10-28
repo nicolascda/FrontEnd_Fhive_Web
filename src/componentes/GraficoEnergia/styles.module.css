@@ -1,0 +1,101 @@
+.graficoContainer {
+  min-width: 0;
+  padding: 17px;
+  border: 1px solid #e1d6cb;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 4px 16px #49301808;
+}
+
+.topoGrafico {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.topoGrafico h3 {
+  margin: 0;
+  color: #332d27;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.topoGrafico p {
+  margin: 5px 0 0;
+  color: #81766b;
+  font-size: 11px;
+}
+
+.botaoBaixar {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border: 1px solid #e3d1c1;
+  border-radius: 8px;
+  color: #93470f;
+  background: #fff8f1;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.botaoBaixar:hover {
+  border-color: #bd8a60;
+  background: #fff0e3;
+}
+
+.svgGrafico {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.svgPizza {
+  max-height: 410px;
+}
+
+.legenda {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 19px;
+  margin: 8px 0 0;
+  padding: 0 5px;
+}
+
+.legenda span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #6d645b;
+  font-size: 11px;
+}
+
+.legenda i {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  border-radius: 50%;
+}
+
+@media (max-width: 600px) {
+  .graficoContainer {
+    padding: 11px;
+  }
+
+  .topoGrafico {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .botaoBaixar {
+    align-self: flex-start;
+  }
+}

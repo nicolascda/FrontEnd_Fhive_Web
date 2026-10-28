@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { AlertTriangle, ArrowLeft, Activity, Check, ChevronDown, ChevronUp, Clock3, CalendarDays, ListOrdered, Cog, Factory, Gauge, Info, Plus, RotateCcw, Save, Trash2, X, Zap, Boxes, Truck, Wrench, } 
-from "lucide-react";
+import { AlertTriangle, ArrowLeft, Activity, Check, Clock3, ListOrdered, Cog, Factory, Gauge, Info, Plus, RotateCcw, Trash2, X, Zap, Boxes, Truck, Wrench } from "lucide-react";
 import { BarraNavegacaoLogado } from "../../componentes/BarraNavegacaoLogado";
+import { CardRotina } from "../../componentes/CardRotina";
+import { CHAVE_AMBIENTE, CHAVE_EQUIPE, lerRotinasEquipe, normalizarRotinasDasMaquinas, salvarRotinasEquipe, criarRotinaDemonstracao } from "../../dados/rotinasEquipe";
 import { CenaIndustrial } from "./CenaIndustrial";
 import type { AcaoRotinaLocal, EquipeAmbiente, MaquinaLocal, RotinaLocal, StatusMaquina } from "./tipos";
 import styles from "./styles.module.css";
@@ -17,30 +18,14 @@ type FormularioMaquina = {
   potenciaKw: string;
 };
 
-type FormularioRotina = {
-  nome: string;
-  descricao: string;
-  horarioInicial: string;
-  horarioFinal: string;
-  diasSemana: string[];
-  acoes: AcaoRotinaLocal[];
-};
+function criarId(prefixo: string) {
+  return `${prefixo}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
 
-// As chaves incluem o ID da equipe para que cada ambiente e suas rotinas
-// permaneçam separados no localStorage durante esta etapa sem backend.
-const CHAVE_AMBIENTE = "fhive:ambiente-industrial:";
-const CHAVE_EQUIPE = "fhive:equipe-ambiente:";
-
-// Abreviações usadas nos botões de seleção dos dias da semana.
-const DIAS_SEMANA = [
-  { valor: "Seg", nome: "Segunda-feira" },
-  { valor: "Ter", nome: "Terça-feira" },
-  { valor: "Qua", nome: "Quarta-feira" },
-  { valor: "Qui", nome: "Quinta-feira" },
-  { valor: "Sex", nome: "Sexta-feira" },
-  { valor: "Sáb", nome: "Sábado" },
-  { valor: "Dom", nome: "Domingo" },
-];
+// Mantém compatibilidade com equipamentos de demonstração criados nesta tela.
+function criarRotinaInicial(equipeId: string): RotinaLocal {
+  return criarRotinaDemonstracao(equipeId);
+}
 
 const modelosDisponiveis = [
   { valor: "Robô industrial", rotulo: "Braço robótico", Icone: Cog },
@@ -49,29 +34,6 @@ const modelosDisponiveis = [
   { valor: "Prensa hidráulica", rotulo: "Prensa hidráulica", Icone: Wrench },
   { valor: "Outro", rotulo: "Outro equipamento", Icone: Boxes },
 ];
-
-function criarId(prefixo: string) {
-  return `${prefixo}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-}
-
-// A rotina demonstrativa já vem com dias úteis e etapas em ordem cronológica,
-// para ilustrar como a sequência de ações aparece no painel lateral.
-function criarRotinaInicial(equipeId: string): RotinaLocal {
-  return {
-    id: `${equipeId}-rotina-robo-inicial`,
-    nome: "Fabricação de materiais metálicos",
-    descricao: "Ciclo automatizado de produção e movimentação de peças.",
-    horarioInicial: "08:00",
-    horarioFinal: "17:00",
-    diasSemana: ["Seg", "Ter", "Qua", "Qui", "Sex"],
-    acoes: [
-      { id: `${equipeId}-acao-iniciar`, horario: "08:00", nome: "Iniciar produção", descricao: "Verificar a área de trabalho e iniciar o ciclo." },
-      { id: `${equipeId}-acao-inspecao`, horario: "12:00", nome: "Inspeção intermediária", descricao: "Pausar para conferir a qualidade das peças." },
-      { id: `${equipeId}-acao-retomar`, horario: "13:00", nome: "Retomar produção", descricao: "Retomar o ciclo após a inspeção." },
-      { id: `${equipeId}-acao-finalizar`, horario: "17:00", nome: "Encerrar produção", descricao: "Concluir o ciclo e preparar o equipamento." },
-    ],
-  };
-}
 
 function criarMaquinasDemonstracao(equipeId: string): MaquinaLocal[] {
   const agora = new Date().toISOString();
@@ -92,6 +54,21 @@ function criarMaquinasDemonstracao(equipeId: string): MaquinaLocal[] {
       erro: "Temperatura do motor acima do limite recomendado. Verifique a ventilação e a lubrificação antes de retomar o ciclo.",
       criadaEm: agora,
     },
+    {
+      id: `${equipeId}-maquina-cnc-demo`,
+      equipeId,
+      nome: "Centro de usinagem 02",
+      tipo: "CNC",
+      funcao: "Usinagem e acabamento de componentes metálicos",
+      status: "online",
+      potenciaKw: 7.5,
+      energiaHojeKwh: 24.8,
+      horasHoje: 6.1,
+      horasTotais: 231,
+      rotina: null,
+      erro: null,
+      criadaEm: agora,
+    },
   ];
 }
 
@@ -107,7 +84,7 @@ function lerMaquinasEquipe(equipeId: string): MaquinaLocal[] {
       if (Array.isArray(valor)) {
         // Normaliza dados salvos por versões anteriores do frontend: rotinas antigas
         // podem ainda não ter o array de ações e precisam continuar abrindo normalmente.
-        return valor
+        const maquinasNormalizadas = valor
           .filter((item): item is MaquinaLocal =>
             Boolean(item && typeof item === "object" && item.equipeId === equipeId),
           )
@@ -123,13 +100,14 @@ function lerMaquinasEquipe(equipeId: string): MaquinaLocal[] {
               },
             };
           });
+        return normalizarRotinasDasMaquinas(equipeId, maquinasNormalizadas);
       }
     }
   } catch (erro) {
     console.warn("Não foi possível ler o ambiente local desta equipe.", erro);
   }
 
-  return criarMaquinasDemonstracao(equipeId);
+  return normalizarRotinasDasMaquinas(equipeId, criarMaquinasDemonstracao(equipeId));
 }
 
 function lerEquipeSalva(equipeId: string): EquipeAmbiente | null {
@@ -189,21 +167,19 @@ export function TelaRotinaAparelhos() {
   const [maquinaSelecionadaId, setMaquinaSelecionadaId] = useState<string | null>(null);
   const [painelLateral, setPainelLateral] = useState<PainelLateral>(null);
   const [modalRotinaAberto, setModalRotinaAberto] = useState(false);
+  // A tela 3D usa as rotinas cadastradas na tela específica de gestão de rotinas.
+  const [estadoRotinas, setEstadoRotinas] = useState(() => ({
+    equipeId,
+    rotinas: lerRotinasEquipe(equipeId),
+  }));
+  const rotinasEquipe = estadoRotinas.equipeId === equipeId
+    ? estadoRotinas.rotinas
+    : lerRotinasEquipe(equipeId);
   const [formularioMaquina, setFormularioMaquina] = useState<FormularioMaquina>({
     nome: "",
     tipo: "Robô industrial",
     funcao: "",
     potenciaKw: "5",
-  });
-  // Estado editável da rotina: dias escolhidos e ações agendadas são mantidos
-  // juntos até o usuário confirmar o salvamento da configuração local.
-  const [formularioRotina, setFormularioRotina] = useState<FormularioRotina>({
-    nome: "",
-    descricao: "",
-    horarioInicial: "08:00",
-    horarioFinal: "17:00",
-    diasSemana: ["Seg", "Ter", "Qua", "Qui", "Sex"],
-    acoes: [{ id: criarId("acao"), horario: "08:00", nome: "", descricao: "" }],
   });
   const [mensagemFormulario, setMensagemFormulario] = useState("");
 
@@ -223,6 +199,16 @@ export function TelaRotinaAparelhos() {
     setModalRotinaAberto(false);
     setMensagemFormulario("");
   }, [equipeId]);
+
+  useEffect(() => {
+    setEstadoRotinas({ equipeId, rotinas: lerRotinasEquipe(equipeId) });
+  }, [equipeId]);
+
+  // Mantém a lista central de rotinas e sincroniza as referências aplicadas aos equipamentos.
+  useEffect(() => {
+    if (estadoRotinas.equipeId !== equipeId) return;
+    salvarRotinasEquipe(equipeId, estadoRotinas.rotinas);
+  }, [estadoRotinas, equipeId]);
 
   useEffect(() => {
     if (estadoAmbiente.equipeId !== equipeId) return;
@@ -311,114 +297,19 @@ export function TelaRotinaAparelhos() {
     setMensagemFormulario("");
   };
 
-  // Carrega a rotina atual no editor. Para rotinas antigas, fornece valores padrão
-  // quando ainda não existiam dias selecionados ou ações individuais.
+  // Abre o seletor das rotinas criadas na página "Rotina dos aparelhos".
   const abrirFormularioRotina = () => {
-    if (!maquinaSelecionada) return;
-    const rotinaAtual = maquinaSelecionada.rotina;
-    setFormularioRotina({
-      nome: rotinaAtual?.nome || "",
-      descricao: rotinaAtual?.descricao || maquinaSelecionada.funcao,
-      horarioInicial: rotinaAtual?.horarioInicial || "08:00",
-      horarioFinal: rotinaAtual?.horarioFinal || "17:00",
-      diasSemana: rotinaAtual?.diasSemana?.length ? [...rotinaAtual.diasSemana] : ["Seg", "Ter", "Qua", "Qui", "Sex"],
-      acoes: rotinaAtual?.acoes?.length
-        ? rotinaAtual.acoes.map((acao) => ({ ...acao }))
-        : [{ id: criarId("acao"), horario: rotinaAtual?.horarioInicial || "08:00", nome: "", descricao: "" }],
-    });
     setMensagemFormulario("");
     setModalRotinaAberto(true);
   };
 
-  // Atualiza uma ação identificada pelo próprio ID, sem modificar as outras etapas.
-  const atualizarAcaoRotina = (acaoId: string, campos: Partial<AcaoRotinaLocal>) => {
-    setFormularioRotina((atual) => ({
-      ...atual,
-      acoes: atual.acoes.map((acao) => acao.id === acaoId ? { ...acao, ...campos } : acao),
-    }));
-  };
-
-  // Adiciona uma etapa nova ao final da sequência, inicialmente no horário da etapa anterior.
-  const adicionarAcaoRotina = () => {
-    setFormularioRotina((atual) => {
-      const ultimaAcao = atual.acoes[atual.acoes.length - 1];
-      return {
-        ...atual,
-        acoes: [...atual.acoes, {
-          id: criarId("acao"),
-          horario: ultimaAcao?.horario || atual.horarioInicial,
-          nome: "",
-          descricao: "",
-        }],
-      };
-    });
-    setMensagemFormulario("");
-  };
-
-  // Reordena uma etapa por vez. A validação no salvamento exige horários crescentes.
-  const moverAcaoRotina = (indice: number, direcao: -1 | 1) => {
-    setFormularioRotina((atual) => {
-      const destino = indice + direcao;
-      if (destino < 0 || destino >= atual.acoes.length) return atual;
-      const acoes = [...atual.acoes];
-      [acoes[indice], acoes[destino]] = [acoes[destino], acoes[indice]];
-      return { ...atual, acoes };
-    });
-  };
-
-  // Confere os campos e a ordem temporal antes de gravar a rotina na máquina selecionada.
-  const salvarRotina = () => {
+  // Aplica uma rotina existente à máquina ativa; a criação e edição ficam na página de rotinas.
+  const aplicarRotinaSelecionada = (rotina: RotinaLocal | null) => {
     if (!maquinaSelecionada) return;
-    if (!formularioRotina.nome.trim()) {
-      setMensagemFormulario("Informe o nome da rotina.");
-      return;
-    }
-    if (formularioRotina.diasSemana.length === 0) {
-      setMensagemFormulario("Selecione pelo menos um dia da semana.");
-      return;
-    }
-    if (formularioRotina.acoes.length === 0) {
-      setMensagemFormulario("Adicione pelo menos uma ação à rotina.");
-      return;
-    }
-    if (formularioRotina.horarioFinal < formularioRotina.horarioInicial) {
-      setMensagemFormulario("O horário final da rotina deve ser posterior ao inicial.");
-      return;
-    }
-
-    for (let indice = 0; indice < formularioRotina.acoes.length; indice += 1) {
-      const acao = formularioRotina.acoes[indice];
-      if (!acao.nome.trim()) {
-        setMensagemFormulario(`Informe o nome da ação ${indice + 1}.`);
-        return;
-      }
-      if (acao.horario < formularioRotina.horarioInicial || acao.horario > formularioRotina.horarioFinal) {
-        setMensagemFormulario(`A ação ${indice + 1} precisa estar entre o horário inicial e o final da rotina.`);
-        return;
-      }
-      if (indice > 0 && acao.horario < formularioRotina.acoes[indice - 1].horario) {
-        setMensagemFormulario("As ações precisam estar em ordem cronológica. Use as setas para reorganizar a sequência.");
-        return;
-      }
-    }
-
-    const rotina: RotinaLocal = {
-      id: maquinaSelecionada.rotina?.id || criarId(`${equipeId}-rotina`),
-      nome: formularioRotina.nome.trim(),
-      descricao: formularioRotina.descricao.trim(),
-      horarioInicial: formularioRotina.horarioInicial,
-      horarioFinal: formularioRotina.horarioFinal,
-      // Grava os dias na ordem do calendário, não na ordem em que os botões foram clicados.
-      diasSemana: DIAS_SEMANA.filter((dia) => formularioRotina.diasSemana.includes(dia.valor)).map((dia) => dia.valor),
-      acoes: formularioRotina.acoes.map((acao) => ({
-        ...acao,
-        nome: acao.nome.trim(),
-        descricao: acao.descricao.trim(),
-      })),
-    };
-
     atualizarMaquinas((atuais) => atuais.map((maquina) =>
-      maquina.id === maquinaSelecionada.id ? { ...maquina, rotina } : maquina,
+      maquina.id === maquinaSelecionada.id
+        ? { ...maquina, rotina: rotina ? { ...rotina, acoes: rotina.acoes.map((acao) => ({ ...acao })), diasSemana: [...rotina.diasSemana] } : null }
+        : maquina,
     ));
     setModalRotinaAberto(false);
     setMensagemFormulario("");
@@ -565,7 +456,7 @@ export function TelaRotinaAparelhos() {
                 <div className={styles.tituloBloco}>
                   <div><RotateCcw size={18} /><h3>Rotina aplicada</h3></div>
                   <button type="button" onClick={abrirFormularioRotina}>
-                    {maquinaSelecionada.rotina ? "Editar" : "Adicionar"}
+                    {maquinaSelecionada.rotina ? "Trocar" : "Selecionar"}
                   </button>
                 </div>
                 {maquinaSelecionada.rotina ? (
@@ -686,8 +577,8 @@ export function TelaRotinaAparelhos() {
         </section>
       </main>
 
-      {/* Editor da rotina local: seleciona os dias de execução e define as etapas
-          com horário individual. O salvamento continua limitado ao navegador/equipe. */}
+      {/* O modal de seleção reutiliza o mesmo CardRotina da página de gerenciamento.
+          Aqui a pessoa apenas escolhe uma rotina já criada e a aplica à máquina. */}
       {modalRotinaAberto && maquinaSelecionada && (
         <div className={styles.fundoModal} role="presentation" onMouseDown={(evento) => {
           if (evento.target === evento.currentTarget) setModalRotinaAberto(false);
@@ -695,115 +586,45 @@ export function TelaRotinaAparelhos() {
           <section className={styles.modalRotina} role="dialog" aria-modal="true" aria-labelledby="titulo-modal-rotina">
             <div className={styles.topoModal}>
               <div>
-                <span className={styles.miniTituloPainel}>CONFIGURAÇÃO LOCAL</span>
+                <span className={styles.miniTituloPainel}>ROTINAS DA EQUIPE</span>
                 <h2 id="titulo-modal-rotina">Aplicar rotina</h2>
-                <p>{maquinaSelecionada.nome}</p>
+                <p>Escolha uma rotina existente para {maquinaSelecionada.nome}.</p>
               </div>
-              <button type="button" className={styles.botaoFechar} aria-label="Fechar formulário" onClick={() => setModalRotinaAberto(false)}><X size={22} /></button>
+              <button type="button" className={styles.botaoFechar} aria-label="Fechar seletor de rotinas" onClick={() => setModalRotinaAberto(false)}><X size={22} /></button>
             </div>
 
-            <form className={styles.formularioRotina} onSubmit={(evento) => { evento.preventDefault(); salvarRotina(); }}>
-              <label className={styles.campoFormulario}>
-                Nome da rotina
-                <input value={formularioRotina.nome} onChange={(evento) => setFormularioRotina((atual) => ({ ...atual, nome: evento.target.value }))} placeholder="Ex.: Produção de peças" required maxLength={80} />
-              </label>
-              <label className={styles.campoFormulario}>
-                Descrição / função
-                <textarea value={formularioRotina.descricao} onChange={(evento) => setFormularioRotina((atual) => ({ ...atual, descricao: evento.target.value }))} placeholder="Descreva o objetivo desta rotina" rows={2} maxLength={240} />
-              </label>
-
-              {/* Dias da semana: mais de um dia pode ser ativado e cada opção tem
-                  estado controlado pelo formulário para ser gravada junto à rotina. */}
-              <fieldset className={styles.campoDiasSemana}>
-                <legend><CalendarDays size={16} /> Dias de execução</legend>
-                <div className={styles.seletorDiasSemana}>
-                  {DIAS_SEMANA.map((dia) => {
-                    const ativo = formularioRotina.diasSemana.includes(dia.valor);
-                    return (
-                      <label key={dia.valor} className={`${styles.opcaoDiaSemana} ${ativo ? styles.opcaoDiaSelecionada : ""}`} title={dia.nome}>
-                        <input
-                          type="checkbox"
-                          checked={ativo}
-                          onChange={() => setFormularioRotina((atual) => ({
-                            ...atual,
-                            diasSemana: ativo
-                              ? atual.diasSemana.filter((valor) => valor !== dia.valor)
-                              : [...atual.diasSemana, dia.valor],
-                          }))}
-                        />
-                        <span>{dia.valor}</span>
-                      </label>
-                    );
-                  })}
-                </div>
-              </fieldset>
-
-              <div className={styles.camposHorario}>
-                <label className={styles.campoFormulario}>
-                  Horário inicial da rotina
-                  <input type="time" value={formularioRotina.horarioInicial} onChange={(evento) => setFormularioRotina((atual) => ({ ...atual, horarioInicial: evento.target.value }))} required />
-                </label>
-                <label className={styles.campoFormulario}>
-                  Horário final da rotina
-                  <input type="time" value={formularioRotina.horarioFinal} onChange={(evento) => setFormularioRotina((atual) => ({ ...atual, horarioFinal: evento.target.value }))} required />
-                </label>
+            {rotinasEquipe.length > 0 ? (
+              <div className={styles.listaSeletorRotinas}>
+                {rotinasEquipe.map((rotina) => (
+                  <CardRotina
+                    key={rotina.id}
+                    rotina={rotina}
+                    selecionada={maquinaSelecionada.rotina?.id === rotina.id}
+                    modoSelecao
+                    aoSelecionar={aplicarRotinaSelecionada}
+                  />
+                ))}
               </div>
-
-              {/* Cada cartão é uma ação sequencial com horário próprio. As setas
-                  permitem reordenar as ações; o salvamento confere a ordem horária. */}
-              <section className={styles.editorAcoesRotina} aria-labelledby="titulo-acoes-rotina">
-                <div className={styles.cabecalhoAcoesRotina}>
-                  <div>
-                    <h3 id="titulo-acoes-rotina"><ListOrdered size={18} /> Ações da rotina</h3>
-                    <p>Defina o horário e a sequência de cada etapa.</p>
-                  </div>
-                  <button type="button" className={styles.botaoAdicionarAcao} onClick={adicionarAcaoRotina}>
-                    <Plus size={16} /> Adicionar ação
-                  </button>
-                </div>
-
-                <div className={styles.listaEditorAcoes}>
-                  {formularioRotina.acoes.map((acao, indice) => (
-                    <article className={styles.cartaoAcaoRotina} key={acao.id}>
-                      <div className={styles.controlesOrdemAcao} aria-label={`Ordem da ação ${indice + 1}`}>
-                        <span>{indice + 1}</span>
-                        <button type="button" title="Mover ação para cima" aria-label={`Mover ação ${indice + 1} para cima`} disabled={indice === 0} onClick={() => moverAcaoRotina(indice, -1)}>
-                          <ChevronUp size={17} />
-                        </button>
-                        <button type="button" title="Mover ação para baixo" aria-label={`Mover ação ${indice + 1} para baixo`} disabled={indice === formularioRotina.acoes.length - 1} onClick={() => moverAcaoRotina(indice, 1)}>
-                          <ChevronDown size={17} />
-                        </button>
-                      </div>
-                      <div className={styles.camposAcaoRotina}>
-                        <label className={styles.campoFormulario}>
-                          Horário
-                          <input type="time" value={acao.horario} onChange={(evento) => atualizarAcaoRotina(acao.id, { horario: evento.target.value })} required />
-                        </label>
-                        <label className={styles.campoFormulario}>
-                          Ação / etapa
-                          <input value={acao.nome} onChange={(evento) => atualizarAcaoRotina(acao.id, { nome: evento.target.value })} placeholder="Ex.: Iniciar esteira" required maxLength={80} />
-                        </label>
-                        <label className={`${styles.campoFormulario} ${styles.descricaoAcaoRotina}`}>
-                          Instrução (opcional)
-                          <input value={acao.descricao} onChange={(evento) => atualizarAcaoRotina(acao.id, { descricao: evento.target.value })} placeholder="Ex.: Verificar proteção e iniciar ciclo" maxLength={160} />
-                        </label>
-                      </div>
-                      <button type="button" className={styles.botaoRemoverAcao} title="Remover ação" aria-label={`Remover ação ${indice + 1}`} onClick={() => setFormularioRotina((atual) => ({ ...atual, acoes: atual.acoes.filter((item) => item.id !== acao.id) }))}>
-                        <Trash2 size={17} />
-                      </button>
-                    </article>
-                  ))}
-                </div>
-                <p className={styles.ajudaAcoesRotina}>As ações devem estar em ordem cronológica e dentro do intervalo da rotina. Elas são salvas como uma sequência local; ainda não acionam a máquina física.</p>
-              </section>
-
-              {mensagemFormulario && <p className={styles.erroFormulario} role="alert">{mensagemFormulario}</p>}
-              <p className={styles.avisoFormulario}><Info size={16} /> A rotina, os dias e as ações ficarão vinculados apenas a esta máquina e equipe neste navegador.</p>
-              <div className={styles.botoesModal}>
-                <button type="button" className={styles.botaoSecundario} onClick={() => setModalRotinaAberto(false)}>Cancelar</button>
-                <button type="submit" className={styles.botaoPrimario}><Save size={17} /> Salvar rotina</button>
+            ) : (
+              <div className={styles.semRotinasSeletor}>
+                <Info size={19} />
+                <p>Esta equipe ainda não tem rotinas. Crie uma rotina na tela de gerenciamento para aplicá-la aqui.</p>
               </div>
-            </form>
+            )}
+
+            {maquinaSelecionada.rotina && (
+              <button type="button" className={styles.botaoExcluir} onClick={() => aplicarRotinaSelecionada(null)}>
+                <Trash2 size={16} /> Remover rotina desta máquina
+              </button>
+            )}
+
+            <div className={styles.botoesModal}>
+              <button type="button" className={styles.botaoSecundario} onClick={() => navigate(`/rotinas/${encodeURIComponent(equipeId)}`)}>
+                <ListOrdered size={16} /> Gerenciar rotinas
+              </button>
+              <button type="button" className={styles.botaoPrimario} onClick={() => setModalRotinaAberto(false)}>Concluir</button>
+            </div>
+            <p className={styles.notaPainel}>Criar e editar rotinas agora é feito na tela própria de rotinas. Os dados permanecem locais nesta etapa.</p>
           </section>
         </div>
       )}

@@ -56,13 +56,13 @@ export function BarraNavegacao() {
                     <span className={styles['seta']} />
                 </Link>
 
-                <Link to="/solucao" className={styles['menu-item']}>
+                <Link to="/solucaoFhive" className={styles['menu-item']}>
                     <span>Solução</span>
 
                     <span className={styles['seta']} />
                 </Link>
 
-                <Link to="/quem-somos" className={styles['menu-item']}>
+                <Link to="/quemSomos" className={styles['menu-item']}>
                     Quem Somos?
                 </Link>
 

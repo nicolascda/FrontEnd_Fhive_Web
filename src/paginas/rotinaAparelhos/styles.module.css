@@ -1238,3 +1238,40 @@
     grid-column: auto;
   }
 }
+
+/* Lista de rotinas reutilizáveis exibida ao aplicar uma rotina em uma máquina. */
+.listaSeletorRotinas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px;
+  margin-top: 18px;
+}
+
+.semRotinasSeletor {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px dashed #d9c9b9;
+  border-radius: 10px;
+  color: #75695d;
+  background: #fff9f1;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.semRotinasSeletor svg {
+  flex: 0 0 auto;
+  color: #a85b16;
+}
+
+.semRotinasSeletor p {
+  margin: 0;
+}
+
+@media (max-width: 560px) {
+  .listaSeletorRotinas {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

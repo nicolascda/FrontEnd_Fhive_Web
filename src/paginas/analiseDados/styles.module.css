@@ -1,0 +1,788 @@
+.pagina {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: #2f2924;
+  background: #fff2d4;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.cabecalhoPagina {
+  min-height: 39px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 7px 20px;
+  color: #fff;
+  background: #bd500d;
+}
+
+.cabecalhoPagina h1 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 750;
+}
+
+.cabecalhoPagina span {
+  display: block;
+  margin-top: 4px;
+  color: #ffe0c2;
+  font-size: 10px;
+}
+
+.linkAmbiente {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 11px;
+  border: 1px solid #ffffff62;
+  border-radius: 8px;
+  color: #fff;
+  background: #ffffff13;
+  font-size: 11px;
+  font-weight: 750;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.linkAmbiente:hover {
+  background: #ffffff25;
+}
+
+.conteudo {
+  width: min(1400px, 100%);
+  box-sizing: border-box;
+  flex: 1;
+  margin: 0 auto;
+  padding: 23px clamp(15px, 3vw, 30px) 18px;
+}
+
+.painelSelecao {
+  margin-bottom: 21px;
+  padding: 16px;
+  border: 1px solid #ead7c1;
+  border-radius: 13px;
+  background: #fff8e9;
+}
+
+.topoSelecao {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.topoSelecao h2 {
+  margin: 0;
+  color: #322c26;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.topoSelecao p {
+  margin: 6px 0 0;
+  color: #7a6e62;
+  font-size: 12px;
+}
+
+.seletorModo {
+  display: flex;
+  flex: 0 0 auto;
+  padding: 3px;
+  border: 1px solid #e2d2c0;
+  border-radius: 9px;
+  background: #f7ead9;
+}
+
+.seletorModo button {
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 7px;
+  color: #78695b;
+  background: transparent;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.seletorModo button.opcaoAtiva {
+  color: #fff;
+  background: #bd500d;
+  box-shadow: 0 2px 6px #8e3c0c24;
+}
+
+.seletorIndividual {
+  position: relative;
+  max-width: 390px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 16px;
+  color: #63584e;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.seletorIndividual select {
+  width: 100%;
+  min-height: 38px;
+  padding: 9px 34px 9px 11px;
+  appearance: none;
+  border: 1px solid #ddcdbc;
+  border-radius: 8px;
+  color: #3c342c;
+  background: #fff;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.seletorIndividual > svg {
+  position: absolute;
+  right: 11px;
+  bottom: 11px;
+  pointer-events: none;
+}
+
+.controlesMultiplos {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 15px;
+  color: #75695d;
+  font-size: 11px;
+}
+
+.controlesMultiplos > div {
+  display: flex;
+  gap: 7px;
+}
+
+.controlesMultiplos button {
+  padding: 6px 9px;
+  border: 1px solid #e0c7af;
+  border-radius: 7px;
+  color: #93470f;
+  background: #fff;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.controlesMultiplos button:hover {
+  background: #fff0e3;
+}
+
+.listaSelecao {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 11px;
+}
+
+.itemSelecao {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border: 1px solid #e8ddcf;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.itemSelecionado {
+  border-color: #d69e70;
+  background: #fff7ee;
+}
+
+.itemSelecao input {
+  width: 15px;
+  height: 15px;
+  accent-color: #bd500d;
+}
+
+.numeroMaquina {
+  width: 29px;
+  height: 29px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 8px;
+  color: #98480c;
+  background: #ffead7;
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.nomeMaquina {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.nomeMaquina strong {
+  overflow: hidden;
+  color: #3a322a;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nomeMaquina small {
+  overflow: hidden;
+  color: #897d70;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.valorConsumo {
+  flex: 0 0 auto;
+  color: #796c5e;
+  font-size: 10px;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+}
+
+.gradeAnalise {
+  display: grid;
+  grid-template-columns: minmax(280px, .78fr) minmax(0, 1.65fr);
+  align-items: start;
+  gap: 22px;
+}
+
+.colunaMaquinas,
+.colunaGrafico {
+  min-width: 0;
+}
+
+.tituloColuna {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 13px;
+}
+
+.tituloColuna h2 {
+  margin: 0;
+  color: #302922;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.tituloColuna > span {
+  min-width: 25px;
+  height: 25px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #99480c;
+  background: #f7dfc2;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.cardsMaquinas {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.cardMaquina {
+  min-width: 0;
+  display: flex;
+  overflow: hidden;
+  border: 1px solid #dccfc1;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 2px 7px #37271908;
+}
+
+.cardMaquina > img {
+  width: 38%;
+  min-width: 90px;
+  max-width: 150px;
+  object-fit: cover;
+  background: #e2dfd8;
+  filter: saturate(.75);
+}
+
+.dadosMaquina {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 11px 12px;
+}
+
+.rotuloModelo {
+  color: #817467;
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.dadosMaquina > strong {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  color: #332c25;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.dadosMaquina > small {
+  color: #877a6e;
+  font-size: 10px;
+}
+
+.rotuloEnergia {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+  color: #8a4a16;
+  font-size: 10px;
+}
+
+.idMaquina {
+  margin-top: 5px;
+  color: #908477;
+  font-size: 9px;
+  overflow-wrap: anywhere;
+}
+
+.statusTexto {
+  margin-top: 3px;
+  padding: 4px 7px;
+  border-radius: 20px;
+  color: #226943;
+  background: #e5f5eb;
+  font-size: 9px;
+  font-weight: 750;
+}
+
+.texto-erro { color: #a52c22; background: #fff0ed; }
+.texto-offline { color: #71685f; background: #f2efeb; }
+.texto-atencao { color: #8b5e0b; background: #fff3d8; }
+
+.listaOrdenada {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.listaOrdenada li {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px;
+  border: 1px solid #e0cfbc;
+  border-radius: 9px;
+  background: #fffaf1;
+}
+
+.amostraCor {
+  width: 9px;
+  height: 30px;
+  flex: 0 0 auto;
+  border-radius: 10px;
+}
+
+.resumoConsumo {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 14px;
+  padding: 14px;
+  border: 1px solid #e7c7a9;
+  border-radius: 11px;
+  color: #7b6b5c;
+  background: #fff6e9;
+  font-size: 11px;
+}
+
+.resumoConsumo > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.resumoConsumo > span svg {
+  color: #a85b16;
+}
+
+.resumoConsumo strong {
+  color: #332a22;
+  font-size: 23px;
+}
+
+.resumoConsumo small {
+  color: #897a6a;
+  font-size: 11px;
+}
+
+.colunaGrafico {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.controlesGrafico {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 11px;
+  padding: 11px;
+  border: 1px solid #e5d3c0;
+  border-radius: 12px;
+  background: #fff9ed;
+}
+
+.abasPeriodo {
+  display: flex;
+  gap: 5px;
+}
+
+.abasPeriodo button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px 10px;
+  border: 1px solid #e0cfbe;
+  border-radius: 7px;
+  color: #8c7764;
+  background: #fff;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.abasPeriodo button.abaAtiva {
+  border-color: #a84a0b;
+  color: #fff;
+  background: #bd500d;
+}
+
+.seletorGrafico {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.seletorGrafico > span {
+  margin-right: 3px;
+  color: #776a5d;
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.seletorGrafico button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 7px 9px;
+  border: 1px solid transparent;
+  border-radius: 18px;
+  color: #7d6b5c;
+  background: #f6eddf;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.seletorGrafico button.tipoAtivo {
+  color: #fff;
+  background: #8e8b86;
+}
+
+.botaoDownloadDados {
+  min-height: 41px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  align-self: center;
+  padding: 10px 23px;
+  border: 1px solid #7a7a78;
+  border-radius: 25px;
+  color: #fff;
+  background: #858581;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.botaoDownloadDados:hover:not(:disabled) {
+  background: #676762;
+}
+
+.botaoDownloadDados:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.semMaquinas {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px;
+  border: 1px dashed #d6c3ad;
+  border-radius: 13px;
+  color: #7a6c5c;
+  background: #fff9ee;
+  font-size: 12px;
+}
+
+.avisoDados {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 22px;
+  color: #7d7165;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.avisoDados svg {
+  flex: 0 0 auto;
+  color: #a85b16;
+}
+
+.rodape {
+  min-height: 35px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 8px 20px;
+  border-top: 1px solid #e6d9c8;
+  color: #83796e;
+  background: #fff9ed;
+  font-size: 10px;
+}
+
+.rodape strong { margin-right: auto; color: #685c4f; }
+.rodape a { color: #8e4a15; text-decoration: none; font-weight: 700; }
+.rodape a:hover { text-decoration: underline; }
+
+@media (max-width: 1000px) {
+  .gradeAnalise {
+    grid-template-columns: minmax(250px, .8fr) minmax(0, 1.2fr);
+    gap: 14px;
+  }
+
+  .cardMaquina > img { width: 32%; min-width: 78px; }
+  .dadosMaquina { padding: 9px; }
+}
+
+@media (max-width: 760px) {
+  .topoSelecao {
+    flex-direction: column;
+  }
+
+  .gradeAnalise {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .colunaGrafico { order: -1; }
+}
+
+@media (max-width: 520px) {
+  .cabecalhoPagina {
+    align-items: flex-start;
+    padding-inline: 12px;
+  }
+
+  .conteudo { padding: 14px 10px; }
+
+  .painelSelecao { padding: 11px; }
+
+  .seletorModo { width: 100%; }
+  .seletorModo button { flex: 1; justify-content: center; }
+
+  .controlesMultiplos {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .controlesGrafico {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .abasPeriodo,
+  .seletorGrafico {
+    flex-wrap: wrap;
+  }
+
+  .seletorGrafico { justify-content: flex-start; }
+  .seletorGrafico > span { width: 100%; }
+  .cardMaquina > img { width: 30%; min-width: 70px; }
+  .rodape { flex-wrap: wrap; gap: 8px 14px; }
+}
+
+/* Resumo do tipo de comparação: compacto para caber acima da máquina selecionada. */
+.topoPainelSelecao {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.topoPainelSelecao h2 {
+  margin: 0;
+  color: #322c26;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.topoPainelSelecao p {
+  margin: 6px 0 0;
+  color: #7a6e62;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.resumoSelecao {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 14px;
+  padding: 10px 11px;
+  border: 1px solid #ead9c7;
+  border-radius: 8px;
+  background: #fffdf8;
+}
+
+.rotuloResumo {
+  color: #8a7968;
+  font-size: 10px;
+}
+
+.resumoSelecao > strong {
+  color: #332c25;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.textoResumoSelecao {
+  overflow-wrap: anywhere;
+  color: #7d7165;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.botaoAbrirSelecao,
+.botaoAlterarComparacao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 35px;
+  padding: 8px 11px;
+  border: 1px solid #bd500d;
+  border-radius: 7px;
+  color: #fff;
+  background: #bd500d;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease;
+}
+
+.botaoAbrirSelecao {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.botaoAbrirSelecao:hover,
+.botaoAlterarComparacao:hover {
+  border-color: #9f4209;
+  background: #a9470a;
+}
+
+.cabecalhoComparacao {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 14px 16px;
+  border: 1px solid #ead7c1;
+  border-radius: 10px;
+  background: #fff9ed;
+}
+
+.miniTituloComparacao {
+  display: block;
+  color: #a85b16;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .45px;
+  line-height: 1.4;
+}
+
+.cabecalhoComparacao h2 {
+  margin: 4px 0 0;
+  color: #322c26;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.cabecalhoComparacao p {
+  margin: 4px 0 0;
+  color: #827466;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+.botaoAlterarComparacao {
+  flex: 0 0 auto;
+  color: #a34a0d;
+  background: #fff;
+  border-color: #e2c9b1;
+}
+
+.botaoAlterarComparacao:hover {
+  color: #8d3c08;
+  border-color: #bd8a60;
+  background: #fff0e3;
+}
+
+@media (max-width: 760px) {
+  .gradeAnalise { grid-template-columns: minmax(0, 1fr); }
+  .colunaGrafico { order: initial; }
+  .cabecalhoComparacao { align-items: flex-start; }
+}
+
+@media (max-width: 520px) {
+  .cabecalhoComparacao { padding: 11px; }
+  .cabecalhoComparacao h2 { font-size: 14px; }
+  .botaoAlterarComparacao { padding: 7px 8px; font-size: 10px; }
+}

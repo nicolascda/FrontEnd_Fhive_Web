@@ -78,14 +78,14 @@ export function BarraNavegacaoLogado({ equipeAtualNome, equipeAtualId }: BarraNa
                         <span className={styles['seta']} />
                     </Link>
 
-                    <Link to="/solucao" className={styles['menu-item']}>
+                    <Link to={equipeAtualId ? `/solucao/${encodeURIComponent(equipeAtualId)}` : "/solucao/demo-equipe"} className={styles['menu-item']}>
                         <span>Analisar dados</span>
 
                         <span className={styles['seta']} />
                     </Link>
 
                     <Link
-                        to={equipeAtualId ? `/rotina-aparelhos/${encodeURIComponent(equipeAtualId)}` : "/rotina-aparelhos/demo-equipe"}
+                        to={equipeAtualId ? `/rotinas/${encodeURIComponent(equipeAtualId)}` : "/rotinas/demo-equipe"}
                         className={`${styles['menu-item']} ${styles['rotina']}`}
                     >
                         Rotina dos Aparelhos
