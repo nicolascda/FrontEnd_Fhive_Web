@@ -1,5 +1,5 @@
 import styles from "./styles.module.css";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MoreVertical, Settings } from 'lucide-react'
 
@@ -125,6 +125,7 @@ export function CardEquipe({
                         <button className={`${styles.acoesEquipe}`}
                             type="button"
                             aria-label="Mais opções"
+                            aria-expanded={menuAberto}
                             onClick={handleMenu}
                         >
                             <MoreVertical

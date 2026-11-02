@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Activity, CalendarDays, Clock3, Download, Info, PieChart, SlidersHorizontal, TrendingUp, Zap } from "lucide-react";
 import { BarraNavegacaoLogado } from "../../componentes/BarraNavegacaoLogado";
+import { FooterBar } from "../../componentes/FooterBar";
 import { GraficoEnergia, type ItemPizza, type SerieGrafico } from "../../componentes/GraficoEnergia";
 import { ModalSelecaoMaquinas, type ModoComparacao } from "../../componentes/ModalAnalise";
 import { CHAVE_AMBIENTE, CHAVE_EQUIPE } from "../../dados/rotinasEquipe";
@@ -219,34 +220,13 @@ export function TelaAnaliseDados() {
       <BarraNavegacaoLogado equipeAtualNome={equipeNome} equipeAtualId={equipeId} />
 
       <header className={styles.cabecalhoPagina}>
-        <div><h1>Análise dos Dados</h1><span>{equipeNome} · dados locais de demonstração</span></div>
+        <div className={`${styles.tituloCabecalho}`}><h1>Análise dos Dados</h1>  <span> - {equipeNome}</span></div>
         <Link to={`/rotina-aparelhos/${encodeURIComponent(equipeId)}`} className={styles.linkAmbiente}>Abrir ambiente 3D</Link>
       </header>
 
       <main className={styles.conteudo}>
         <div className={styles.gradeAnalise}>
           <aside className={styles.colunaMaquinas}>
-            {/* O resumo da comparação fica na coluna esquerda, imediatamente acima dos cards. */}
-            <section className={styles.painelSelecao} aria-labelledby="titulo-selecao-maquinas">
-              <div className={styles.topoPainelSelecao}>
-                <div>
-                  <h2 id="titulo-selecao-maquinas">Selecione máquinas para analisar</h2>
-                  <p>Escolha uma máquina ou compare várias da equipe atual.</p>
-                </div>
-              </div>
-              <div className={styles.resumoSelecao}>
-                <span className={styles.rotuloResumo}>Tipo de comparação</span>
-                <strong>{modo === "individual" ? "Uma máquina" : "Comparar várias"}</strong>
-                <span className={styles.textoResumoSelecao}>
-                  {selecionadas.length === 1
-                    ? selecionadas[0].nome
-                    : `${selecionadas.length} máquinas selecionadas`}
-                </span>
-              </div>
-              <button type="button" className={styles.botaoAbrirSelecao} onClick={abrirModalSelecao}>
-                <SlidersHorizontal size={15} /> Selecionar máquinas
-              </button>
-            </section>
 
             <div className={styles.tituloColuna}>
               <h2>{selecionadas.length > 1 ? "Máquinas comparadas" : "Máquina selecionada"}</h2>
@@ -337,11 +317,9 @@ export function TelaAnaliseDados() {
             </button>
           </section>
         </div>
-
-        <div className={styles.avisoDados}>
-          <Info size={16} /> Os gráficos usam dados locais de demonstração; os números não representam telemetria real do backend.
-        </div>
       </main>
+
+      <FooterBar/>
 
       {/* O componente encapsula toda a interface e o estado temporário do seletor de máquinas. */}
       <ModalSelecaoMaquinas
@@ -354,7 +332,7 @@ export function TelaAnaliseDados() {
         onConfirmar={confirmarSelecao}
       />
 
-      <footer className={styles.rodape}><strong>Fhive</strong><span>©2026 Fhive · Análise local</span><Link to={`/rotinas/${encodeURIComponent(equipeId)}`}>Gerenciar rotinas</Link></footer>
+      
     </div>
   );
 }

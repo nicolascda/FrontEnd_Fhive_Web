@@ -1,0 +1,222 @@
+.fundoModal {
+  position: fixed;
+  inset: 0;
+  z-index: 2300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(32, 22, 14, 0.46);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.modal {
+  width: min(92vw, 550px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 4px solid #e96800;
+  border-radius: 15px;
+  background: #fffaf3;
+  color: #3d2a1d;
+  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.24);
+  font-family: var(--fonte-texto, 'Montserrat', sans-serif);
+  animation: aparecer 160ms ease-out;
+}
+
+.cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.05rem 1.25rem;
+  background: var(--cor-marrom-claro, #c35800);
+  color: #fff;
+}
+
+.tituloComIcone {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+
+.iconeTitulo {
+  width: 2.6rem;
+  height: 2.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  border: 1px solid rgba(255,255,255,.42);
+  border-radius: 50%;
+  background: rgba(255,255,255,.12);
+}
+
+.tituloComIcone h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.tituloComIcone p {
+  margin: .22rem 0 0;
+  font-size: .8rem;
+  opacity: .94;
+}
+
+.fechar {
+  width: 2.2rem;
+  height: 2.2rem;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255,255,255,.55);
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+
+.fechar:hover { background: rgba(255,255,255,.14); }
+.fechar:disabled { opacity: .55; cursor: not-allowed; }
+
+.conteudo {
+  display: flex;
+  flex-direction: column;
+  gap: .85rem;
+  padding: 1.2rem 1.25rem 1.15rem;
+}
+
+.bloco {
+  display: flex;
+  flex-direction: column;
+  gap: .65rem;
+  padding: 1.05rem;
+  border: 1px solid #ead8c5;
+  border-radius: 9px;
+  background: #fff;
+}
+
+.bloco h3 {
+  margin: 0;
+  color: #a94c0b;
+  font-size: 1rem;
+}
+
+.bloco > p {
+  margin: 0;
+  color: #75675e;
+  font-size: .82rem;
+  line-height: 1.5;
+}
+
+.rotulo {
+  margin-top: .2rem;
+  color: #5e4534;
+  font-size: .83rem;
+  font-weight: 600;
+}
+
+.campoCodigo {
+  min-height: 3rem;
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: 0 .8rem;
+  border: 1px solid #d8c4b3;
+  border-radius: 5px;
+  background: #fffdf9;
+  color: #a85b16;
+}
+
+.campoCodigo:focus-within {
+  border-color: #c95600;
+  outline: 2px solid rgba(201, 86, 0, .16);
+}
+
+.campoCodigo input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #653512;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+}
+
+.campoCodigo input::placeholder {
+  color: #b6a69a;
+  font-size: .86rem;
+  font-weight: 400;
+  letter-spacing: .02em;
+}
+
+.contador {
+  flex: 0 0 auto;
+  color: #8c7a6c;
+  font-size: .72rem;
+}
+
+.bloco > .ajuda {
+  font-size: .74rem;
+  color: #8a7a6e;
+}
+
+.erro, .sucesso {
+  margin: 0;
+  padding: .65rem .8rem;
+  border-radius: 5px;
+  font-size: .82rem;
+  line-height: 1.45;
+}
+
+.erro { border: 1px solid #e6b8b3; background: #fff0ef; color: #9f3028; }
+.sucesso { border: 1px solid #b6d8bd; background: #f0fff3; color: #236b34; }
+
+.acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: .65rem;
+  padding-top: .1rem;
+}
+
+.botaoCancelar, .botaoPrincipal {
+  min-height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+  padding: .55rem 1rem;
+  border-radius: 5px;
+  font: inherit;
+  font-size: .84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color .2s ease, border-color .2s ease;
+}
+
+.botaoCancelar { border: 1px solid #d6c7ba; background: #fff; color: #6c5b4d; }
+.botaoCancelar:hover:not(:disabled) { background: #f7f1ea; }
+.botaoPrincipal { border: 1px solid #b94f00; background: #c85c0a; color: #fff; }
+.botaoPrincipal:hover:not(:disabled) { background: #aa4b00; }
+.botaoCancelar:disabled, .botaoPrincipal:disabled { opacity: .6; cursor: not-allowed; }
+
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(5px) scale(.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 560px) {
+  .fundoModal { padding: .55rem; }
+  .modal { width: 100%; border-width: 3px; }
+  .cabecalho { padding: .85rem; }
+  .conteudo { padding: .8rem; }
+  .acoes { flex-direction: column-reverse; }
+  .acoes button { width: 100%; }
+}
