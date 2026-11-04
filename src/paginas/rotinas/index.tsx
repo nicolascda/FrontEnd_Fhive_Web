@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Link, useParams } from "react-router-dom";
 import { CalendarDays, Clock3, Info, ListOrdered, Plus, Save, X, ChevronUp, ChevronDown, Trash2, Factory, Layers3 } from "lucide-react";
-import { BarraNavegacaoLogado } from "../../componentes/BarraNavegacaoLogado";
 import { CardRotina } from "../../componentes/CardRotina";
-import { CHAVE_AMBIENTE, CHAVE_EQUIPE, lerRotinasEquipe, salvarRotinasEquipe } from "../../dados/rotinasEquipe";
-import type { AcaoRotinaLocal, MaquinaLocal, RotinaLocal } from "../rotinaAparelhos/tipos";
+import { CHAVE_AMBIENTE, CHAVE_EQUIPE, CHAVE_ROTINAS, lerRotinasEquipe, salvarRotinasEquipe } from "../../dados/rotinasEquipe";
+import { atualizarRotinaNaEquipe, criarRotinaNaEquipe, excluirRotinaDaEquipe, listarRotinasDaEquipe } from "../../dados/rotinasEquipe.ts";
+import type { AcaoRotinaLocal, MaquinaLocal, RotinaLocal } from "../ambienteAparelhos/tipos.ts";
 import styles from "./styles.module.css";
 
 const DIAS = [
@@ -68,32 +68,89 @@ export function TelaRotinas() {
   // O estado carrega a equipe junto das rotinas para não gravar dados da equipe anterior durante a navegação.
   const [estadoRotinas, setEstadoRotinas] = useState(() => ({
     equipeId,
-    rotinas: lerRotinasEquipe(equipeId),
+    rotinas: [] as RotinaLocal[],
+    carregando: true,
   }));
   const [modalAberto, setModalAberto] = useState(false);
   const [formulario, setFormulario] = useState<FormularioRotina>(formularioVazio);
   const [mensagemErro, setMensagemErro] = useState("");
+  const [erroCarregamento, setErroCarregamento] = useState("");
+  const [salvando, setSalvando] = useState(false);
 
-  const rotinas = estadoRotinas.equipeId === equipeId ? estadoRotinas.rotinas : lerRotinasEquipe(equipeId);
+  const rotinas = estadoRotinas.equipeId === equipeId ? estadoRotinas.rotinas : [];
+  const carregando = estadoRotinas.equipeId !== equipeId || estadoRotinas.carregando;
 
   useEffect(() => {
-    setEstadoRotinas({ equipeId, rotinas: lerRotinasEquipe(equipeId) });
+    let ativo = true;
+    setEstadoRotinas({ equipeId, rotinas: [], carregando: true });
     setModalAberto(false);
     setMensagemErro("");
+    setErroCarregamento("");
+
+    // A equipe de demonstração não existe no banco e continua usando somente dados locais.
+    if (equipeId === "demo-equipe") {
+      const locais = lerRotinasEquipe(equipeId);
+      setEstadoRotinas({ equipeId, rotinas: locais, carregando: false });
+      return () => { ativo = false; };
+    }
+
+    listarRotinasDaEquipe(equipeId)
+      .then(async (dadosBanco) => {
+        let dados = dadosBanco;
+
+        // Migra rotinas personalizadas de versões anteriores que existiam somente neste navegador.
+        // A rotina demonstrativa padrão não é importada para o banco.
+        if (dados.length === 0) {
+          const cacheAntigo = window.localStorage.getItem(`${CHAVE_ROTINAS}${equipeId}`);
+          const locais = cacheAntigo
+            ? JSON.parse(cacheAntigo) as RotinaLocal[]
+            : lerRotinasEquipe(equipeId);
+          const candidatas = Array.isArray(locais)
+            ? locais.filter((rotina) => rotina?.id && rotina.id !== `${equipeId}-rotina-robo-inicial` && rotina.nome && rotina.acoes?.length)
+            : [];
+
+          for (const rotinaLocal of candidatas) {
+            try {
+              const rotinaMigrada = await criarRotinaNaEquipe(equipeId, {
+                nome: rotinaLocal.nome,
+                descricao: rotinaLocal.descricao || "",
+                horarioInicial: rotinaLocal.horarioInicial || "08:00",
+                horarioFinal: rotinaLocal.horarioFinal || "17:00",
+                diasSemana: rotinaLocal.diasSemana?.length ? rotinaLocal.diasSemana : ["Seg", "Ter", "Qua", "Qui", "Sex"],
+                acoes: rotinaLocal.acoes.map((acao, indice) => ({
+                  id: acao.id || `${rotinaLocal.id}-acao-${indice + 1}`,
+                  horario: acao.horario || rotinaLocal.horarioInicial || "08:00",
+                  nome: acao.nome,
+                  descricao: acao.descricao || "",
+                })),
+              });
+              dados = [...dados, rotinaMigrada];
+            } catch (erroMigracao) {
+              const mensagem = erroMigracao instanceof Error ? erroMigracao.message : "";
+              if (mensagem.includes("Já existe") || mensagem.includes("não permite")) continue;
+              throw erroMigracao;
+            }
+          }
+        }
+
+        if (!ativo) return;
+        setEstadoRotinas({ equipeId, rotinas: dados, carregando: false });
+        salvarRotinasEquipe(equipeId, dados);
+      })
+      .catch((erro: unknown) => {
+        if (!ativo) return;
+        setErroCarregamento(erro instanceof Error ? erro.message : "Não foi possível carregar as rotinas.");
+        setEstadoRotinas({ equipeId, rotinas: [], carregando: false });
+      });
+
+    return () => { ativo = false; };
   }, [equipeId]);
 
-  // Persiste a lista central e atualiza as rotinas já aplicadas às máquinas desta equipe.
+  // Mantém uma cópia local para o ambiente 3D e para sincronizar referências aplicadas às máquinas.
   useEffect(() => {
-    if (estadoRotinas.equipeId !== equipeId) return;
+    if (estadoRotinas.equipeId !== equipeId || estadoRotinas.carregando || erroCarregamento) return;
     salvarRotinasEquipe(equipeId, estadoRotinas.rotinas);
-  }, [estadoRotinas, equipeId]);
-
-  const atualizarRotinas = (atualizar: (atuais: RotinaLocal[]) => RotinaLocal[]) => {
-    setEstadoRotinas((atual) => ({
-      equipeId,
-      rotinas: atualizar(atual.equipeId === equipeId ? atual.rotinas : lerRotinasEquipe(equipeId)),
-    }));
-  };
+  }, [estadoRotinas, equipeId, erroCarregamento]);
 
   const abrirCriacao = () => {
     setFormulario(formularioVazio());
@@ -142,7 +199,7 @@ export function TelaRotinas() {
     });
   };
 
-  const salvarFormulario = (evento: FormEvent<HTMLFormElement>) => {
+  const salvarFormulario = async (evento: FormEvent<HTMLFormElement>) => {
     evento.preventDefault();
 
     if (!formulario.nome.trim()) {
@@ -178,8 +235,7 @@ export function TelaRotinas() {
       }
     }
 
-    const rotinaSalva: RotinaLocal = {
-      id: formulario.id || `${equipeId}-${criarId()}`,
+    const dadosRotina = {
       nome: formulario.nome.trim(),
       descricao: formulario.descricao.trim(),
       horarioInicial: formulario.horarioInicial,
@@ -192,25 +248,55 @@ export function TelaRotinas() {
       })),
     };
 
-    atualizarRotinas((atuais) => {
-      const existe = atuais.some((rotina) => rotina.id === rotinaSalva.id);
-      return existe
-        ? atuais.map((rotina) => rotina.id === rotinaSalva.id ? rotinaSalva : rotina)
-        : [...atuais, rotinaSalva];
-    });
-    setModalAberto(false);
+    setSalvando(true);
     setMensagemErro("");
+    try {
+      let rotinaSalva: RotinaLocal;
+      if (equipeId === "demo-equipe") {
+        rotinaSalva = { ...dadosRotina, id: formulario.id || `${equipeId}-${criarId()}` };
+      } else if (formulario.id) {
+        rotinaSalva = await atualizarRotinaNaEquipe(equipeId, formulario.id, dadosRotina);
+      } else {
+        rotinaSalva = await criarRotinaNaEquipe(equipeId, dadosRotina);
+      }
+
+      setEstadoRotinas((atual) => {
+        const atuais = atual.equipeId === equipeId ? atual.rotinas : [];
+        const existe = atuais.some((rotina) => rotina.id === rotinaSalva.id);
+        const novasRotinas = existe
+          ? atuais.map((rotina) => rotina.id === rotinaSalva.id ? rotinaSalva : rotina)
+          : [...atuais, rotinaSalva];
+        return { equipeId, rotinas: novasRotinas, carregando: false };
+      });
+      setModalAberto(false);
+      setMensagemErro("");
+      setErroCarregamento("");
+    } catch (erro) {
+      setMensagemErro(erro instanceof Error ? erro.message : "Não foi possível salvar a rotina.");
+    } finally {
+      setSalvando(false);
+    }
   };
 
-  const excluirRotina = (rotina: RotinaLocal) => {
+  const excluirRotina = async (rotina: RotinaLocal) => {
     const confirmacao = window.confirm(`Excluir a rotina "${rotina.nome}"? Ela também será removida das máquinas em que estiver aplicada.`);
     if (!confirmacao) return;
-    atualizarRotinas((atuais) => atuais.filter((item) => item.id !== rotina.id));
+
+    try {
+      if (equipeId !== "demo-equipe") await excluirRotinaDaEquipe(equipeId, rotina.id);
+      setEstadoRotinas((atual) => {
+        const atuais = atual.equipeId === equipeId ? atual.rotinas : [];
+        const novasRotinas = atuais.filter((item) => item.id !== rotina.id);
+        return { equipeId, rotinas: novasRotinas, carregando: false };
+      });
+      setErroCarregamento("");
+    } catch (erro) {
+      setErroCarregamento(erro instanceof Error ? erro.message : "Não foi possível excluir a rotina.");
+    }
   };
 
   return (
     <div className={styles.pagina}>
-      <BarraNavegacaoLogado equipeAtualNome={equipeNome} equipeAtualId={equipeId} />
 
       <header className={styles.cabecalho}>
         <div>
@@ -236,7 +322,12 @@ export function TelaRotinas() {
           <span className={styles.contadorRotinas}>{rotinas.length} {rotinas.length === 1 ? "rotina" : "rotinas"}</span>
         </div>
 
-        {rotinas.length > 0 ? (
+        {erroCarregamento && rotinas.length > 0 && <p className={styles.erroFormulario} role="alert">{erroCarregamento}</p>}
+        {carregando ? (
+          <section className={styles.estadoVazio}><h2>Carregando rotinas...</h2><p>Buscando as rotinas salvas para esta equipe.</p></section>
+        ) : erroCarregamento && rotinas.length === 0 ? (
+          <section className={styles.estadoVazio}><h2>Não foi possível carregar as rotinas</h2><p>{erroCarregamento}</p></section>
+        ) : rotinas.length > 0 ? (
           <section className={styles.gradeRotinas} aria-label="Rotinas criadas para esta equipe">
             {rotinas.map((rotina) => (
               <CardRotina
@@ -259,7 +350,7 @@ export function TelaRotinas() {
 
         <div className={styles.avisoLocal}>
           <Info size={17} />
-          <span>As rotinas são demonstrativas e ficam salvas neste navegador, separadas pelo ID da equipe. Elas ainda não executam comandos em máquinas físicas.</span>
+          <span>{equipeId === "demo-equipe" ? "A equipe de demonstração utiliza dados locais." : "As rotinas são salvas no banco de dados e vinculadas a esta equipe. O cadastro ainda não envia comandos para máquinas físicas."}</span>
         </div>
       </main>
 
@@ -344,10 +435,10 @@ export function TelaRotinas() {
               </section>
 
               {mensagemErro && <p className={styles.erroFormulario} role="alert">{mensagemErro}</p>}
-              <div className={styles.avisoFormulario}><Info size={16} /> Esta versão salva a rotina somente no navegador e não aciona máquinas físicas.</div>
+              <div className={styles.avisoFormulario}><Info size={16} /> {equipeId === "demo-equipe" ? "A equipe de demonstração salva os dados somente neste navegador." : "A rotina será salva no banco de dados desta equipe. O cadastro ainda não envia comandos para máquinas físicas."}</div>
               <div className={styles.botoesModal}>
                 <button type="button" className={styles.botaoCancelar} onClick={() => setModalAberto(false)}>Cancelar</button>
-                <button type="submit" className={styles.botaoSalvar}><Save size={17} /> Salvar rotina</button>
+                <button type="submit" className={styles.botaoSalvar} disabled={salvando}><Save size={17} /> {salvando ? "Salvando..." : "Salvar rotina"}</button>
               </div>
             </form>
           </section>

@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import styles from "./styles.module.css";
-import { BarraNavegacao } from "../../componentes/BarraNavegacao";
 import { FooterBar } from "../../componentes/FooterBar";
 import Solucoes from "../../imagens/Solucoes_sem_borda.png";
 import FundoMarromV2 from "../../imagens/FundomarromV2.png";
@@ -17,7 +16,6 @@ import PessoasSentadas from "../../imagens/PessoasSentadas.jpg";
 export function TelaSolucao() {
   return (
     <div className={styles.page}>
-      <BarraNavegacao />
 
       <main>
         {/* Apresentação principal da página. */}

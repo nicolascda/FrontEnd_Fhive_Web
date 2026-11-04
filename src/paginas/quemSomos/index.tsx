@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Globe, Lightbulb, Minus, Plus, Sparkles, Target, Users } from "lucide-react";
 import styles from "./styles.module.css";
-import { BarraNavegacao } from "../../componentes/BarraNavegacao";
 import { FooterBar } from "../../componentes/FooterBar";
 import FundoQuemSomos from "../../imagens/FundoQuemSomos.png";
 import PessoasSentadas from "../../imagens/PessoasSentadas.jpg";
@@ -55,7 +54,6 @@ export function TelaQuemSomos() {
 
   return (
     <div className={styles.page}>
-      <BarraNavegacao />
 
       <main>
         {/* Faixa institucional com o fundo oficial e uma ilustração de globo e lâmpada. */}

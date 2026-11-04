@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { AlertTriangle, ArrowLeft, Activity, Check, Clock3, ListOrdered, Cog, Factory, Gauge, Info, Plus, RotateCcw, Trash2, X, Zap, Boxes, Truck, Wrench } from "lucide-react";
-import { BarraNavegacaoLogado } from "../../componentes/BarraNavegacaoLogado";
 import { CardRotina } from "../../componentes/CardRotina";
-import { CHAVE_AMBIENTE, CHAVE_EQUIPE, lerRotinasEquipe, normalizarRotinasDasMaquinas, salvarRotinasEquipe, criarRotinaDemonstracao } from "../../dados/rotinasEquipe";
+import { CHAVE_AMBIENTE, CHAVE_EQUIPE, lerRotinasEquipe, normalizarRotinasDasMaquinas, salvarRotinasEquipe, criarRotinaDemonstracao, listarRotinasDaEquipe } from "../../dados/rotinasEquipe";
 import { CenaIndustrial } from "./CenaIndustrial";
 import type { AcaoRotinaLocal, EquipeAmbiente, MaquinaLocal, RotinaLocal, StatusMaquina } from "./tipos";
 import styles from "./styles.module.css";
@@ -201,7 +200,24 @@ export function TelaRotinaAparelhos() {
   }, [equipeId]);
 
   useEffect(() => {
-    setEstadoRotinas({ equipeId, rotinas: lerRotinasEquipe(equipeId) });
+    let ativo = true;
+    const rotinasLocais = lerRotinasEquipe(equipeId);
+    setEstadoRotinas({ equipeId, rotinas: rotinasLocais });
+
+    // Equipes reais carregam as rotinas do banco, mesmo quando o ambiente 3D é aberto diretamente.
+    if (equipeId !== "demo-equipe") {
+      listarRotinasDaEquipe(equipeId)
+        .then((rotinasBanco) => {
+          if (!ativo) return;
+          setEstadoRotinas({ equipeId, rotinas: rotinasBanco });
+          salvarRotinasEquipe(equipeId, rotinasBanco);
+        })
+        .catch((erro: unknown) => {
+          console.warn("Não foi possível atualizar as rotinas pelo backend. Mantendo a cópia local.", erro);
+        });
+    }
+
+    return () => { ativo = false; };
   }, [equipeId]);
 
   // Mantém a lista central de rotinas e sincroniza as referências aplicadas aos equipamentos.
@@ -341,12 +357,11 @@ export function TelaRotinaAparelhos() {
   };
 
   const voltar = () => {
-    navigate(equipeId === "demo-equipe" ? "/" : "/configuracoes-equipe");
+    navigate("/configuracoes-equipe");
   };
 
   return (
     <div className={styles.pagina}>
-      <BarraNavegacaoLogado equipeAtualNome={equipe.nome} equipeAtualId={equipeId} />
 
       <header className={styles.cabecalhoEquipe}>
         <div className={styles.tituloEquipe}>
@@ -624,7 +639,7 @@ export function TelaRotinaAparelhos() {
               </button>
               <button type="button" className={styles.botaoPrimario} onClick={() => setModalRotinaAberto(false)}>Concluir</button>
             </div>
-            <p className={styles.notaPainel}>Criar e editar rotinas agora é feito na tela própria de rotinas. Os dados permanecem locais nesta etapa.</p>
+            <p className={styles.notaPainel}>As definições das rotinas são carregadas do banco de dados. Neste protótipo, a associação da rotina à máquina e a execução de comandos físicos ainda são demonstrativas e permanecem locais.</p>
           </section>
         </div>
       )}

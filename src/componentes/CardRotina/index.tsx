@@ -1,5 +1,5 @@
 import { CalendarDays, Clock3, ListOrdered, Pencil, Trash2, CheckCircle2, Layers3 } from "lucide-react";
-import type { RotinaLocal } from "../../paginas/rotinaAparelhos/tipos";
+import type { RotinaLocal } from "../../paginas/ambienteAparelhos/tipos";
 import styles from "./styles.module.css";
 
 type CardRotinaProps = {

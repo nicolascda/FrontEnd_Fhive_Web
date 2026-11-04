@@ -37,6 +37,7 @@ export function ModalCriarEquipe({ onFechar, onCriada }: ModalCriarEquipeProps) 
 
     const [informacaoAberta, setInformacaoAberta] = useState(false);
     const [botaoSelecionado, setBotaoSelecionado] = useState<number>(1);
+    const [planoSelecionado, setPlanoSelecionado] = useState<number>(1);
     const [integrantes, setIntegrantes] = useState(25);
     const [nome, setNome] = useState("");
     const [descricao, setDescricao] = useState("");
@@ -176,7 +177,7 @@ export function ModalCriarEquipe({ onFechar, onCriada }: ModalCriarEquipeProps) 
                                     aria-label="Selecionar imagem de fundo"
                                 >
                                     {imagemFundo ? (
-                                        <img src={imagemFundo} alt="Prévia do fundo da equipe" className={styles.ImagemEquipeFoto} />
+                                        <img src={imagemFundo} alt="Prévia do fundo da equipe" className={`${styles.ImagemEquipeFoto} ${styles.ImagemEquipeFotoFundo}`} />
                                     ) : (
                                         <Camera className={styles.ImagemEquipeFoto} />
                                     )}
@@ -201,7 +202,7 @@ export function ModalCriarEquipe({ onFechar, onCriada }: ModalCriarEquipeProps) 
                                     aria-label="Selecionar logo da equipe"
                                 >
                                     {logo ? (
-                                        <img src={logo} alt="Prévia do logo da equipe" className={styles.ImagemEquipeFoto} />
+                                        <img src={logo} alt="Prévia do logo da equipe" className={`${styles.ImagemEquipeFoto} ${styles.ImagemEquipeFotoLogo}`} />
                                     ) : (
                                         <Camera className={styles.ImagemEquipeFoto} />
                                     )}
@@ -236,7 +237,13 @@ export function ModalCriarEquipe({ onFechar, onCriada }: ModalCriarEquipeProps) 
 
                             <div className={styles.PlanoComprar}>
                                 {[1, 2, 3].map((plano) => (
-                                    <div className={styles.PlanoComprarIndividual} key={plano}>
+                                    <button
+                                        type="button"
+                                        className={`${styles.PlanoComprarIndividual} ${planoSelecionado === plano ? styles.PlanoComprarSelecionado : ""}`}
+                                        key={plano}
+                                        onClick={() => setPlanoSelecionado(plano)}
+                                        aria-pressed={planoSelecionado === plano}
+                                    >
                                         <h3>Básico</h3>
                                         <p>Feito para iniciar projetos escolares ou esboços de modelos</p>
                                         <h3>Características</h3>
@@ -247,7 +254,7 @@ export function ModalCriarEquipe({ onFechar, onCriada }: ModalCriarEquipeProps) 
                                             <li>Espaço máximo de 30 integrantes</li>
                                         </ul>
                                         <h3>Preço: R$89,90</h3>
-                                    </div>
+                                    </button>
                                 ))}
                             </div>
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Activity, BarChart3, Check, CheckCircle2, X } from "lucide-react";
-import type { MaquinaLocal, StatusMaquina } from "../../paginas/rotinaAparelhos/tipos";
+import type { MaquinaLocal, StatusMaquina } from "../../paginas/ambienteAparelhos/tipos";
 import styles from "./styles.module.css";
 
 /** Define os dois modos disponíveis para a análise de máquinas. */

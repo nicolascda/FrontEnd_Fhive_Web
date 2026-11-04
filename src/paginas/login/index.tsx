@@ -81,7 +81,7 @@ export function TelaDeLogin() {
           dados.mensagem ||
           "Acesso realizado com sucesso. Seja bem-vindo ao Fhive!",
         textoBotao: "Continuar",
-        aoFechar: () => navigate("/configuracoes-equipe"),
+        aoFechar: () => navigate("/"),
       });
     } catch (error) {
       console.error("Erro ao realizar login:", error);

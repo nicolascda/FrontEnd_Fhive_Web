@@ -1,5 +1,4 @@
 import styles from "./styles.module.css";
-import { BarraNavegacao } from "../../componentes/BarraNavegacao/index.tsx";
 import { Link } from 'react-router-dom';
 import { ProdutosPrimeiraSecao } from "../../secoes/Produtos/PrimeiraSecao";
 import { SegundaSecaoProdutos } from "../../secoes/Produtos/SegundaSecao/index.tsx";
@@ -11,8 +10,6 @@ export function TelaProdutos() {
     return (
 
         <>
-            <BarraNavegacao />
-
             <section className={styles.FundoMarrom}>
 
                 <div className={styles.FundoMarromTexto}>

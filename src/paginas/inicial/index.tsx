@@ -1,5 +1,4 @@
 import styles from "./styles.module.css";
-import { BarraNavegacao } from "../../componentes/BarraNavegacao/index.tsx";
 import { CardInicial } from "../../componentes/CardInicial/index.tsx";
 import { Link } from 'react-router-dom';
 import { PrimeiraSecaoInicial } from "../../secoes/Inicial/PrimeiraSecao/index.tsx";
@@ -14,8 +13,6 @@ export function TelaInicial() {
 
   return (
     <div className={styles.telaInicial}>
-
-      <BarraNavegacao />
 
       <section className={styles.FundoMarrom}>
 

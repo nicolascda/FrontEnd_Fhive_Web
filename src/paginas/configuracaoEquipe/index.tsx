@@ -3,7 +3,6 @@ import { Settings } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Empresa3D from '../../imagens/Empresa3D.png';
 import QualquerImagem from '../../imagens/AutomatizacaoImagem.jpg';
-import { BarraNavegacaoLogado } from '../../componentes/BarraNavegacaoLogado';
 import { FooterBar } from '../../componentes/FooterBar';
 import styles from './styles.module.css';
 import { CardEquipe } from '../../componentes/CardEquipe';
@@ -123,7 +122,6 @@ export function TelaConfiguracoesEquipe() {
 
     return (
         <div className={styles['pagina-equipe']}>
-            <BarraNavegacaoLogado />
 
             <section className={styles['barra-titulo']}>
                 <h1>Configurações de Equipe</h1>
@@ -215,7 +213,7 @@ export function TelaConfiguracoesEquipe() {
                                         const equipeSelecionada = equipes.find((item) => item.id === id);
                                         if (!equipeSelecionada) return;
 
-                                        navigate(`/rotina-aparelhos/${encodeURIComponent(id)}`, {
+                                        navigate(`/ambiente-aparelhos/${encodeURIComponent(id)}`, {
                                             state: { equipe: equipeSelecionada },
                                         });
                                     }}

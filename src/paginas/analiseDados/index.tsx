@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Activity, CalendarDays, Clock3, Download, Info, PieChart, SlidersHorizontal, TrendingUp, Zap } from "lucide-react";
-import { BarraNavegacaoLogado } from "../../componentes/BarraNavegacaoLogado";
 import { FooterBar } from "../../componentes/FooterBar";
 import { GraficoEnergia, type ItemPizza, type SerieGrafico } from "../../componentes/GraficoEnergia";
 import { ModalSelecaoMaquinas, type ModoComparacao } from "../../componentes/ModalAnalise";
 import { CHAVE_AMBIENTE, CHAVE_EQUIPE } from "../../dados/rotinasEquipe";
-import type { MaquinaLocal, StatusMaquina } from "../rotinaAparelhos/tipos";
+import type { MaquinaLocal, StatusMaquina } from "../ambienteAparelhos/tipos";
 import imagemAutomacao from "../../imagens/AutomatizacaoImagem.jpg";
 import imagemIndustria from "../../imagens/Empresa3D.png";
 import styles from "./styles.module.css";
@@ -217,7 +216,6 @@ export function TelaAnaliseDados() {
 
   return (
     <div className={styles.pagina}>
-      <BarraNavegacaoLogado equipeAtualNome={equipeNome} equipeAtualId={equipeId} />
 
       <header className={styles.cabecalhoPagina}>
         <div className={`${styles.tituloCabecalho}`}><h1>Análise dos Dados</h1>  <span> - {equipeNome}</span></div>

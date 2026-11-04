@@ -1,4 +1,4 @@
-import type { AcaoRotinaLocal, MaquinaLocal, RotinaLocal } from "../paginas/rotinaAparelhos/tipos";
+import type { AcaoRotinaLocal, MaquinaLocal, RotinaLocal } from "../paginas/ambienteAparelhos/tipos.ts";
 
 /** Chaves compartilhadas pelas telas de rotinas, comparação e ambiente 3D. */
 export const CHAVE_AMBIENTE = "fhive:ambiente-industrial:";
@@ -116,3 +116,136 @@ export function normalizarRotinasDasMaquinas(equipeId: string, maquinas: Maquina
     return maquinas;
   }
 }
+
+// -----------------------------------------------------------------------------
+// Comunicação com o backend
+// As funções HTTP ficam neste mesmo módulo para centralizar os dados e as
+// operações de rotinas, sem criar um serviço separado para rotinas de equipe.
+// -----------------------------------------------------------------------------
+
+export type DadosRotina = Omit<RotinaLocal, "id">;
+
+type RespostaRotinaApi = {
+  id: string;
+  nome: string;
+  descricao?: string | null;
+  horarioInicial: string;
+  horarioFinal?: string | null;
+  diasSemana?: unknown;
+  acoes?: unknown;
+};
+
+type RespostaApiRotinas<T> = {
+  mensagem?: string;
+  erro?: string;
+  rotina?: T;
+  rotinas?: T[];
+};
+
+function obterTokenRotinas(): string {
+  const token = window.localStorage.getItem("token");
+  if (!token) {
+    throw new Error("Sua sessão não foi encontrada. Entre novamente no Fhive.");
+  }
+  return token;
+}
+
+async function requisitarRotinas<T>(
+  url: string,
+  metodo: "GET" | "POST" | "PUT" | "DELETE" = "GET",
+  dados?: unknown,
+): Promise<T> {
+  const resposta = await fetch(url, {
+    method: metodo,
+    headers: {
+      Authorization: `Bearer ${obterTokenRotinas()}`,
+      ...(dados !== undefined ? { "Content-Type": "application/json" } : {}),
+    },
+    ...(dados !== undefined ? { body: JSON.stringify(dados) } : {}),
+  });
+
+  const corpo = await resposta.json().catch(() => ({})) as RespostaApiRotinas<unknown>;
+  if (!resposta.ok) {
+    throw new Error(
+      corpo.mensagem || corpo.erro || `Não foi possível concluir a operação (${resposta.status}).`,
+    );
+  }
+
+  return corpo as T;
+}
+
+function normalizarRotinaRecebida(rotina: RespostaRotinaApi): RotinaLocal {
+  const acoes = Array.isArray(rotina.acoes) ? rotina.acoes as AcaoRotinaLocal[] : [];
+  const diasSemana = Array.isArray(rotina.diasSemana)
+    ? rotina.diasSemana.filter((dia): dia is string => typeof dia === "string")
+    : [];
+
+  return {
+    id: rotina.id,
+    nome: rotina.nome,
+    descricao: rotina.descricao || "",
+    horarioInicial: rotina.horarioInicial,
+    horarioFinal: rotina.horarioFinal || "17:00",
+    diasSemana,
+    acoes: acoes.map((acao) => ({
+      id: acao.id,
+      horario: acao.horario,
+      nome: acao.nome,
+      descricao: acao.descricao || "",
+    })),
+  };
+}
+
+function obterRotaRotinasEquipe(equipeId: string): string {
+  if (!equipeId) throw new Error("Não foi possível identificar a equipe das rotinas.");
+  return `/equipes/${encodeURIComponent(equipeId)}/rotinas`;
+}
+
+/** Busca no banco todas as rotinas cadastradas para a equipe. */
+export async function listarRotinasDaEquipe(equipeId: string): Promise<RotinaLocal[]> {
+  const resposta = await requisitarRotinas<{ rotinas?: RespostaRotinaApi[] }>(
+    obterRotaRotinasEquipe(equipeId),
+  );
+  return (resposta.rotinas || []).map(normalizarRotinaRecebida);
+}
+
+/** Cria uma rotina da equipe no banco de dados. */
+export async function criarRotinaNaEquipe(
+  equipeId: string,
+  dados: DadosRotina,
+): Promise<RotinaLocal> {
+  const resposta = await requisitarRotinas<{ rotina: RespostaRotinaApi }>(
+    obterRotaRotinasEquipe(equipeId),
+    "POST",
+    dados,
+  );
+  if (!resposta.rotina) throw new Error("O servidor não retornou a rotina criada.");
+  return normalizarRotinaRecebida(resposta.rotina);
+}
+
+/** Atualiza uma rotina existente, sempre dentro da equipe informada. */
+export async function atualizarRotinaNaEquipe(
+  equipeId: string,
+  rotinaId: string,
+  dados: DadosRotina,
+): Promise<RotinaLocal> {
+  const resposta = await requisitarRotinas<{ rotina: RespostaRotinaApi }>(
+    `${obterRotaRotinasEquipe(equipeId)}/${encodeURIComponent(rotinaId)}`,
+    "PUT",
+    dados,
+  );
+  if (!resposta.rotina) throw new Error("O servidor não retornou a rotina atualizada.");
+  return normalizarRotinaRecebida(resposta.rotina);
+}
+
+/** Exclui uma rotina da equipe no banco de dados. */
+export async function excluirRotinaDaEquipe(
+  equipeId: string,
+  rotinaId: string,
+): Promise<void> {
+  await requisitarRotinas<{ mensagem?: string }>(
+    `${obterRotaRotinasEquipe(equipeId)}/${encodeURIComponent(rotinaId)}`,
+    "DELETE",
+  );
+}
+

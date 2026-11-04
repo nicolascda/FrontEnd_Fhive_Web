@@ -44,7 +44,7 @@ export function CardEquipe({
             return;
         }
 
-        navigate("/");
+        navigate(`/ambiente-aparelhos/${encodeURIComponent(id)}`);
     };
 
     const handleConfiguracoes = () => {
