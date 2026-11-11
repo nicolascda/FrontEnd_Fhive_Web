@@ -1,6 +1,6 @@
-import { Canvas, useThree } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Html, OrbitControls, useGLTF } from "@react-three/drei";
-import { Component, Suspense, useEffect, useMemo, useRef, useState, type ErrorInfo, type ReactNode } from "react";
+import { Component, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState, type ErrorInfo, type ReactNode } from "react";
 import type { ThreeEvent } from "@react-three/fiber";
 import { Box3, DoubleSide, type Group, type Mesh, Plane, Quaternion, Raycaster, Vector2, Vector3 } from "three";
 import { clone as cloneSkeleton } from "three/addons/utils/SkeletonUtils.js";
@@ -29,6 +29,8 @@ type MaquinaCena = {
   posicaoX?: number;
   posicaoY?: number;
   posicaoZ?: number;
+  /** Rotação horizontal (eixo Y) em radianos, alterada pela tecla R na página. */
+  rotacaoY?: number;
 };
 
 export type AmbienteVisual = "industrial" | "escolar" | "saude";
@@ -498,6 +500,34 @@ function Maquina3D({
   const raycasterArrasteRef = useRef(new Raycaster());
   const { camera, gl } = useThree();
 
+  // O giro é aplicado só ao modelo (e ao hitbox), não ao grupo externo: assim o círculo,
+  // os rótulos e o indicador continuam alinhados com a posição, e o arraste não muda.
+  const giroRef = useRef<Group>(null);
+  const rotacaoAlvo = maquina.rotacaoY ?? 0;
+  const rotacaoAtualRef = useRef(rotacaoAlvo);
+
+  // Começa já no ângulo salvo, sem animar a partir de 0 ao abrir a cena.
+  useLayoutEffect(() => {
+    if (giroRef.current) giroRef.current.rotation.y = rotacaoAtualRef.current;
+  }, []);
+
+  // Suaviza a transição até o ângulo pedido, sempre pelo caminho mais curto
+  // (ex.: de 345° para 0° gira 15° em vez de voltar 345°).
+  useFrame((_, delta) => {
+    const giro = giroRef.current;
+    if (!giro) return;
+    const diferenca = Math.atan2(
+      Math.sin(rotacaoAlvo - rotacaoAtualRef.current),
+      Math.cos(rotacaoAlvo - rotacaoAtualRef.current),
+    );
+    if (Math.abs(diferenca) < 0.0005) {
+      rotacaoAtualRef.current = rotacaoAlvo;
+    } else {
+      rotacaoAtualRef.current += diferenca * (1 - Math.exp(-14 * Math.min(delta, 0.1)));
+    }
+    giro.rotation.y = rotacaoAtualRef.current;
+  });
+
   const ehArCondicionado = tipoModelo(maquina.tipo) === "ar-condicionado";
   const possuiErro = maquina.possuiErro || maquina.status === "erro" || Boolean(maquina.mensagemErro?.trim());
   const escalaGrupo = maquina.demo ? 0.86 : 0.92;
@@ -639,17 +669,20 @@ function Maquina3D({
         <ringGeometry args={ehArCondicionado ? [0.82, 0.94, 40] : [1.22, 1.35, 40]} />
         <meshBasicMaterial color={selecionada ? "#c85c0a" : hover ? "#e6a36c" : "#b5b2ad"} />
       </mesh>
-      <ModeloDaMaquina tipo={maquina.tipo} />
+      <group ref={giroRef}>
+        <ModeloDaMaquina tipo={maquina.tipo} />
 
-      {/* Área invisível acompanha o volume real do ar-condicionado em escala 3x.
-          O GLB normalizado mede aproximadamente 4.5 x 1.8 x 2.42; por isso o hitbox
-          fica centralizado na metade da altura, com a base apoiada no mesmo piso do grupo. */}
-      {ehArCondicionado && (
-        <mesh position={[0, 0.9, 0]}>
-          <boxGeometry args={[4.85, 2.05, 2.65]} />
-          <meshBasicMaterial transparent opacity={0} colorWrite={false} depthWrite={false} side={DoubleSide} />
-        </mesh>
-      )}
+        {/* Área invisível acompanha o volume real do ar-condicionado em escala 3x.
+            O GLB normalizado mede aproximadamente 4.5 x 1.8 x 2.42; por isso o hitbox
+            fica centralizado na metade da altura, com a base apoiada no mesmo piso do grupo.
+            Fica dentro do grupo que gira para acompanhar a orientação do equipamento. */}
+        {ehArCondicionado && (
+          <mesh position={[0, 0.9, 0]}>
+            <boxGeometry args={[4.85, 2.05, 2.65]} />
+            <meshBasicMaterial transparent opacity={0} colorWrite={false} depthWrite={false} side={DoubleSide} />
+          </mesh>
+        )}
+      </group>
 
       {(possuiErro || selecionada) && (
         <Html position={[0, ehArCondicionado ? 2.05 : 3.72, 0]} center distanceFactor={10} zIndexRange={[1000, 0]} style={{ pointerEvents: "none" }}>
@@ -740,7 +773,7 @@ export function CenaIndustrial({ ambiente, maquinas, maquinaSelecionadaId, aoSel
         <OrbitControls
           makeDefault
           enabled={modoCamera !== "pausada" && !arrastandoMaquina}
-          autoRotate={modoCamera === "cena"}
+          // autoRotate={modoCamera === "cena"}
           // autoRotateSpeed={0.65}
           enableDamping
           dampingFactor={0.08}

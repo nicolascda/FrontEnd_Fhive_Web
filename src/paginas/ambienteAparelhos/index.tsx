@@ -14,6 +14,10 @@ type PainelLateral = "detalhes" | "adicionar" | null;
 const PASSO_ALTURA_MAQUINA = 0.25;
 const ALTURA_MAXIMA_MAQUINA = 4.5;
 
+// Cada toque em R gira o equipamento 15° no eixo Y (Shift + R gira no sentido contrário).
+const PASSO_ROTACAO_MAQUINA = Math.PI / 12;
+const VOLTA_COMPLETA = Math.PI * 2;
+
 type FormularioMaquina = {
   nome: string;
   tipo: string;
@@ -348,6 +352,7 @@ export function TelaRotinaAparelhos() {
     posicaoX: maquina.posicaoX,
     posicaoY: maquina.posicaoY,
     posicaoZ: maquina.posicaoZ,
+    rotacaoY: maquina.rotacaoY,
   })), [maquinas]);
 
   // Todas as alterações da cena (cadastro, posição, rotina, erro e exclusão) passam
@@ -359,12 +364,14 @@ export function TelaRotinaAparelhos() {
     });
   }, [equipeId, ambiente]);
 
-  // Atalhos verticais da máquina selecionada: E sobe e Q desce.
+  // Atalhos da máquina selecionada: E sobe, Q desce e R gira (Shift + R gira ao contrário).
   // Não intercepta teclas enquanto o usuário digita em campos de formulário ou está no modal de rotina.
   useEffect(() => {
-    const tratarTeclaAltura = (evento: KeyboardEvent) => {
+    const tratarTeclaMaquina = (evento: KeyboardEvent) => {
       const tecla = evento.key.toLocaleLowerCase();
-      if (tecla !== "q" && tecla !== "e") return;
+      if (tecla !== "q" && tecla !== "e" && tecla !== "r") return;
+      // Ctrl/Cmd/Alt + tecla pertencem ao navegador (ex.: Ctrl + R recarrega a página).
+      if (evento.ctrlKey || evento.metaKey || evento.altKey) return;
       if (evento.repeat || !maquinaSelecionadaId || modalRotinaAberto) return;
 
       const alvo = evento.target;
@@ -374,6 +381,18 @@ export function TelaRotinaAparelhos() {
       }
 
       evento.preventDefault();
+
+      if (tecla === "r") {
+        const passo = evento.shiftKey ? -PASSO_ROTACAO_MAQUINA : PASSO_ROTACAO_MAQUINA;
+        atualizarMaquinas((atuais) => atuais.map((maquina) => {
+          if (maquina.id !== maquinaSelecionadaId) return maquina;
+          // Mantém o ângulo entre 0 e 2π para o valor salvo não crescer indefinidamente.
+          const novaRotacao = (((maquina.rotacaoY ?? 0) + passo) % VOLTA_COMPLETA + VOLTA_COMPLETA) % VOLTA_COMPLETA;
+          return { ...maquina, rotacaoY: Number(novaRotacao.toFixed(4)) };
+        }));
+        return;
+      }
+
       const deslocamento = tecla === "e" ? PASSO_ALTURA_MAQUINA : -PASSO_ALTURA_MAQUINA;
 
       atualizarMaquinas((atuais) => atuais.map((maquina) => {
@@ -388,8 +407,8 @@ export function TelaRotinaAparelhos() {
       }));
     };
 
-    window.addEventListener("keydown", tratarTeclaAltura);
-    return () => window.removeEventListener("keydown", tratarTeclaAltura);
+    window.addEventListener("keydown", tratarTeclaMaquina);
+    return () => window.removeEventListener("keydown", tratarTeclaMaquina);
   }, [maquinaSelecionadaId, modalRotinaAberto, atualizarMaquinas]);
 
   // O clique em um objeto 3D seleciona o equipamento e abre a barra lateral.
@@ -556,7 +575,7 @@ export function TelaRotinaAparelhos() {
 
           <div className={styles.avisoDadosLocais}>
             <Info size={18} />
-            <span>Arraste uma máquina para reposicioná-la ou arraste o espaço vazio para girar a câmera. Com uma máquina selecionada, pressione E para subir e Q para descer. Cada toque move 0,25 unidade; a altura é salva por equipe neste navegador.</span>
+            <span>Arraste uma máquina para reposicioná-la ou arraste o espaço vazio para girar a câmera. Com uma máquina selecionada, pressione E para subir, Q para descer e R para girar (Shift + R gira ao contrário). Cada toque move 0,25 unidade ou gira 15°; altura e rotação são salvas por equipe neste navegador.</span>
           </div>
 
           {painelLateral === "detalhes" && maquinaSelecionada && (
