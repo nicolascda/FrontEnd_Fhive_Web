@@ -35,7 +35,7 @@ export function AppRoutes() {
                     <Route path="/rotinas" element={<Navigate to="/rotinas/demo-equipe" replace />} />
                     <Route path="/rotinas/:equipeId" element={<TelaRotinas />} />
                     <Route path="/solucaoFhive" element={<TelaSolucao />} />
-                    <Route path="/solucao/:equipeId" element={<TelaAnaliseDados />} />
+                    <Route path="/analisarDados/:equipeId" element={<TelaAnaliseDados />} />
                     <Route path="/quemSomos" element={<TelaQuemSomos />} />
                 </Routes>
             </div>

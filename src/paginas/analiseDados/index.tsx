@@ -219,7 +219,7 @@ export function TelaAnaliseDados() {
 
       <header className={styles.cabecalhoPagina}>
         <div className={`${styles.tituloCabecalho}`}><h1>Análise dos Dados</h1>  <span> - {equipeNome}</span></div>
-        <Link to={`/rotina-aparelhos/${encodeURIComponent(equipeId)}`} className={styles.linkAmbiente}>Abrir ambiente 3D</Link>
+        <Link to={`/ambiente-aparelhos/${encodeURIComponent(equipeId)}`} className={styles.linkAmbiente}>Abrir ambiente 3D</Link>
       </header>
 
       <main className={styles.conteudo}>

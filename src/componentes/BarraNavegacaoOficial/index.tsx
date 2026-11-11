@@ -56,7 +56,7 @@ function lerEquipeSalva(equipeId: string): EquipeNav | null {
 }
 
 function obterEquipeDaRota(caminho: string): string | null {
-    const correspondencia = caminho.match(/^\/(?:solucao|rotinas|ambiente-aparelhos|ambiente-3d)\/([^/]+)/);
+    const correspondencia = caminho.match(/^\/(?:analisarDados|rotinas|ambiente-aparelhos|ambiente-3d)\/([^/]+)/);
     if (!correspondencia?.[1]) return null;
 
     try {
@@ -219,7 +219,7 @@ export function BarraNavegacaoOficial() {
                             </NavLink>
 
                             <NavLink
-                                to={`/solucao/${encodeURIComponent(equipeId || '')}`}
+                                to={`/analisarDados/${encodeURIComponent(equipeId || '')}`}
                                 className={({ isActive }) => classeLinkAtivo(isActive)}
                             >
                                 Analisar dados

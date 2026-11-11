@@ -57,8 +57,31 @@
   overflow: visible;
 }
 
+.resumoPizza {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  /* A largura posiciona o resumo acima do centro da pizza (lado esquerdo do SVG). */
+  width: 63.5%;
+  margin: 0 0 -4px;
+  text-align: center;
+}
+
+.resumoPizza span {
+  color: #574c42;
+  font-size: 12px;
+}
+
+.resumoPizza strong {
+  color: #2e2924;
+  font-size: 17px;
+  font-weight: 800;
+}
+
 .svgPizza {
   max-height: 410px;
+  overflow: hidden;
 }
 
 .legenda {

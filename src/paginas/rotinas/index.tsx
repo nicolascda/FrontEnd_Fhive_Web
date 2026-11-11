@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Link, useParams } from "react-router-dom";
+import { FooterBar } from "../../componentes/FooterBar/index.tsx";
 import { CalendarDays, Clock3, Info, ListOrdered, Plus, Save, X, ChevronUp, ChevronDown, Trash2, Factory, Layers3 } from "lucide-react";
 import { CardRotina } from "../../componentes/CardRotina";
 import { CHAVE_AMBIENTE, CHAVE_EQUIPE, CHAVE_ROTINAS, lerRotinasEquipe, salvarRotinasEquipe } from "../../dados/rotinasEquipe";
@@ -304,7 +305,7 @@ export function TelaRotinas() {
           <h1>Rotina dos aparelhos</h1>
         </div>
         <div className={styles.acoesCabecalho}>
-          <Link to={`/rotina-aparelhos/${encodeURIComponent(equipeId)}`} className={styles.botaoAmbiente}>
+          <Link to={`/ambiente-aparelhos/${encodeURIComponent(equipeId)}`} className={styles.botaoAmbiente}>
             <Factory size={16} /> Abrir ambiente 3D
           </Link>
           <button type="button" className={styles.botaoAdicionar} onClick={abrirCriacao} aria-label="Criar nova rotina" title="Criar nova rotina">
@@ -354,10 +355,7 @@ export function TelaRotinas() {
         </div>
       </main>
 
-      <footer className={styles.rodape}>
-        <strong>Fhive</strong><span>©2026 Fhive · Ambiente industrial</span>
-        <Link to={`/solucao/${encodeURIComponent(equipeId)}`}>Analisar dados</Link>
-      </footer>
+      <FooterBar/>
 
       {modalAberto && (
         <div className={styles.fundoModal} role="presentation" onMouseDown={(evento) => {
