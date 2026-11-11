@@ -25,6 +25,13 @@ function criarId(prefixo: string) {
   return `${prefixo}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
+function obterPosicaoPadraoMaquina(indice: number, total: number): [number, number, number] {
+  if (total === 1) return [-4, 0, 1];
+  const coluna = indice % 4;
+  const linha = Math.floor(indice / 4);
+  return [((coluna - 1.5) * 5.2), 0, 3.7 - linha * 5.2];
+}
+
 // Mantém compatibilidade com equipamentos de demonstração criados nesta tela.
 function criarRotinaInicial(equipeId: string): RotinaLocal {
   return criarRotinaDemonstracao(equipeId);
@@ -422,7 +429,26 @@ export function TelaRotinaAparelhos() {
       criadaEm: new Date().toISOString(),
     };
 
-    atualizarMaquinas((atuais) => [...atuais, novaMaquina]);
+    atualizarMaquinas((atuais) => {
+      // Materializa as posições atuais antes de aumentar a lista. Sem isso, a grade
+      // recalcula a posição padrão dos equipamentos antigos ao criar um novo aparelho.
+      const existentesComPosicao = atuais.map((maquina, indice) => {
+        const padrao = obterPosicaoPadraoMaquina(indice, atuais.length);
+        return {
+          ...maquina,
+          posicaoX: maquina.posicaoX ?? padrao[0],
+          posicaoY: maquina.posicaoY ?? padrao[1],
+          posicaoZ: maquina.posicaoZ ?? padrao[2],
+        };
+      });
+      const posicaoNova = obterPosicaoPadraoMaquina(atuais.length, atuais.length + 1);
+      return [...existentesComPosicao, {
+        ...novaMaquina,
+        posicaoX: posicaoNova[0],
+        posicaoY: posicaoNova[1],
+        posicaoZ: posicaoNova[2],
+      }];
+    });
     setMaquinaSelecionadaId(novaMaquina.id);
     setPainelLateral("detalhes");
     setFormularioMaquina({ nome: "", tipo: modelosDisponiveis[0].valor, funcao: "", potenciaKw: "5" });

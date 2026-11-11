@@ -12,7 +12,6 @@ export type AcaoRotinaLocal = {
   nome: string;
   descricao: string;
 };
-
 /**
  * Configuração local da rotina de um equipamento.
  * Os campos permanecem no navegador e são separados pela equipe.
@@ -27,7 +26,6 @@ export type RotinaLocal = {
   /** Etapas agendadas, ordenadas conforme a sequência de execução desejada. */
   acoes: AcaoRotinaLocal[];
 };
-
 /**
  * Equipamento visualizado na cena 3D.
  * `posicaoX` e `posicaoZ` guardam a posição horizontal; `posicaoY` guarda a altura.
@@ -40,6 +38,8 @@ export type MaquinaLocal = {
   posicaoX?: number;
   posicaoY?: number;
   posicaoZ?: number;
+  /** Rotação horizontal do equipamento, em radianos (eixo Y). */
+  rotacaoY?: number;
   funcao: string;
   status: StatusMaquina;
   potenciaKw: number;
@@ -50,7 +50,6 @@ export type MaquinaLocal = {
   erro: string | null;
   criadaEm: string;
 };
-
 /** Metadados da equipe usados para identificar e personalizar seu ambiente 3D. */
 export type EquipeAmbiente = {
   id: string;

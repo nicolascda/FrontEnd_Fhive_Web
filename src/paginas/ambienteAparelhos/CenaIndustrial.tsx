@@ -1,8 +1,9 @@
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useThree } from "@react-three/fiber";
 import { Html, OrbitControls, useGLTF } from "@react-three/drei";
-import { Component, Suspense, useMemo, useRef, useState, type ErrorInfo, type ReactNode } from "react";
+import { Component, Suspense, useEffect, useMemo, useRef, useState, type ErrorInfo, type ReactNode } from "react";
 import type { ThreeEvent } from "@react-three/fiber";
-import { Box3, type Group, type Mesh, Plane, Quaternion, Vector3 } from "three";
+import { Box3, DoubleSide, type Group, type Mesh, Plane, Quaternion, Raycaster, Vector2, Vector3 } from "three";
+import { clone as cloneSkeleton } from "three/addons/utils/SkeletonUtils.js";
 import styles from "./styles.module.css";
 import modeloBracoRoboUrl from "../../dados/modelos/industria/braco_robo.glb?url";
 import modeloConversorUrl from "../../dados/modelos/industria/conversor.glb?url";
@@ -389,7 +390,10 @@ function ModeloComFallback(props: ModeloGLBProps) {
 function ModeloGLB({ arquivo, tamanhoAlvo, deslocamentoY = 0 }: ModeloGLBProps) {
   const { scene } = useGLTF(arquivo);
   const transformacao = useMemo(() => {
-    const copia = scene.clone(true);
+    // O GLB do ar-condicionado possui armature/skinned meshes. Object3D.clone(true)
+    // mantém referências ao esqueleto original e pode separar a malha do grupo visual.
+    // SkeletonUtils.clone cria uma cópia com os bones corretamente vinculados.
+    const copia = cloneSkeleton(scene);
     copia.updateMatrixWorld(true);
     const limites = new Box3().setFromObject(copia);
     const dimensoes = limites.getSize(new Vector3());
@@ -447,7 +451,7 @@ function ModeloDaMaquina({ tipo }: { tipo: string }) {
     return <ModeloComFallback arquivo={modeloConversorUrl} tamanhoAlvo={3.2} />;
   }
   if (modelo === "ar-condicionado") {
-    return <ModeloComFallback arquivo={modeloArCondicionadoIndustrialUrl} tamanhoAlvo={2.35} deslocamentoY={1.45} />;
+    return <ModeloComFallback arquivo={modeloArCondicionadoIndustrialUrl} tamanhoAlvo={4.5} />;
   }
   if (modelo === "carteira") {
     return <ModeloComFallback arquivo={modeloCadeiraUrl} tamanhoAlvo={2.25} />;
@@ -476,6 +480,7 @@ function Maquina3D({
   aoSelecionar,
   aoMover,
   aoIniciarArraste,
+  mostrarRotulo,
 }: {
   maquina: MaquinaCena;
   posicao: [number, number, number];
@@ -483,114 +488,171 @@ function Maquina3D({
   aoSelecionar: (maquina: MaquinaCena) => void;
   aoMover: (maquinaId: string, posicaoX: number, posicaoY: number, posicaoZ: number) => void;
   aoIniciarArraste: (arrastando: boolean) => void;
+  mostrarRotulo: boolean;
 }) {
   const [hover, setHover] = useState(false);
   const grupoRef = useRef<Group>(null);
-  const planoChaoRef = useRef(new Plane(new Vector3(0, 1, 0), 0));
   const pontoIntersecaoRef = useRef(new Vector3());
-  const arrasteRef = useRef<{
+  const coordenadasPonteiroRef = useRef(new Vector2());
+  const planoArrasteRef = useRef(new Plane(new Vector3(0, 1, 0), 0));
+  const raycasterArrasteRef = useRef(new Raycaster());
+  const { camera, gl } = useThree();
+
+  const ehArCondicionado = tipoModelo(maquina.tipo) === "ar-condicionado";
+  const possuiErro = maquina.possuiErro || maquina.status === "erro" || Boolean(maquina.mensagemErro?.trim());
+  const escalaGrupo = maquina.demo ? 0.86 : 0.92;
+  // Todos os equipamentos, inclusive o ar-condicionado, usam o piso como origem.
+  // A altura é controlada exclusivamente por posicaoY (teclas E/Q), sem deslocamento visual fixo.
+  const alturaMarcadorLocal = 0.035;
+  const alturaArrasteMundo = posicao[1] + alturaMarcadorLocal * escalaGrupo;
+
+  type EstadoArraste = {
     pointerId: number;
-    inicioMouseX: number;
-    inicioMouseY: number;
     deslocamentoX: number;
     deslocamentoZ: number;
     x: number;
     z: number;
     moveu: boolean;
-  } | null>(null);
-  // Trata status e texto do erro como fontes equivalentes, incluindo dados locais antigos.
-  const possuiErro = maquina.possuiErro || maquina.status === "erro" || Boolean(maquina.mensagemErro?.trim());
-  // Um clique sem movimento apenas seleciona a máquina e deixa o painel cuidar dos detalhes.
+    inicioMouseX: number;
+    inicioMouseY: number;
+    aoMoverPonteiro: (evento: PointerEvent) => void;
+    aoFinalizarPonteiro: (evento: PointerEvent) => void;
+  };
+  const arrasteRef = useRef<EstadoArraste | null>(null);
+
+  useEffect(() => {
+    return () => {
+      const arraste = arrasteRef.current;
+      if (arraste) {
+        window.removeEventListener("pointermove", arraste.aoMoverPonteiro, true);
+        window.removeEventListener("pointerup", arraste.aoFinalizarPonteiro, true);
+        window.removeEventListener("pointercancel", arraste.aoFinalizarPonteiro, true);
+      }
+      document.body.style.cursor = "auto";
+    };
+  }, []);
+
   const tratarClick = (evento: ThreeEvent<MouseEvent>) => {
     evento.stopPropagation();
     aoSelecionar(maquina);
   };
 
   const iniciarArraste = (evento: ThreeEvent<PointerEvent>) => {
-    if (evento.nativeEvent.button !== 0) return;
+    if (evento.nativeEvent.button !== 0 || arrasteRef.current) return;
     evento.stopPropagation();
     evento.nativeEvent.preventDefault();
-    // Não deixa o mesmo clique iniciar também a rotação da câmera.
     evento.nativeEvent.stopImmediatePropagation();
 
-    const pontoChao = evento.ray.intersectPlane(planoChaoRef.current, pontoIntersecaoRef.current);
-    if (!pontoChao) return;
+    // O plano é o mesmo em que o círculo é desenhado. Assim, arrastar o círculo
+    // ou qualquer parte do aparelho altera uma única posição X/Z do grupo inteiro.
+    planoArrasteRef.current.set(new Vector3(0, 1, 0), -alturaArrasteMundo);
+    const pontoInicial = evento.ray.intersectPlane(planoArrasteRef.current, pontoIntersecaoRef.current);
+    if (!pontoInicial) return;
 
     aoSelecionar(maquina);
-    arrasteRef.current = {
+
+    const arraste: EstadoArraste = {
       pointerId: evento.pointerId,
       inicioMouseX: evento.nativeEvent.clientX,
       inicioMouseY: evento.nativeEvent.clientY,
-      deslocamentoX: posicao[0] - pontoChao.x,
-      deslocamentoZ: posicao[2] - pontoChao.z,
+      deslocamentoX: posicao[0] - pontoInicial.x,
+      deslocamentoZ: posicao[2] - pontoInicial.z,
       x: posicao[0],
       z: posicao[2],
       moveu: false,
+      aoMoverPonteiro: () => undefined,
+      aoFinalizarPonteiro: () => undefined,
     };
-    // Captura o ponteiro quando o alvo DOM oferece essa API, para continuar acompanhando
-    // o arraste mesmo se o cursor passar para fora da área visual da máquina.
-    const alvoPonteiro = evento.target as unknown as { setPointerCapture?: (pointerId: number) => void };
-    alvoPonteiro.setPointerCapture?.(evento.pointerId);
+
+    // A captura e os listeners ficam no canvas/janela, e não na malha estreita do GLB.
+    // Isso evita que o arraste seja interrompido quando o ponteiro sai do aparelho.
+    arraste.aoMoverPonteiro = (ponteiro) => {
+      if (ponteiro.pointerId !== arraste.pointerId || !grupoRef.current) return;
+      const limite = gl.domElement.getBoundingClientRect();
+      if (!limite.width || !limite.height) return;
+
+      const dx = ponteiro.clientX - arraste.inicioMouseX;
+      const dy = ponteiro.clientY - arraste.inicioMouseY;
+      if (!arraste.moveu && Math.hypot(dx, dy) < 4) return;
+      arraste.moveu = true;
+
+      coordenadasPonteiroRef.current.set(
+        ((ponteiro.clientX - limite.left) / limite.width) * 2 - 1,
+        -((ponteiro.clientY - limite.top) / limite.height) * 2 + 1,
+      );
+      raycasterArrasteRef.current.setFromCamera(coordenadasPonteiroRef.current, camera);
+      const ponto = raycasterArrasteRef.current.ray.intersectPlane(planoArrasteRef.current, pontoIntersecaoRef.current);
+      if (!ponto) return;
+
+      arraste.x = Math.max(-13, Math.min(13, ponto.x + arraste.deslocamentoX));
+      arraste.z = Math.max(-12, Math.min(12, ponto.z + arraste.deslocamentoZ));
+      grupoRef.current.position.x = arraste.x;
+      grupoRef.current.position.z = arraste.z;
+    };
+
+    arraste.aoFinalizarPonteiro = (ponteiro) => {
+      if (ponteiro.pointerId !== arraste.pointerId) return;
+      window.removeEventListener("pointermove", arraste.aoMoverPonteiro, true);
+      window.removeEventListener("pointerup", arraste.aoFinalizarPonteiro, true);
+      window.removeEventListener("pointercancel", arraste.aoFinalizarPonteiro, true);
+
+      if (arraste.moveu && grupoRef.current) {
+        aoMover(maquina.id, arraste.x, grupoRef.current.position.y, arraste.z);
+      }
+
+      try {
+        if (gl.domElement.hasPointerCapture(arraste.pointerId)) {
+          gl.domElement.releasePointerCapture(arraste.pointerId);
+        }
+      } catch {
+        // A captura pode já ter sido liberada pelo navegador.
+      }
+      arrasteRef.current = null;
+      aoIniciarArraste(false);
+      document.body.style.cursor = "auto";
+    };
+
+    arrasteRef.current = arraste;
+    window.addEventListener("pointermove", arraste.aoMoverPonteiro, true);
+    window.addEventListener("pointerup", arraste.aoFinalizarPonteiro, true);
+    window.addEventListener("pointercancel", arraste.aoFinalizarPonteiro, true);
+    try {
+      gl.domElement.setPointerCapture(evento.pointerId);
+    } catch {
+      // Os listeners globais seguem funcionando mesmo sem captura nativa.
+    }
     aoIniciarArraste(true);
     document.body.style.cursor = "grabbing";
-  };
-
-  const moverDuranteArraste = (evento: ThreeEvent<PointerEvent>) => {
-    const arraste = arrasteRef.current;
-    if (!arraste || arraste.pointerId !== evento.pointerId || !grupoRef.current) return;
-
-    const deslocamentoMouseX = evento.nativeEvent.clientX - arraste.inicioMouseX;
-    const deslocamentoMouseY = evento.nativeEvent.clientY - arraste.inicioMouseY;
-    if (!arraste.moveu && Math.hypot(deslocamentoMouseX, deslocamentoMouseY) < 4) return;
-    arraste.moveu = true;
-
-    const pontoChao = evento.ray.intersectPlane(planoChaoRef.current, pontoIntersecaoRef.current);
-    if (!pontoChao) return;
-
-    // Mantém os equipamentos dentro da área útil e conserva o deslocamento inicial
-    // para que o modelo não "salte" para o centro do cursor.
-    arraste.x = Math.max(-13, Math.min(13, pontoChao.x + arraste.deslocamentoX));
-    arraste.z = Math.max(-12, Math.min(12, pontoChao.z + arraste.deslocamentoZ));
-    grupoRef.current.position.x = arraste.x;
-    grupoRef.current.position.z = arraste.z;
-  };
-
-  const finalizarArraste = (evento: ThreeEvent<PointerEvent>) => {
-    const arraste = arrasteRef.current;
-    if (!arraste || arraste.pointerId !== evento.pointerId) return;
-
-    if (arraste.moveu) {
-      // O arraste no piso altera X/Z e preserva a altura atual do equipamento.
-      aoMover(maquina.id, arraste.x, grupoRef.current?.position.y ?? posicao[1], arraste.z);
-    }
-    arrasteRef.current = null;
-    aoIniciarArraste(false);
-    document.body.style.cursor = "auto";
   };
 
   return (
     <group
       ref={grupoRef}
       position={posicao}
-      scale={maquina.demo ? 0.86 : 0.92}
+      scale={escalaGrupo}
       onClick={tratarClick}
       onPointerDown={iniciarArraste}
-      onPointerMove={moverDuranteArraste}
-      onPointerUp={finalizarArraste}
-      onPointerCancel={finalizarArraste}
       onPointerOver={(evento) => { evento.stopPropagation(); setHover(true); if (!arrasteRef.current) document.body.style.cursor = "grab"; }}
       onPointerOut={() => { setHover(false); if (!arrasteRef.current) document.body.style.cursor = "auto"; }}
     >
-      <mesh position={[0, 0.035, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[1.22, 1.35, 40]} />
+      <mesh position={[0, alturaMarcadorLocal, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={ehArCondicionado ? [0.82, 0.94, 40] : [1.22, 1.35, 40]} />
         <meshBasicMaterial color={selecionada ? "#c85c0a" : hover ? "#e6a36c" : "#b5b2ad"} />
       </mesh>
       <ModeloDaMaquina tipo={maquina.tipo} />
 
-      {/* Marcador HTML preso ao topo do modelo: alertas têm prioridade visual sobre a seleção.
-          O elemento não captura o clique, então não atrapalha selecionar/arrastar o equipamento. */}
+      {/* Área invisível acompanha o volume real do ar-condicionado em escala 3x.
+          O GLB normalizado mede aproximadamente 4.5 x 1.8 x 2.42; por isso o hitbox
+          fica centralizado na metade da altura, com a base apoiada no mesmo piso do grupo. */}
+      {ehArCondicionado && (
+        <mesh position={[0, 0.9, 0]}>
+          <boxGeometry args={[4.85, 2.05, 2.65]} />
+          <meshBasicMaterial transparent opacity={0} colorWrite={false} depthWrite={false} side={DoubleSide} />
+        </mesh>
+      )}
+
       {(possuiErro || selecionada) && (
-        <Html position={[0, 3.72, 0]} center distanceFactor={10} zIndexRange={[1000, 0]} style={{ pointerEvents: "none" }}>
+        <Html position={[0, ehArCondicionado ? 2.05 : 3.72, 0]} center distanceFactor={10} zIndexRange={[1000, 0]} style={{ pointerEvents: "none" }}>
           {possuiErro ? (
             <div className={`${styles.indicadorMaquina} ${styles.indicadorErro}`} role="img" aria-label={maquina.mensagemErro || "Equipamento com erro"} title={maquina.mensagemErro || "Equipamento com erro"}>
               <span>!</span>
@@ -602,12 +664,14 @@ function Maquina3D({
         </Html>
       )}
 
-      <Html position={[0, -0.08, 1.14]} center distanceFactor={13} zIndexRange={[30, 0]}>
-        <div className={`${styles.rotuloMaquina} ${selecionada ? styles.rotuloSelecionado : ""}`}>
-          <span>{maquina.nome}</span>
-          {maquina.demo && <small>MODELO ILUSTRATIVO</small>}
-        </div>
-      </Html>
+      {mostrarRotulo && (
+        <Html position={[0, -0.08, 1.14]} center distanceFactor={13} zIndexRange={[30, 0]}>
+          <div className={`${styles.rotuloMaquina} ${selecionada ? styles.rotuloSelecionado : ""}`}>
+            <span>{maquina.nome}</span>
+            {maquina.demo && <small>MODELO ILUSTRATIVO</small>}
+          </div>
+        </Html>
+      )}
     </group>
   );
 }
@@ -616,9 +680,21 @@ function Maquina3D({
  * Componente raiz da cena: monta o Canvas, estrutura do setor, equipamentos e câmera.
  * A posição guardada em cada equipamento vence a posição inicial padrão após mover/salvar.
  */
+type ModoCamera = "livre" | "pausada" | "cena";
+
 export function CenaIndustrial({ ambiente, maquinas, maquinaSelecionadaId, aoSelecionar, aoMover }: Props) {
-  const [controlesAtivos, setControlesAtivos] = useState(true);
+  const [modoCamera, setModoCamera] = useState<ModoCamera>("livre");
   const [arrastandoMaquina, setArrastandoMaquina] = useState(false);
+  const mostrarRotulos = modoCamera !== "cena";
+  const avancarModoCamera = () => {
+    setModoCamera((atual) => (
+      atual === "livre" ? "pausada" : atual === "pausada" ? "cena" : "livre"
+    ));
+  };
+  const rotuloModoCamera =
+    modoCamera === "livre" ? "Câmera livre" :
+    modoCamera === "pausada" ? "Câmera pausada" :
+    "Câmera da cena";
   // A mesma cena recebe apenas os equipamentos filtrados pela equipe na página pai.
   const exibidas = maquinas;
   // Organiza máquinas novas em uma grade; posições personalizadas são lidas depois.
@@ -656,13 +732,16 @@ export function CenaIndustrial({ ambiente, maquinas, maquinaSelecionadaId, aoSel
             aoSelecionar={aoSelecionar}
             aoMover={aoMover}
             aoIniciarArraste={setArrastandoMaquina}
+            mostrarRotulo={mostrarRotulos}
           />
         ))}
         {/* A câmera gira/ aproxima quando o usuário arrasta o piso; fica desativada
             enquanto uma máquina está sendo movida para evitar conflito de gestos. */}
         <OrbitControls
           makeDefault
-          enabled={controlesAtivos && !arrastandoMaquina}
+          enabled={modoCamera !== "pausada" && !arrastandoMaquina}
+          autoRotate={modoCamera === "cena"}
+          // autoRotateSpeed={0.65}
           enableDamping
           dampingFactor={0.08}
           minDistance={7}
@@ -678,11 +757,16 @@ export function CenaIndustrial({ ambiente, maquinas, maquinaSelecionadaId, aoSel
       <button
         type="button"
         className={styles.controlesCena}
-        onClick={() => setControlesAtivos((atual) => !atual)}
-        aria-pressed={controlesAtivos}
-        title={controlesAtivos ? "Desativar movimento da câmera" : "Ativar movimento da câmera"}
+        onClick={avancarModoCamera}
+        aria-label={`Modo atual: ${rotuloModoCamera}. Clique para alternar o modo da câmera.`}
+        aria-pressed={modoCamera !== "pausada"}
+        title={
+          modoCamera === "livre" ? "Próximo modo: Câmera pausada" :
+          modoCamera === "pausada" ? "Próximo modo: Câmera da cena (rotação automática, sem nomes)" :
+          "Próximo modo: Câmera livre"
+        }
       >
-        {controlesAtivos ? "Câmera livre" : "Câmera pausada"}
+        {rotuloModoCamera}
       </button>
     </div>
   );
