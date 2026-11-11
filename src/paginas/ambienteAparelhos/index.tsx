@@ -1,14 +1,18 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { AlertTriangle, ArrowLeft, Activity, Check, Clock3, ListOrdered, Cog, Factory, Gauge, Info, Plus, RotateCcw, Trash2, X, Zap, Boxes, Truck, Wrench } from "lucide-react";
 import { CardRotina } from "../../componentes/CardRotina";
 import { CHAVE_AMBIENTE, CHAVE_EQUIPE, lerRotinasEquipe, normalizarRotinasDasMaquinas, salvarRotinasEquipe, criarRotinaDemonstracao, listarRotinasDaEquipe } from "../../dados/rotinasEquipe";
-import { CenaIndustrial } from "./CenaIndustrial";
+import { CenaIndustrial, type AmbienteVisual } from "./CenaIndustrial";
 import type { AcaoRotinaLocal, EquipeAmbiente, MaquinaLocal, RotinaLocal, StatusMaquina } from "./tipos";
 import styles from "./styles.module.css";
 
 // Controla quais painéis estão abertos sobre a visualização 3D.
 type PainelLateral = "detalhes" | "adicionar" | null;
+
+// Cada toque em E/Q desloca o equipamento 25 cm na escala do ambiente 3D.
+const PASSO_ALTURA_MAQUINA = 0.25;
+const ALTURA_MAXIMA_MAQUINA = 4.5;
 
 type FormularioMaquina = {
   nome: string;
@@ -26,16 +30,78 @@ function criarRotinaInicial(equipeId: string): RotinaLocal {
   return criarRotinaDemonstracao(equipeId);
 }
 
-const modelosDisponiveis = [
-  { valor: "Robô industrial", rotulo: "Braço robótico", Icone: Cog },
-  { valor: "CNC", rotulo: "Centro de usinagem", Icone: Factory },
-  { valor: "Esteira", rotulo: "Esteira transportadora", Icone: Truck },
-  { valor: "Prensa hidráulica", rotulo: "Prensa hidráulica", Icone: Wrench },
-  { valor: "Outro", rotulo: "Outro equipamento", Icone: Boxes },
-];
+function normalizarTexto(valor: string) {
+  return valor.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
 
-function criarMaquinasDemonstracao(equipeId: string): MaquinaLocal[] {
+/** O setor escolhido no cadastro da equipe determina o ambiente e os modelos disponíveis. */
+function identificarAmbiente(setor?: string | null): AmbienteVisual {
+  const valor = normalizarTexto(setor ?? "");
+  if (valor.includes("educ") || valor.includes("escol")) return "escolar";
+  if (valor.includes("saud") || valor.includes("hospital") || valor.includes("medic")) return "saude";
+  return "industrial";
+}
+
+function obterModelosDisponiveis(ambiente: AmbienteVisual) {
+  if (ambiente === "escolar") {
+    return [
+      { valor: "Carteira escolar", rotulo: "Carteira e cadeira", Icone: Boxes },
+      { valor: "Notebook", rotulo: "Notebook", Icone: Gauge },
+      { valor: "Outro", rotulo: "Outro equipamento", Icone: Boxes },
+    ];
+  }
+
+  if (ambiente === "saude") {
+    return [
+      { valor: "Cama hospitalar", rotulo: "Cama hospitalar", Icone: Activity },
+      { valor: "Monitor médico", rotulo: "Monitor médico", Icone: Gauge },
+      { valor: "Outro", rotulo: "Outro equipamento", Icone: Boxes },
+    ];
+  }
+
+  return [
+    { valor: "Robô industrial", rotulo: "Braço robótico", Icone: Cog },
+    { valor: "CNC", rotulo: "Centro de usinagem", Icone: Factory },
+    { valor: "Esteira transportadora", rotulo: "Esteira transportadora", Icone: Truck },
+    { valor: "Ar-condicionado industrial", rotulo: "Ar-condicionado", Icone: Wrench },
+    { valor: "Prensa hidráulica", rotulo: "Prensa hidráulica", Icone: Wrench },
+    { valor: "Outro", rotulo: "Outro equipamento", Icone: Boxes },
+  ];
+}
+
+function criarMaquinasDemonstracao(equipeId: string, ambiente: AmbienteVisual): MaquinaLocal[] {
   const agora = new Date().toISOString();
+
+  if (ambiente === "escolar") {
+    return [
+      {
+        id: `${equipeId}-carteira-demo`, equipeId, nome: "Carteira escolar 01", tipo: "Carteira escolar",
+        funcao: "Estação de estudo e atividades em sala", status: "online", potenciaKw: 0,
+        energiaHojeKwh: 0, horasHoje: 0, horasTotais: 0, rotina: null, erro: null, criadaEm: agora,
+      },
+      {
+        id: `${equipeId}-notebook-demo`, equipeId, nome: "Notebook 01", tipo: "Notebook",
+        funcao: "Equipamento de apoio às atividades escolares", status: "online", potenciaKw: 0.065,
+        energiaHojeKwh: 0.2, horasHoje: 3.1, horasTotais: 86, rotina: null, erro: null, criadaEm: agora,
+      },
+    ];
+  }
+
+  if (ambiente === "saude") {
+    return [
+      {
+        id: `${equipeId}-cama-demo`, equipeId, nome: "Leito hospitalar 01", tipo: "Cama hospitalar",
+        funcao: "Leito para acomodação e atendimento de pacientes", status: "online", potenciaKw: 0.12,
+        energiaHojeKwh: 0.4, horasHoje: 8, horasTotais: 420, rotina: null, erro: null, criadaEm: agora,
+      },
+      {
+        id: `${equipeId}-monitor-demo`, equipeId, nome: "Monitor médico 01", tipo: "Monitor médico",
+        funcao: "Monitoramento de sinais vitais", status: "atencao", potenciaKw: 0.08,
+        energiaHojeKwh: 0.3, horasHoje: 8, horasTotais: 620, rotina: null,
+        erro: "Demonstração: verifique a conexão do monitor antes de iniciar o acompanhamento.", criadaEm: agora,
+      },
+    ];
+  }
 
   return [
     {
@@ -73,7 +139,7 @@ function criarMaquinasDemonstracao(equipeId: string): MaquinaLocal[] {
 
 // Carrega somente máquinas cujo campo equipeId coincide com a rota atual.
 // Essa validação evita misturar equipamentos pertencentes a equipes diferentes.
-function lerMaquinasEquipe(equipeId: string): MaquinaLocal[] {
+function lerMaquinasEquipe(equipeId: string, ambiente: AmbienteVisual): MaquinaLocal[] {
   if (!equipeId || typeof window === "undefined") return [];
 
   try {
@@ -81,6 +147,18 @@ function lerMaquinasEquipe(equipeId: string): MaquinaLocal[] {
     if (salvo !== null) {
       const valor: unknown = JSON.parse(salvo);
       if (Array.isArray(valor)) {
+        // Versões anteriores gravavam os dois equipamentos industriais de demonstração
+        // para qualquer setor. Migra somente esse par padrão, sem sobrescrever máquinas editadas.
+        const possuiRoboDemoAntigo = valor.some((item) =>
+          Boolean(item && typeof item === "object" && "id" in item && item.id === `${equipeId}-maquina-robo-demo` && "tipo" in item && item.tipo === "Robô industrial"),
+        );
+        const possuiCncDemoAntigo = valor.some((item) =>
+          Boolean(item && typeof item === "object" && "id" in item && item.id === `${equipeId}-maquina-cnc-demo` && "tipo" in item && item.tipo === "CNC"),
+        );
+        if (ambiente !== "industrial" && valor.length === 2 && possuiRoboDemoAntigo && possuiCncDemoAntigo) {
+          return normalizarRotinasDasMaquinas(equipeId, criarMaquinasDemonstracao(equipeId, ambiente));
+        }
+
         // Normaliza dados salvos por versões anteriores do frontend: rotinas antigas
         // podem ainda não ter o array de ações e precisam continuar abrindo normalmente.
         const maquinasNormalizadas = valor
@@ -106,7 +184,7 @@ function lerMaquinasEquipe(equipeId: string): MaquinaLocal[] {
     console.warn("Não foi possível ler o ambiente local desta equipe.", erro);
   }
 
-  return normalizarRotinasDasMaquinas(equipeId, criarMaquinasDemonstracao(equipeId));
+  return normalizarRotinasDasMaquinas(equipeId, criarMaquinasDemonstracao(equipeId, ambiente));
 }
 
 function lerEquipeSalva(equipeId: string): EquipeAmbiente | null {
@@ -158,10 +236,13 @@ export function TelaRotinaAparelhos() {
       setor: "Ambiente industrial",
     };
   }, [equipeId, equipeRecebida]);
+  const ambiente = identificarAmbiente(equipe.setor);
+  const rotuloAmbiente = ambiente === "escolar" ? "ESCOLAR" : ambiente === "saude" ? "DE SAÚDE" : "INDUSTRIAL";
+  const modelosDisponiveis = obterModelosDisponiveis(ambiente);
 
   const [estadoAmbiente, setEstadoAmbiente] = useState(() => ({
     equipeId,
-    maquinas: lerMaquinasEquipe(equipeId),
+    maquinas: lerMaquinasEquipe(equipeId, ambiente),
   }));
   const [maquinaSelecionadaId, setMaquinaSelecionadaId] = useState<string | null>(null);
   const [painelLateral, setPainelLateral] = useState<PainelLateral>(null);
@@ -174,17 +255,17 @@ export function TelaRotinaAparelhos() {
   const rotinasEquipe = estadoRotinas.equipeId === equipeId
     ? estadoRotinas.rotinas
     : lerRotinasEquipe(equipeId);
-  const [formularioMaquina, setFormularioMaquina] = useState<FormularioMaquina>({
+  const [formularioMaquina, setFormularioMaquina] = useState<FormularioMaquina>(() => ({
     nome: "",
-    tipo: "Robô industrial",
+    tipo: obterModelosDisponiveis(ambiente)[0].valor,
     funcao: "",
     potenciaKw: "5",
-  });
+  }));
   const [mensagemFormulario, setMensagemFormulario] = useState("");
 
   const maquinas = estadoAmbiente.equipeId === equipeId
     ? estadoAmbiente.maquinas
-    : lerMaquinasEquipe(equipeId);
+    : lerMaquinasEquipe(equipeId, ambiente);
   const maquinaSelecionada = maquinas.find((maquina) => maquina.id === maquinaSelecionadaId) || null;
   // Considera tanto o status quanto a mensagem salva para manter painel e marcador 3D sincronizados.
   const maquinaSelecionadaTemErro = Boolean(
@@ -192,12 +273,13 @@ export function TelaRotinaAparelhos() {
   );
 
   useEffect(() => {
-    setEstadoAmbiente({ equipeId, maquinas: lerMaquinasEquipe(equipeId) });
+    setEstadoAmbiente({ equipeId, maquinas: lerMaquinasEquipe(equipeId, ambiente) });
     setMaquinaSelecionadaId(null);
     setPainelLateral(null);
     setModalRotinaAberto(false);
     setMensagemFormulario("");
-  }, [equipeId]);
+    setFormularioMaquina((atual) => ({ ...atual, tipo: obterModelosDisponiveis(ambiente)[0].valor }));
+  }, [equipeId, ambiente]);
 
   useEffect(() => {
     let ativo = true;
@@ -257,17 +339,51 @@ export function TelaRotinaAparelhos() {
     possuiErro: maquina.status === "erro" || Boolean(maquina.erro?.trim()),
     mensagemErro: maquina.erro,
     posicaoX: maquina.posicaoX,
+    posicaoY: maquina.posicaoY,
     posicaoZ: maquina.posicaoZ,
   })), [maquinas]);
 
   // Todas as alterações da cena (cadastro, posição, rotina, erro e exclusão) passam
   // por esta função para preservar a coleção da equipe ativa.
-  const atualizarMaquinas = (atualizar: (atuais: MaquinaLocal[]) => MaquinaLocal[]) => {
+  const atualizarMaquinas = useCallback((atualizar: (atuais: MaquinaLocal[]) => MaquinaLocal[]) => {
     setEstadoAmbiente((estado) => {
-      const atuais = estado.equipeId === equipeId ? estado.maquinas : lerMaquinasEquipe(equipeId);
+      const atuais = estado.equipeId === equipeId ? estado.maquinas : lerMaquinasEquipe(equipeId, ambiente);
       return { equipeId, maquinas: atualizar(atuais) };
     });
-  };
+  }, [equipeId, ambiente]);
+
+  // Atalhos verticais da máquina selecionada: E sobe e Q desce.
+  // Não intercepta teclas enquanto o usuário digita em campos de formulário ou está no modal de rotina.
+  useEffect(() => {
+    const tratarTeclaAltura = (evento: KeyboardEvent) => {
+      const tecla = evento.key.toLocaleLowerCase();
+      if (tecla !== "q" && tecla !== "e") return;
+      if (evento.repeat || !maquinaSelecionadaId || modalRotinaAberto) return;
+
+      const alvo = evento.target;
+      if (alvo instanceof HTMLElement) {
+        const tag = alvo.tagName.toLocaleLowerCase();
+        if (alvo.isContentEditable || tag === "input" || tag === "textarea" || tag === "select") return;
+      }
+
+      evento.preventDefault();
+      const deslocamento = tecla === "e" ? PASSO_ALTURA_MAQUINA : -PASSO_ALTURA_MAQUINA;
+
+      atualizarMaquinas((atuais) => atuais.map((maquina) => {
+        if (maquina.id !== maquinaSelecionadaId) return maquina;
+        const alturaAtual = maquina.posicaoY ?? 0;
+        const novaAltura = Math.min(
+          ALTURA_MAXIMA_MAQUINA,
+          Math.max(0, Number((alturaAtual + deslocamento).toFixed(2))),
+        );
+        if (novaAltura === alturaAtual) return maquina;
+        return { ...maquina, posicaoY: novaAltura };
+      }));
+    };
+
+    window.addEventListener("keydown", tratarTeclaAltura);
+    return () => window.removeEventListener("keydown", tratarTeclaAltura);
+  }, [maquinaSelecionadaId, modalRotinaAberto, atualizarMaquinas]);
 
   // O clique em um objeto 3D seleciona o equipamento e abre a barra lateral.
   const selecionarMaquina = (id: string) => {
@@ -309,7 +425,7 @@ export function TelaRotinaAparelhos() {
     atualizarMaquinas((atuais) => [...atuais, novaMaquina]);
     setMaquinaSelecionadaId(novaMaquina.id);
     setPainelLateral("detalhes");
-    setFormularioMaquina({ nome: "", tipo: "Robô industrial", funcao: "", potenciaKw: "5" });
+    setFormularioMaquina({ nome: "", tipo: modelosDisponiveis[0].valor, funcao: "", potenciaKw: "5" });
     setMensagemFormulario("");
   };
 
@@ -365,11 +481,11 @@ export function TelaRotinaAparelhos() {
 
       <header className={styles.cabecalhoEquipe}>
         <div className={styles.tituloEquipe}>
-          <span className={styles.miniTitulo}>AMBIENTE INDUSTRIAL · EQUIPE {equipeId}</span>
+          <span className={styles.miniTitulo}>AMBIENTE {rotuloAmbiente} · EQUIPE {equipeId}</span>
           <h1>{equipe.nome}</h1>
         </div>
         <div className={styles.indicadoresCabecalho}>
-          <span><Boxes size={16} /> {maquinas.length} {maquinas.length === 1 ? "maquinário" : "maquinários"}</span>
+          <span><Boxes size={16} /> {maquinas.length} {maquinas.length === 1 ? "equipamento" : "equipamentos"}</span>
           <span className={styles.seloLocal}><Activity size={14} /> Modo local</span>
         </div>
       </header>
@@ -377,12 +493,13 @@ export function TelaRotinaAparelhos() {
       <main className={styles.areaTrabalho}>
         <section className={styles.areaCena} aria-label={`Ambiente 3D da equipe ${equipe.nome}`}>
           <CenaIndustrial
+            ambiente={ambiente}
             maquinas={maquinasCena}
             maquinaSelecionadaId={maquinaSelecionadaId}
             aoSelecionar={(maquina) => selecionarMaquina(maquina.id)}
-            aoMover={(id, posicaoX, posicaoZ) => {
+            aoMover={(id, posicaoX, posicaoY, posicaoZ) => {
               atualizarMaquinas((atuais) => atuais.map((maquina) => (
-                maquina.id === id ? { ...maquina, posicaoX, posicaoZ } : maquina
+                maquina.id === id ? { ...maquina, posicaoX, posicaoY, posicaoZ } : maquina
               )));
             }}
           />
@@ -391,8 +508,8 @@ export function TelaRotinaAparelhos() {
             <button
               type="button"
               className={styles.botaoFlutuante}
-              aria-label="Adicionar maquinário"
-              title="Adicionar maquinário"
+              aria-label="Adicionar equipamento"
+              title="Adicionar equipamento"
               onClick={() => {
                 setPainelLateral((atual) => atual === "adicionar" ? null : "adicionar");
                 setMensagemFormulario("");
@@ -413,11 +530,11 @@ export function TelaRotinaAparelhos() {
 
           <div className={styles.avisoDadosLocais}>
             <Info size={18} />
-            <span>Arraste uma máquina para reposicioná-la ou arraste o espaço vazio para girar a câmera. Posições salvas por equipe neste navegador.</span>
+            <span>Arraste uma máquina para reposicioná-la ou arraste o espaço vazio para girar a câmera. Com uma máquina selecionada, pressione E para subir e Q para descer. Cada toque move 0,25 unidade; a altura é salva por equipe neste navegador.</span>
           </div>
 
           {painelLateral === "detalhes" && maquinaSelecionada && (
-            <aside className={styles.painelLateral} aria-label="Informações do maquinário">
+            <aside className={styles.painelLateral} aria-label="Informações do equipamento">
               <div className={styles.topoPainel}>
                 <div>
                   <span className={styles.miniTituloPainel}>DETALHES DO EQUIPAMENTO</span>
@@ -519,12 +636,12 @@ export function TelaRotinaAparelhos() {
           )}
 
           {painelLateral === "adicionar" && (
-            <aside className={`${styles.painelLateral} ${styles.painelAdicionar}`} aria-label="Adicionar maquinário">
+            <aside className={`${styles.painelLateral} ${styles.painelAdicionar}`} aria-label="Adicionar equipamento">
               <div className={styles.topoPainel}>
                 <div>
                   <span className={styles.miniTituloPainel}>AMBIENTE DA EQUIPE</span>
                   <h2>Adicionar modelos</h2>
-                  <p>Escolha um modelo para posicionar no galpão.</p>
+                  <p>Escolha um modelo para posicionar no ambiente.</p>
                 </div>
                 <button type="button" className={styles.botaoFechar} aria-label="Fechar painel" onClick={() => setPainelLateral(null)}>
                   <X size={22} />
@@ -548,11 +665,11 @@ export function TelaRotinaAparelhos() {
                 </div>
 
                 <label className={styles.campoFormulario}>
-                  Nome do maquinário
+                  Nome do equipamento
                   <input
                     value={formularioMaquina.nome}
                     onChange={(evento) => setFormularioMaquina((atual) => ({ ...atual, nome: evento.target.value }))}
-                    placeholder="Ex.: Robô de soldagem 02"
+                    placeholder={ambiente === "escolar" ? "Ex.: Notebook da sala 02" : ambiente === "saude" ? "Ex.: Monitor do leito 02" : "Ex.: Robô de soldagem 02"}
                     maxLength={70}
                     required
                   />

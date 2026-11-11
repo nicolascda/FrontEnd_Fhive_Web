@@ -35,6 +35,7 @@
   background-color: #fff1d5;
   position: relative;
   margin-bottom: -10rem;
+  box-sizing: border-box;
 }
 
 .estado-vazio {
@@ -88,22 +89,22 @@
   transform: translateY(-1px);
 }
 
+/* Organiza os cards em uma única linha de três quando houver espaço. */
 .lista-equipes {
-  margin-left: 2rem;
-  margin-right: 2rem;
   width: 100%;
+  margin: 0;
   display: flex;
-  flex-direction: left;
+  flex-direction: row;
   flex-wrap: wrap;
-  gap: 6.4rem;
-  justify-content: left;
+  gap: 3rem;
+  justify-content: center;
+  box-sizing: border-box;
 }
 
 .configuracao-container {
   color: white;
   margin-left: auto;
   cursor: pointer;
-  margin-left: auto;
   position: relative;
 }
 
@@ -155,7 +156,7 @@
 
 .menu-configuracao button:hover {
   background-color: #c85c0a;
-} 
+}
 
 @media (max-width: 800px) {
   .conteudo {
@@ -170,6 +171,7 @@
   .lista-equipes {
     justify-content: flex-start;
     overflow-x: auto;
+    flex-wrap: nowrap;
     padding-bottom: 1rem;
   }
 }

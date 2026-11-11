@@ -1,8 +1,10 @@
 .pagina {
   width: 100%;
+  /* Ocupa exatamente a área abaixo da navbar, sem impor uma altura mínima que
+     force a página a ultrapassar a viewport em janelas menores. */
   height: calc(100vh - 3.5rem);
-  /* height: 100dvh; */
-  min-height: 600px;
+  height: calc(100dvh - 3.5rem);
+  min-height: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -147,6 +149,9 @@
   z-index: 4;
   left: 15px;
   bottom: 14px;
+  width: 50%;
+  max-width: 50%;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   gap: 0.8rem;
@@ -1115,7 +1120,7 @@
 
 @media (max-width: 760px) {
   .pagina {
-    min-height: 520px;
+    min-height: 0;
   }
 
   .cabecalhoEquipe {
@@ -1164,7 +1169,8 @@
   .avisoDadosLocais {
     left: 8px;
     bottom: 8px;
-    max-width: calc(100% - 16px);
+    width: 50%;
+    max-width: 50%;
     padding: 7px 9px;
     font-size: 9px;
   }

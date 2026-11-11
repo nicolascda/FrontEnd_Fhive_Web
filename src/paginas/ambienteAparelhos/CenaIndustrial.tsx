@@ -1,9 +1,16 @@
 import { Canvas } from "@react-three/fiber";
-import { Html, OrbitControls } from "@react-three/drei";
-import { useMemo, useRef, useState } from "react";
+import { Html, OrbitControls, useGLTF } from "@react-three/drei";
+import { Component, Suspense, useMemo, useRef, useState, type ErrorInfo, type ReactNode } from "react";
 import type { ThreeEvent } from "@react-three/fiber";
-import { type Group, Plane, Quaternion, Vector3 } from "three";
+import { Box3, type Group, type Mesh, Plane, Quaternion, Vector3 } from "three";
 import styles from "./styles.module.css";
+import modeloBracoRoboUrl from "../../dados/modelos/industria/braco_robo.glb?url";
+import modeloConversorUrl from "../../dados/modelos/industria/conversor.glb?url";
+import modeloArCondicionadoIndustrialUrl from "../../dados/modelos/industria/ArCondicionado_industrial.glb?url";
+import modeloCadeiraUrl from "../../dados/modelos/escola/cadeira.glb?url";
+import modeloLaptopUrl from "../../dados/modelos/escola/laptop.glb?url";
+import modeloCamaHospitalUrl from "../../dados/modelos/saude/cama_hospital.glb?url";
+import modeloMonitorMedicoUrl from "../../dados/modelos/saude/monitor.glb?url";
 
 /**
  * Este arquivo contém apenas a renderização e a interação 3D.
@@ -19,14 +26,18 @@ type MaquinaCena = {
   mensagemErro?: string | null;
   demo?: boolean;
   posicaoX?: number;
+  posicaoY?: number;
   posicaoZ?: number;
 };
 
+export type AmbienteVisual = "industrial" | "escolar" | "saude";
+
 type Props = {
+  ambiente: AmbienteVisual;
   maquinas: MaquinaCena[];
   maquinaSelecionadaId: string | null;
   aoSelecionar: (maquina: MaquinaCena) => void;
-  aoMover: (maquinaId: string, posicaoX: number, posicaoZ: number) => void;
+  aoMover: (maquinaId: string, posicaoX: number, posicaoY: number, posicaoZ: number) => void;
 };
 
 
@@ -129,6 +140,116 @@ function GalpaoIndustrial() {
   );
 }
 
+/** Sala escolar aberta: piso, paredes laterais/traseira e quadro, sem teto para facilitar a navegação. */
+function AmbienteEscolar() {
+  return (
+    <group>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.12, 0]} receiveShadow>
+        <planeGeometry args={[36, 36]} />
+        <meshStandardMaterial color="#f3f0e8" roughness={0.94} />
+      </mesh>
+
+      <mesh position={[0, 2.45, -17.7]} castShadow receiveShadow>
+        <boxGeometry args={[36, 4.9, 0.28]} />
+        <meshStandardMaterial color="#e6e1d6" roughness={0.9} />
+      </mesh>
+      <mesh position={[-17.7, 2.35, 0]} castShadow receiveShadow>
+        <boxGeometry args={[0.28, 4.7, 35.4]} />
+        <meshStandardMaterial color="#eeeae1" roughness={0.9} />
+      </mesh>
+      <mesh position={[17.7, 2.35, 0]} castShadow receiveShadow>
+        <boxGeometry args={[0.28, 4.7, 35.4]} />
+        <meshStandardMaterial color="#eeeae1" roughness={0.9} />
+      </mesh>
+
+      {/* Quadro simples ao fundo para caracterizar a sala sem ocupar a área útil. */}
+      <mesh position={[0, 2.65, -17.48]}>
+        <boxGeometry args={[8.2, 2.05, 0.12]} />
+        <meshStandardMaterial color="#426a59" roughness={0.75} />
+      </mesh>
+      {[-1, 1].map((lado) => (
+        <mesh key={`moldura-quadro-lateral-${lado}`} position={[lado * 4.16, 2.65, -17.38]}>
+          <boxGeometry args={[0.12, 2.24, 0.1]} />
+          <meshStandardMaterial color="#b9a77f" roughness={0.7} />
+        </mesh>
+      ))}
+      {[-1, 1].map((lado) => (
+        <mesh key={`moldura-quadro-horizontal-${lado}`} position={[0, 2.65 + lado * 1.12, -17.38]}>
+          <boxGeometry args={[8.42, 0.12, 0.1]} />
+          <meshStandardMaterial color="#b9a77f" roughness={0.7} />
+        </mesh>
+      ))}
+
+      {/* Janelas altas nas laterais: deixam o ambiente reconhecível sem fechá-lo visualmente. */}
+      {[-10, -5, 0, 5, 10].map((z) => (
+        <group key={`janela-escola-${z}`}>
+          <mesh position={[-17.52, 3.05, z]}>
+            <boxGeometry args={[0.06, 1.65, 3.3]} />
+            <meshStandardMaterial color="#b9d4dc" metalness={0.08} roughness={0.3} />
+          </mesh>
+          <mesh position={[17.52, 3.05, z]}>
+            <boxGeometry args={[0.06, 1.65, 3.3]} />
+            <meshStandardMaterial color="#b9d4dc" metalness={0.08} roughness={0.3} />
+          </mesh>
+        </group>
+      ))}
+
+      <mesh position={[0, 0.18, -17.48]}>
+        <boxGeometry args={[35.8, 0.22, 0.08]} />
+        <meshStandardMaterial color="#c8bda9" roughness={0.8} />
+      </mesh>
+    </group>
+  );
+}
+
+/** Sala hospitalar aberta: estrutura neutra com faixa clínica e piso livre para os equipamentos. */
+function AmbienteSaude() {
+  return (
+    <group>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.12, 0]} receiveShadow>
+        <planeGeometry args={[36, 36]} />
+        <meshStandardMaterial color="#edf2f0" roughness={0.95} />
+      </mesh>
+
+      <mesh position={[0, 2.5, -17.7]} castShadow receiveShadow>
+        <boxGeometry args={[36, 5, 0.28]} />
+        <meshStandardMaterial color="#f5f7f6" roughness={0.9} />
+      </mesh>
+      <mesh position={[-17.7, 2.45, 0]} castShadow receiveShadow>
+        <boxGeometry args={[0.28, 4.9, 35.4]} />
+        <meshStandardMaterial color="#f5f7f6" roughness={0.9} />
+      </mesh>
+      <mesh position={[17.7, 2.45, 0]} castShadow receiveShadow>
+        <boxGeometry args={[0.28, 4.9, 35.4]} />
+        <meshStandardMaterial color="#f5f7f6" roughness={0.9} />
+      </mesh>
+
+      {/* Faixa azul-clara e janelas horizontais, com aparência simples de unidade hospitalar. */}
+      <mesh position={[0, 1.12, -17.52]}>
+        <boxGeometry args={[35.5, 0.34, 0.08]} />
+        <meshStandardMaterial color="#a9d2d2" roughness={0.65} />
+      </mesh>
+      <mesh position={[0, 3.65, -17.5]}>
+        <boxGeometry args={[15.5, 1.55, 0.08]} />
+        <meshStandardMaterial color="#c8e0e2" metalness={0.05} roughness={0.28} />
+      </mesh>
+      {[-1, 1].map((lado) => (
+        <mesh key={`janela-hospital-lateral-${lado}`} position={[lado * 7.8, 3.65, -17.4]}>
+          <boxGeometry args={[0.12, 1.72, 0.1]} />
+          <meshStandardMaterial color="#d8e1de" roughness={0.65} />
+        </mesh>
+      ))}
+      {[-1, 1].map((lado) => (
+        <mesh key={`janela-hospital-horizontal-${lado}`} position={[0, 3.65 + lado * 0.86, -17.4]}>
+          <boxGeometry args={[15.8, 0.12, 0.1]} />
+          <meshStandardMaterial color="#d8e1de" roughness={0.65} />
+        </mesh>
+      ))}
+
+    </group>
+  );
+}
+
 /** Base compartilhada pelos equipamentos para que todos encostem visualmente no piso. */
 function BaseMaquina({ cor = "#bbb9b4" }: { cor?: string }) {
   return (
@@ -146,83 +267,6 @@ function BaseMaquina({ cor = "#bbb9b4" }: { cor?: string }) {
         <mesh key={x} position={[x, 0.05, 0.42]}>
           <boxGeometry args={[0.16, 0.1, 0.12]} />
           <meshStandardMaterial color="#777875" />
-        </mesh>
-      ))}
-    </group>
-  );
-}
-
-/** Modelo geométrico ilustrativo de braço robótico, composto por juntas e segmentos. */
-function BracoRobotico() {
-  return (
-    <group>
-      <BaseMaquina />
-      {/* Coluna giratória sobre a base. */}
-      <mesh position={[0, 0.74, 0]} castShadow>
-        <cylinderGeometry args={[0.43, 0.48, 0.52, 20]} />
-        <meshStandardMaterial color="#777a79" metalness={0.32} roughness={0.45} />
-      </mesh>
-      <mesh position={[0, 1.08, 0]} castShadow>
-        <cylinderGeometry args={[0.32, 0.32, 0.2, 20]} />
-        <meshStandardMaterial color="#c85c0a" metalness={0.22} roughness={0.5} />
-      </mesh>
-      {/* Primeiro segmento do braço e junta esférica. */}
-      <mesh position={[0.25, 1.57, 0]} rotation={[0, 0, -0.48]} castShadow>
-        <boxGeometry args={[0.36, 1.1, 0.38]} />
-        <meshStandardMaterial color="#bfc0bd" metalness={0.25} roughness={0.42} />
-      </mesh>
-      <mesh position={[0.49, 2.06, 0]}>
-        <sphereGeometry args={[0.25, 20, 16]} />
-        <meshStandardMaterial color="#666a6a" metalness={0.32} roughness={0.38} />
-      </mesh>
-      {/* Segundo segmento articulado. */}
-      <mesh position={[0.83, 2.36, 0]} rotation={[0, 0, 0.58]} castShadow>
-        <boxGeometry args={[0.28, 0.88, 0.3]} />
-        <meshStandardMaterial color="#e1e0dc" metalness={0.2} roughness={0.5} />
-      </mesh>
-      <mesh position={[1.05, 2.76, 0]}>
-        <sphereGeometry args={[0.19, 18, 16]} />
-        <meshStandardMaterial color="#55595a" metalness={0.3} roughness={0.4} />
-      </mesh>
-      {/* Garra simplificada, que representa o efetuador do robô. */}
-      <mesh position={[1.22, 2.91, 0]} rotation={[0, 0, -0.55]} castShadow>
-        <boxGeometry args={[0.15, 0.52, 0.17]} />
-        <meshStandardMaterial color="#c85c0a" metalness={0.15} roughness={0.5} />
-      </mesh>
-      <mesh position={[1.38, 3.12, 0]} rotation={[0, 0, 0.5]}>
-        <boxGeometry args={[0.1, 0.35, 0.13]} />
-        <meshStandardMaterial color="#55595a" metalness={0.3} roughness={0.4} />
-      </mesh>
-    </group>
-  );
-}
-
-/** Modelo de esteira construído com roletes, plataforma e proteções laterais. */
-function EsteiraTransportadora() {
-  return (
-    <group>
-      <BaseMaquina cor="#8d918f" />
-      {/* Plataforma da esteira e superfície sobre a qual as peças transitariam. */}
-      <mesh position={[0, 0.85, 0]} castShadow>
-        <boxGeometry args={[2.5, 0.18, 0.9]} />
-        <meshStandardMaterial color="#44494a" metalness={0.25} roughness={0.65} />
-      </mesh>
-      <mesh position={[0, 0.97, 0]}>
-        <boxGeometry args={[2.32, 0.05, 0.72]} />
-        <meshStandardMaterial color="#a6aaa7" metalness={0.18} roughness={0.6} />
-      </mesh>
-      {/* Roletes repetidos ao longo da esteira. */}
-      {[-1.1, -0.65, -0.2, 0.25, 0.7, 1.1].map((x) => (
-        <mesh key={x} position={[x, 0.88, 0]} rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[0.09, 0.09, 0.8, 12]} />
-          <meshStandardMaterial color="#646866" metalness={0.55} roughness={0.38} />
-        </mesh>
-      ))}
-      {/* Proteções laterais destacadas em laranja industrial. */}
-      {[-0.85, 0.85].map((z) => (
-        <mesh key={z} position={[0, 0.45, z]} castShadow>
-          <boxGeometry args={[2.1, 0.7, 0.08]} />
-          <meshStandardMaterial color="#c85c0a" metalness={0.12} roughness={0.6} />
         </mesh>
       ))}
     </group>
@@ -286,13 +330,139 @@ function MaquinaGenerica() {
   );
 }
 
-/** Traduz o nome cadastrado pela pessoa em um dos modelos 3D internos disponíveis. */
+type ModeloGLBProps = {
+  arquivo: string;
+  tamanhoAlvo: number;
+  deslocamentoY?: number;
+};
+
+type LimiteErroModeloProps = {
+  arquivo: string;
+  children: ReactNode;
+  fallback: ReactNode;
+};
+
+type LimiteErroModeloState = {
+  falhou: boolean;
+};
+
+/**
+ * Impede que um arquivo GLB ausente ou inválido derrube todo o Canvas.
+ * Enquanto o modelo carrega, Suspense mostra a geometria genérica; se o carregamento
+ * falhar, este limite mantém a mesma reserva e registra o caminho que apresentou erro.
+ */
+class LimiteErroModelo extends Component<LimiteErroModeloProps, LimiteErroModeloState> {
+  state: LimiteErroModeloState = { falhou: false };
+
+  static getDerivedStateFromError(): LimiteErroModeloState {
+    return { falhou: true };
+  }
+
+  componentDidCatch(erro: Error, _informacoes: ErrorInfo) {
+    console.error(`Não foi possível carregar o modelo 3D "${this.props.arquivo}". Será usado o modelo genérico.`, erro);
+  }
+
+  render() {
+    return this.state.falhou ? this.props.fallback : this.props.children;
+  }
+}
+
+function ModeloComFallback(props: ModeloGLBProps) {
+  return (
+    <LimiteErroModelo
+      key={props.arquivo}
+      arquivo={props.arquivo}
+      fallback={<MaquinaGenerica />}
+    >
+      <Suspense fallback={<MaquinaGenerica />}>
+        <ModeloGLB {...props} />
+      </Suspense>
+    </LimiteErroModelo>
+  );
+}
+
+/**
+ * Carrega o GLB apenas quando o tipo de equipamento aparece na cena.
+ * A geometria é normalizada para um tamanho previsível e apoiada no piso,
+ * porque os arquivos recebidos usam escalas e origens diferentes.
+ */
+function ModeloGLB({ arquivo, tamanhoAlvo, deslocamentoY = 0 }: ModeloGLBProps) {
+  const { scene } = useGLTF(arquivo);
+  const transformacao = useMemo(() => {
+    const copia = scene.clone(true);
+    copia.updateMatrixWorld(true);
+    const limites = new Box3().setFromObject(copia);
+    const dimensoes = limites.getSize(new Vector3());
+    const maiorDimensao = Math.max(dimensoes.x, dimensoes.y, dimensoes.z) || 1;
+    const escala = tamanhoAlvo / maiorDimensao;
+    const centro = limites.getCenter(new Vector3());
+
+    copia.traverse((objeto) => {
+      const malha = objeto as Mesh;
+      if (malha.isMesh) {
+        malha.castShadow = true;
+        malha.receiveShadow = true;
+      }
+    });
+
+    return {
+      copia,
+      escala,
+      posicao: [
+        -centro.x * escala,
+        -limites.min.y * escala + deslocamentoY,
+        -centro.z * escala,
+      ] as [number, number, number],
+    };
+  }, [scene, tamanhoAlvo, deslocamentoY]);
+
+  return (
+    <group position={transformacao.posicao} scale={transformacao.escala}>
+      <primitive object={transformacao.copia} dispose={null} />
+    </group>
+  );
+}
+
+/** Traduz o nome cadastrado em um modelo 3D do setor ou em uma geometria antiga de reserva. */
 function tipoModelo(tipo: string) {
-  const valor = tipo.toLocaleLowerCase("pt-BR");
-  if (valor.includes("esteira") || valor.includes("transport")) return "esteira";
+  const valor = tipo.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[-_]/g, " ").toLowerCase();
+  if (valor.includes("esteira") || valor.includes("transport") || valor.includes("conveyor") || valor.includes("conversor")) return "esteira";
   if (valor.includes("cnc") || valor.includes("torno") || valor.includes("usinagem")) return "cnc";
-  if (valor.includes("robô") || valor.includes("robo") || valor.includes("braço") || valor.includes("braco")) return "robo";
+  if (valor.includes("robo") || valor.includes("braco")) return "robo";
+  if (valor.includes("ar condicionado") || valor.includes("climat") || valor === "ac") return "ar-condicionado";
+  if (valor.includes("carteira") || valor.includes("cadeira") || valor.includes("desk")) return "carteira";
+  if (valor.includes("notebook") || valor.includes("laptop")) return "notebook";
+  if (valor.includes("cama") || valor.includes("leito") || valor.includes("hospital bed")) return "cama";
+  if (valor.includes("monitor") || valor.includes("vitacore")) return "monitor";
   return "generica";
+}
+
+function ModeloDaMaquina({ tipo }: { tipo: string }) {
+  const modelo = tipoModelo(tipo);
+
+  if (modelo === "robo") {
+    return <ModeloComFallback arquivo={modeloBracoRoboUrl} tamanhoAlvo={3.35} />;
+  }
+  if (modelo === "esteira") {
+    return <ModeloComFallback arquivo={modeloConversorUrl} tamanhoAlvo={3.2} />;
+  }
+  if (modelo === "ar-condicionado") {
+    return <ModeloComFallback arquivo={modeloArCondicionadoIndustrialUrl} tamanhoAlvo={2.35} deslocamentoY={1.45} />;
+  }
+  if (modelo === "carteira") {
+    return <ModeloComFallback arquivo={modeloCadeiraUrl} tamanhoAlvo={2.25} />;
+  }
+  if (modelo === "notebook") {
+    return <ModeloComFallback arquivo={modeloLaptopUrl} tamanhoAlvo={1.5} deslocamentoY={0.72} />;
+  }
+  if (modelo === "cama") {
+    return <ModeloComFallback arquivo={modeloCamaHospitalUrl} tamanhoAlvo={4.35} />;
+  }
+  if (modelo === "monitor") {
+    return <ModeloComFallback arquivo={modeloMonitorMedicoUrl} tamanhoAlvo={2.05} />;
+  }
+  if (modelo === "cnc") return <CentroUsinagem />;
+  return <MaquinaGenerica />;
 }
 
 /**
@@ -311,7 +481,7 @@ function Maquina3D({
   posicao: [number, number, number];
   selecionada: boolean;
   aoSelecionar: (maquina: MaquinaCena) => void;
-  aoMover: (maquinaId: string, posicaoX: number, posicaoZ: number) => void;
+  aoMover: (maquinaId: string, posicaoX: number, posicaoY: number, posicaoZ: number) => void;
   aoIniciarArraste: (arrastando: boolean) => void;
 }) {
   const [hover, setHover] = useState(false);
@@ -328,7 +498,6 @@ function Maquina3D({
     z: number;
     moveu: boolean;
   } | null>(null);
-  const modelo = tipoModelo(maquina.tipo);
   // Trata status e texto do erro como fontes equivalentes, incluindo dados locais antigos.
   const possuiErro = maquina.possuiErro || maquina.status === "erro" || Boolean(maquina.mensagemErro?.trim());
   // Um clique sem movimento apenas seleciona a máquina e deixa o painel cuidar dos detalhes.
@@ -378,8 +547,8 @@ function Maquina3D({
     const pontoChao = evento.ray.intersectPlane(planoChaoRef.current, pontoIntersecaoRef.current);
     if (!pontoChao) return;
 
-    // Mantém os equipamentos dentro da área útil do piso do galpão e conserva
-    // o deslocamento inicial para que o modelo não "salte" para o centro do cursor.
+    // Mantém os equipamentos dentro da área útil e conserva o deslocamento inicial
+    // para que o modelo não "salte" para o centro do cursor.
     arraste.x = Math.max(-13, Math.min(13, pontoChao.x + arraste.deslocamentoX));
     arraste.z = Math.max(-12, Math.min(12, pontoChao.z + arraste.deslocamentoZ));
     grupoRef.current.position.x = arraste.x;
@@ -390,7 +559,10 @@ function Maquina3D({
     const arraste = arrasteRef.current;
     if (!arraste || arraste.pointerId !== evento.pointerId) return;
 
-    if (arraste.moveu) aoMover(maquina.id, arraste.x, arraste.z);
+    if (arraste.moveu) {
+      // O arraste no piso altera X/Z e preserva a altura atual do equipamento.
+      aoMover(maquina.id, arraste.x, grupoRef.current?.position.y ?? posicao[1], arraste.z);
+    }
     arrasteRef.current = null;
     aoIniciarArraste(false);
     document.body.style.cursor = "auto";
@@ -413,7 +585,7 @@ function Maquina3D({
         <ringGeometry args={[1.22, 1.35, 40]} />
         <meshBasicMaterial color={selecionada ? "#c85c0a" : hover ? "#e6a36c" : "#b5b2ad"} />
       </mesh>
-      {modelo === "robo" ? <BracoRobotico /> : modelo === "esteira" ? <EsteiraTransportadora /> : modelo === "cnc" ? <CentroUsinagem /> : <MaquinaGenerica />}
+      <ModeloDaMaquina tipo={maquina.tipo} />
 
       {/* Marcador HTML preso ao topo do modelo: alertas têm prioridade visual sobre a seleção.
           O elemento não captura o clique, então não atrapalha selecionar/arrastar o equipamento. */}
@@ -441,10 +613,10 @@ function Maquina3D({
 }
 
 /**
- * Componente raiz da cena: monta o Canvas, luzes, galpão, máquinas e câmera.
- * A posição guardada em cada máquina vence a posição inicial padrão após mover/salvar.
+ * Componente raiz da cena: monta o Canvas, estrutura do setor, equipamentos e câmera.
+ * A posição guardada em cada equipamento vence a posição inicial padrão após mover/salvar.
  */
-export function CenaIndustrial({ maquinas, maquinaSelecionadaId, aoSelecionar, aoMover }: Props) {
+export function CenaIndustrial({ ambiente, maquinas, maquinaSelecionadaId, aoSelecionar, aoMover }: Props) {
   const [controlesAtivos, setControlesAtivos] = useState(true);
   const [arrastandoMaquina, setArrastandoMaquina] = useState(false);
   // A mesma cena recebe apenas os equipamentos filtrados pela equipe na página pai.
@@ -459,7 +631,7 @@ export function CenaIndustrial({ maquinas, maquinaSelecionadaId, aoSelecionar, a
     });
   const posicoes = exibidas.map((maquina, indice) => ([
     maquina.posicaoX ?? posicoesPadrao[indice][0],
-    0,
+    maquina.posicaoY ?? 0,
     maquina.posicaoZ ?? posicoesPadrao[indice][2],
   ] as [number, number, number]));
 
@@ -467,14 +639,14 @@ export function CenaIndustrial({ maquinas, maquinaSelecionadaId, aoSelecionar, a
     <div className={styles.canvasIndustrial}>
       {/* Canvas é a área de renderização. A câmera começa em perspectiva elevada para
           mostrar o piso e a estrutura sem impedir que se aproxime dos equipamentos. */}
-      <Canvas shadows dpr={[1, 1.8]} camera={{ position: [13, 11, 17], fov: 42, near: 0.1, far: 120 }}>
+      <Canvas shadows="percentage" dpr={[1, 1.8]} camera={{ position: [13, 11, 17], fov: 42, near: 0.1, far: 120 }}>
         <color attach="background" args={["#f7f6f3"]} />
         {/* Iluminação ambiente, luz direcional com sombras e luz de preenchimento. */}
         <ambientLight intensity={1.6} />
         <directionalLight position={[9, 16, 9]} intensity={2.1} castShadow shadow-mapSize-width={2048} shadow-mapSize-height={2048} />
         <directionalLight position={[-10, 8, -5]} intensity={0.7} />
         <hemisphereLight args={["#ffffff", "#d2cec7", 1.3]} />
-        <GalpaoIndustrial />
+        {ambiente === "industrial" ? <GalpaoIndustrial /> : ambiente === "escolar" ? <AmbienteEscolar /> : <AmbienteSaude />}
         {exibidas.map((maquina, indice) => (
           <Maquina3D
             key={maquina.id}

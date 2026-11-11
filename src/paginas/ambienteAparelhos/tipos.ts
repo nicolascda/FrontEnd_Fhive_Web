@@ -1,4 +1,4 @@
-/** Estado operacional mostrado para cada equipamento no ambiente industrial. */
+/** Estado operacional mostrado para cada equipamento dos ambientes 3D. */
 export type StatusMaquina = "online" | "offline" | "atencao" | "erro";
 
 /**
@@ -30,7 +30,7 @@ export type RotinaLocal = {
 
 /**
  * Equipamento visualizado na cena 3D.
- * `posicaoX` e `posicaoZ` guardam a posição do equipamento no plano do piso.
+ * `posicaoX` e `posicaoZ` guardam a posição horizontal; `posicaoY` guarda a altura.
  */
 export type MaquinaLocal = {
   id: string;
@@ -38,6 +38,7 @@ export type MaquinaLocal = {
   nome: string;
   tipo: string;
   posicaoX?: number;
+  posicaoY?: number;
   posicaoZ?: number;
   funcao: string;
   status: StatusMaquina;
