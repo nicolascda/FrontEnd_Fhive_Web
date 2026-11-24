@@ -5,8 +5,8 @@ import { SegundaSecaoProdutos } from "../../secoes/Produtos/SegundaSecao/index.t
 import { FooterBar } from "../../componentes/FooterBar/index.tsx";
 import { CardComposto } from "../../componentes/CardComposto/index.tsx";
 import PessoaOlhandoTablet from "../../imagens/PessoaOlhandoTablet.jpg";
-import celularIntro from "../../imagens/celularIntro.png";
-import celularLogado from "../../imagens/celularLogado.png";
+import celularIntro from "../../imagens/CelularIntro.png";
+import celularLogado from "../../imagens/CelularLogado.png";
 
 export function TelaProdutos() {
     return (
