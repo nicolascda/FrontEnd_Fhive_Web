@@ -1,0 +1,163 @@
+.fundoModal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: clamp(5rem, 18vh, 10rem) 1rem 2rem;
+  background: rgba(28, 20, 14, 0.58);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  overflow-y: auto;
+  animation: aparecerFundo 0.2s ease-out;
+}
+
+.modal {
+  position: relative;
+  width: min(100%, 430px);
+  padding: 2.5rem 2rem 2rem;
+  border: 1px solid rgba(150, 73, 0, 0.12);
+  border-radius: 22px;
+  background: #fffaf1;
+  box-shadow: 0 24px 70px rgba(30, 18, 8, 0.25);
+  text-align: center;
+  animation: aparecerModal 0.25s ease-out;
+}
+
+.fechar {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #7a6a5d;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.fechar:hover {
+  background: #f0e5d5;
+  color: #4b270d;
+}
+
+.icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 1.25rem;
+  border-radius: 50%;
+}
+
+.iconeSucesso {
+  background: #e4f4e8;
+  color: #247a3c;
+}
+
+.iconeErro {
+  background: #fde8e6;
+  color: #c03932;
+}
+
+.titulo {
+  margin: 0 0 0.8rem;
+  color: #4b270d;
+  font-family: var(--fonte-texto, "Montserrat", sans-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.mensagem {
+  margin: 0 auto 1.75rem;
+  color: #6d5a4c;
+  font-family: var(--fonte-texto, "Montserrat", sans-serif);
+  font-size: 0.98rem;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.botao {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.85rem 1.25rem;
+  border: none;
+  border-radius: 12px;
+  background: var(--cor-marrom, #964900);
+  color: #fff;
+  font-family: var(--fonte-texto, "Montserrat", sans-serif);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.botao:hover {
+  background: #743800;
+}
+
+.botao:active {
+  transform: scale(0.98);
+}
+
+.fechar:focus-visible,
+.botao:focus-visible {
+  outline: 3px solid #d89b48;
+  outline-offset: 3px;
+}
+
+@keyframes aparecerFundo {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes aparecerModal {
+  from {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 480px) {
+  .fundoModal {
+    padding: 12vh 1rem 1.5rem;
+  }
+
+  .modal {
+    padding: 2.25rem 1.25rem 1.5rem;
+    border-radius: 18px;
+  }
+
+  .titulo {
+    font-size: 1.3rem;
+  }
+
+  .mensagem {
+    font-size: 0.93rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fundoModal,
+  .modal {
+    animation: none;
+  }
+}

@@ -1,0 +1,126 @@
+.CardCompra {
+    width: 20rem;
+    height: 27rem;
+    background-color: white;
+    border-radius: 25px;
+    align-items: center;
+    text-align: center;
+    border: 1px solid var(--cor-cinza-claro);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.CardCompraIcone {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 2.5rem 1.2rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.CardCompraFhive {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+/* .CardCompraFhive span {
+    font-family: var(--fonte-texto);
+    font-size: 2.25rem;
+    font-weight: bold;
+    color: #a85b16;
+} */
+
+.IconeMais {
+    width: 1.8rem;
+    height: 1.8rem;
+    color: #000000;
+}
+
+.IconeColmeia {
+    width: 2.5rem;
+    height: auto;
+}
+
+.Icones {
+    width: 3.2rem;
+    height: 3.2rem;
+}
+
+.CardCompraTexto {
+    width: 100%;
+    background-color:var(--cor-fundo-amarelo-escuro-v2);
+    border: 1px solid var(--cor-cinza-claro);
+    border-radius: 25px;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem;
+    height: auto;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.CardCompraTexto h2 {
+    font-family: var(--fonte-texto);
+    font-size: 1.5rem;
+    font-weight: normal;
+    margin-bottom: 1rem;
+}
+
+.CardCompraTexto p {
+    width: 100%;
+    list-style-position: inside; 
+    margin-top: 0.5rem;
+    font-family: var(--fonte-texto);
+    display: list-item;
+    font-weight: normal;
+    font-size: 1rem;
+    text-align: left;
+}
+
+.CardCompraBotao {
+    width: 100%;
+    height: 2.15rem;
+    border-radius: 5px;
+    border: none;
+    background-color: var(--cor-marrom-claro);
+    font-family: var(--fonte-texto);
+    font-size: var(--subtitulo);
+    color: var(--cor-texto-amarelo);
+    flex: 1 0 auto;
+    cursor: pointer;
+    transition: filter 0.3s ease-in-out;
+
+    margin-top: auto; 
+    flex: none;
+}
+
+.CardCompraBotao:hover {
+    filter: brightness(110%);
+}
+
+.FhiveMaior {
+    font-family: var(--fonte-texto);
+    font-size: 3rem;
+    font-weight: bold;
+    color: #a85b16;
+}
+
+.FhivePequeno {
+    font-family: var(--fonte-texto);
+    font-size: 2rem;
+    font-weight: bold;
+    color: #a85b16;
+}
+
+
+.IconeColmeiaMaior {
+    width: 4.2rem;
+    height: 4rem;
+    color: #a85b16;
+}

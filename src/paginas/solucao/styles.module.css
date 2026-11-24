@@ -1,0 +1,280 @@
+.page {
+  width: 100%;
+  min-height: 100vh;
+  color: #24180f;
+  font-family: var(--fonte-texto, Arial, Helvetica, sans-serif);
+  background: #ffffff;
+  overflow: hidden;
+}
+
+/* Hero da página: mantém a chamada centralizada no cartão branco do Figma. */
+.hero {
+  min-height: 285px;
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(320px, 1.1fr);
+  align-items: center;
+  gap: clamp(1.5rem, 5vw, 5rem);
+  padding: 2rem clamp(1.5rem, 8vw, 7.5rem);
+  background-color: #c35800;
+  background-size: cover;
+  background-position: center;
+}
+
+.heroCard {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 365px);
+  min-height: 172px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1.6rem 1.8rem;
+  border-radius: 10px;
+  background: #ffffff;
+  text-align: center;
+}
+
+.heroCard h1 {
+  margin: 0;
+  color: #23170f;
+  font-size: clamp(1.8rem, 2.6vw, 2.1rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+}
+
+.heroCard p {
+  max-width: 270px;
+  margin: 0;
+  font-size: clamp(0.95rem, 1.1vw, 1rem);
+  line-height: 1.5;
+}
+
+.heroLink {
+  margin-top: 0.05rem;
+  color: #a84a08;
+  font-size: 0.9rem;
+  font-weight: 750;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.heroLink:hover {
+  color: #743400;
+}
+
+.heroImage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 0;
+}
+
+
+.heroImage img {
+  display: block;
+  width: min(100%, 390px);
+  max-height: 270px;
+  object-fit: contain;
+  /* O contorno escuro externo foi removido do próprio arquivo Solucoes.png. */
+  filter: drop-shadow(0 10px 14px rgb(71 28 0 / 18%));
+}
+
+/* Cards das soluções: mais área para a imagem e textos mais fáceis de ler. */
+.featureSection {
+  display: grid;
+  grid-template-columns: minmax(200px, 0.8fr) minmax(300px, 1.2fr);
+  align-items: center;
+  gap: clamp(1.5rem, 6vw, 6rem);
+  min-height: 255px;
+  padding: 2rem clamp(1.5rem, 8vw, 7.5rem);
+}
+
+.cream {
+  background: #fff1d5;
+}
+
+.white {
+  background: #ffffff;
+}
+
+.reverse {
+  grid-template-columns: minmax(300px, 1.2fr) minmax(200px, 0.8fr);
+}
+
+.visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.visual img {
+  display: block;
+  width: min(100%, 290px);
+  aspect-ratio: 1 / 0.88;
+  object-fit: cover;
+  border-radius: 17px;
+  box-shadow: 0 4px 15px rgb(74 43 14 / 10%);
+}
+
+.featureCard {
+  width: 100%;
+  max-width: 560px;
+  min-height: 170px;
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.55rem 1.7rem;
+  border-radius: 10px;
+}
+
+.cardWhite {
+  background: #ffffff;
+}
+
+.cardYellow {
+  background: #fff1d5;
+}
+
+.featureCard h2 {
+  margin: 0 0 0.8rem;
+  font-size: clamp(1.2rem, 1.65vw, 1.35rem);
+  line-height: 1.25;
+  font-weight: 750;
+}
+
+.featureCard p {
+  max-width: 480px;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.58;
+}
+
+.featureCard p + p {
+  margin-top: 0.75rem;
+}
+
+.featureList {
+  display: grid;
+  gap: 0.38rem;
+  margin: 0.95rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.featureList li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.91rem;
+  line-height: 1.35;
+}
+
+.featureList li::before {
+  content: "✓";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.08rem;
+  height: 1.08rem;
+  flex: 0 0 1.08rem;
+  border-radius: 50%;
+  background: #f4770b;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+/* Afasta o último card do rodapé sem alterar o componente de rodapé compartilhado. */
+.lastFeature {
+  padding-bottom: clamp(3.25rem, 5vw, 4.5rem);
+}
+
+/* O FooterBar é compartilhado com outras telas; o ajuste fica isolado nesta página. */
+.footerWrap :global(footer) {
+  margin-top: 0;
+  padding-top: 1.3rem;
+}
+
+@media (min-width: 1500px) {
+  .hero,
+  .featureSection {
+    padding-left: max(7.5rem, calc((100vw - 1250px) / 2));
+    padding-right: max(7.5rem, calc((100vw - 1250px) / 2));
+  }
+}
+
+@media (max-width: 760px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    min-height: unset;
+    padding: 1.5rem 1.2rem;
+  }
+
+  .heroCard {
+    width: min(100%, 360px);
+    margin: 0 auto;
+    min-height: 150px;
+    padding: 1.4rem 1.3rem;
+  }
+
+  .heroCard h1 {
+    font-size: clamp(1.7rem, 6vw, 2rem);
+  }
+
+  .heroImage img {
+    width: min(88%, 320px);
+    max-height: 220px;
+  }
+
+  .featureSection,
+  .reverse {
+    grid-template-columns: 1fr;
+    gap: 1.35rem;
+    padding: 1.6rem 1.1rem;
+  }
+
+  .reverse .featureCard {
+    order: 1;
+  }
+
+  .reverse .visual {
+    order: 2;
+  }
+
+  .visual img {
+    width: min(100%, 285px);
+    aspect-ratio: 1 / 0.82;
+  }
+
+  .featureCard {
+    max-width: 560px;
+    min-height: 0;
+    padding: 1.3rem 1.35rem;
+  }
+
+  .featureCard h2 {
+    font-size: 1.18rem;
+  }
+
+  .featureCard p {
+    font-size: 0.92rem;
+  }
+
+  .featureList li {
+    font-size: 0.9rem;
+  }
+
+  .lastFeature {
+    padding-bottom: 3rem;
+  }
+
+  .footerWrap :global(footer) {
+    padding: 1rem 1.1rem;
+  }
+}

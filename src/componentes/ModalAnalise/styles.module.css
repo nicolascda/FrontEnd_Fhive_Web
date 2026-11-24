@@ -1,0 +1,266 @@
+/* O visual deste modal fica isolado do CSS da página de análise. */
+.fundoModalSelecao {
+  position: fixed;
+  z-index: 1200;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: #1b120c76;
+  backdrop-filter: blur(4px);
+}
+
+.modalSelecao {
+  width: min(620px, 100%);
+  max-height: min(88vh, 760px);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 22px;
+  border: 1px solid #e3d3c3;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 22px 70px #0003;
+}
+
+.topoModalSelecao {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f0e8e0;
+}
+
+.topoModalSelecao h2 {
+  margin: 5px 0 0;
+  color: #312b26;
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.topoModalSelecao p {
+  margin: 5px 0 0;
+  color: #7c7268;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.botaoFecharModal {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #e5ddd5;
+  border-radius: 50%;
+  color: #5f554b;
+  background: #fff;
+  cursor: pointer;
+}
+
+.botaoFecharModal:hover { background: #fff0e3; }
+
+.opcoesModoModal {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.opcoesModoModal button {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 8px 10px;
+  border: 1px solid #e2d2c0;
+  border-radius: 8px;
+  color: #695d51;
+  background: #fffaf3;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.opcoesModoModal button.modoModalAtivo {
+  color: #fff;
+  border-color: #bd500d;
+  background: #bd500d;
+}
+
+.instrucaoSelecao {
+  margin: 13px 0 9px;
+  color: #786d62;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.listaModalMaquinas {
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  overflow-y: auto;
+  padding: 2px 3px 2px 1px;
+}
+
+.itemModalMaquina {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid #e6d8ca;
+  border-radius: 8px;
+  color: inherit;
+  background: #fff;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 130ms ease, border-color 130ms ease;
+}
+
+.itemModalMaquina:hover { background: #fffaf3; border-color: #d5b18f; }
+.itemModalMaquinaAtivo { background: #fff4e8; border-color: #bd500d; }
+
+.textoItemModal {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.textoItemModal strong {
+  color: #342d26;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.textoItemModal small {
+  color: #84776b;
+  font-size: 10px;
+}
+
+.marcadorEscolha {
+  width: 19px;
+  height: 19px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 1px solid #cfc2b4;
+  border-radius: 50%;
+  color: #fff;
+  background: #fff;
+}
+
+.marcadorEscolhaAtivo {
+  border-color: #bd500d;
+  background: #bd500d;
+}
+
+.rodapeSelecaoModal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+  color: #7d7165;
+  font-size: 10px;
+}
+
+.rodapeSelecaoModal button {
+  padding: 5px 7px;
+  border: 0;
+  color: #9c4b11;
+  background: transparent;
+  font: inherit;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.botoesModalSelecao {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  margin-top: 17px;
+  padding-top: 14px;
+  border-top: 1px solid #f0e8e0;
+}
+
+.botaoCancelarModal,
+.botaoConfirmarModal {
+  min-height: 37px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 8px 12px;
+  border-radius: 7px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.botaoCancelarModal {
+  border: 1px solid #ded5cc;
+  color: #5d5349;
+  background: #fff;
+}
+
+.botaoConfirmarModal {
+  border: 1px solid #bd500d;
+  color: #fff;
+  background: #bd500d;
+}
+
+.botaoConfirmarModal:hover:not(:disabled) { background: #a64207; }
+.botaoConfirmarModal:disabled { opacity: .45; cursor: not-allowed; }
+
+
+.pontoStatus {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #5aa57d;
+}
+
+.status-erro { background: #d34232; }
+.status-offline { background: #89837c; }
+.status-atencao { background: #d9a229; }
+.status-online { background: #3b9f6f; }
+
+.numeroMaquina {
+  width: 29px;
+  height: 29px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 8px;
+  color: #98480c;
+  background: #ffead7;
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.miniTituloComparacao {
+  display: block;
+  color: #a34a0d;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .45px;
+  line-height: 1.4;
+}
+
+@media (max-width: 520px) {
+  .modalSelecao { padding: 15px; }
+  .topoModalSelecao h2 { font-size: 19px; }
+  .opcoesModoModal button { padding-inline: 6px; font-size: 10px; }
+  .botoesModalSelecao { flex-wrap: wrap; }
+}

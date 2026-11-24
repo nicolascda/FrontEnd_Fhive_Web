@@ -5,7 +5,7 @@ type LabelPadraoProps = {
     textoLabel?: string;
     textoTitulo: string;
     tipo: string;
-} & React.ComponentProps<'div'>
+} & React.ComponentProps<'input'>
 
 export function LabelPadrao({
     id,
@@ -17,7 +17,7 @@ export function LabelPadrao({
 }: LabelPadraoProps) {
     return (
         <>
-            <div className={`${styles.Campo}`} {...rest}>
+            <div className={`${styles.Campo}`}>
                 <label htmlFor={id} className={`${styles.TextoCampo}`}>
                     {textoTitulo}
                 </label>
@@ -27,6 +27,7 @@ export function LabelPadrao({
                     type={tipo}
                     placeholder={textoLabel}
                     className={`${styles.CampoInput}`}
+                    {...rest}
                   />
             </div>
            
