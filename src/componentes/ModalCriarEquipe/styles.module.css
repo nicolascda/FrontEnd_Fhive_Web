@@ -1532,3 +1532,25 @@
         min-height: 100px;
     }
 }
+
+
+/* A versão atual disponibiliza somente o Plano Básico demonstrativo. */
+.PlanoComprar {
+    grid-template-columns: minmax(0, 440px);
+    justify-content: center;
+    width: 100%;
+}
+
+.PlanoComprarIndividual {
+    cursor: default;
+}
+
+.PlanoComprarIndividual:hover {
+    transform: none;
+}
+
+.avisoPlano {
+    margin-top: 0.35rem;
+    font-weight: 600;
+    color: var(--cor-cinza);
+}

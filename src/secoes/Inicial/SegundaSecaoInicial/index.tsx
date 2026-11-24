@@ -1,246 +1,84 @@
 import styles from "./styles.module.css";
-import { Link } from 'react-router-dom';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import { Link } from "react-router-dom";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { BarChart3, Boxes, CalendarClock, Wifi } from "lucide-react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
+const recursos = [
+  {
+    titulo: "Gestão de dispositivos",
+    descricao:
+      "Organize os aparelhos cadastrados por equipe e consulte suas principais informações em uma interface centralizada.",
+    Icone: Wifi,
+  },
+  {
+    titulo: "Análise de dados",
+    descricao:
+      "Visualize indicadores por equipamento e período para acompanhar o consumo e comparar os dados disponíveis.",
+    Icone: BarChart3,
+  },
+  {
+    titulo: "Rotinas de automação",
+    descricao:
+      "Planeje atividades recorrentes, distribua as etapas e associe cada rotina aos equipamentos correspondentes.",
+    Icone: CalendarClock,
+  },
+  {
+    titulo: "Ambientes em 3D",
+    descricao:
+      "Explore representações tridimensionais de ambientes e visualize os equipamentos dentro de seu contexto.",
+    Icone: Boxes,
+  },
+];
 
 export function SegundaSecaoInicial() {
-    return (
-        <>
-            <section>
-                <div className={`${styles.SegundaSecaoTexto}`}>
-                    <h2>
-                        Produtos
-                    </h2>
-                    <h1> Saiba mais sobre os produtos e serviços dentro do Fhive</h1>
-                </div>
+  return (
+    <section aria-labelledby="titulo-recursos-fhive">
+      <div className={styles.SegundaSecaoTexto}>
+        <h2>Recursos</h2>
+        <h1 id="titulo-recursos-fhive">
+          Uma plataforma para acompanhar e organizar seus dispositivos IoT
+        </h1>
+      </div>
 
-                <Swiper
-                    modules={[Navigation, Pagination, Autoplay]}
-                    // rewind={true}
-                    loop={true}
-                    // loopAdditionalSlides={7} 
-                    autoplay={{
-                        delay: 5000,
-                        disableOnInteraction: false,
-                    }}
-                    navigation={true}
-                    centeredSlides={true}
-
-                    breakpoints={{
-                        1024: {
-                            slidesPerView: 3.2, // Mostra 4 cards inteiros e 40% do quinto card nas pontas!
-                            spaceBetween: 20
-                        }
-                    }}
-                    className={styles.Carrousel}
-                >
-                    {/* Cada item DEVE estar obrigatoriamente dentro de um SwiperSlide */}
-                    <SwiperSlide>
-                        <div className={`${styles.divCarrousel}`}>
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                color="#cf1313"
-                                className="lucide lucide-wifi">
-                                <path d="M12 20h.01" />
-                                <path d="M2 8.82a15 15 0 0 1 20 0" />
-                                <path d="M5 12.859a10 10 0 0 1 14 0" /><path d="M8.5 16.429a5 5 0 0 1 7 0" />
-                            </svg>
-
-                            <h2>Serviços de Automação</h2>
-
-                            <p> Crie soluções de integência espacial IoT  de ultima geração replicando espaços físicos reais e criando ambientes conectados</p>
-
-                            <Link
-                                to="/tutorial"
-                                className={styles.botaoInicial}
-                            >
-                                Saiba Mais
-                            </Link>
-                        </div>
-                    </SwiperSlide>
-
-                    <SwiperSlide>
-                        <div className={`${styles.divCarrousel}`}>
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                color="#cf1313"
-                                className="lucide lucide-wifi">
-                                <path d="M12 20h.01" />
-                                <path d="M2 8.82a15 15 0 0 1 20 0" />
-                                <path d="M5 12.859a10 10 0 0 1 14 0" /><path d="M8.5 16.429a5 5 0 0 1 7 0" />
-                            </svg>
-
-                            <h2>Serviços de Automação</h2>
-
-                            <p> Crie soluções de integência espacial IoT  de ultima geração replicando espaços físicos reais e criando ambientes conectados</p>
-
-                            <Link
-                                to="/tutorial"
-                                className={styles.botaoInicial}
-                            >
-                                Saiba Mais
-                            </Link>
-                        </div>
-                    </SwiperSlide>
-
-                    <SwiperSlide>
-                        <div className={`${styles.divCarrousel}`}>
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                color="#cf1313"
-                                className="lucide lucide-wifi">
-                                <path d="M12 20h.01" />
-                                <path d="M2 8.82a15 15 0 0 1 20 0" />
-                                <path d="M5 12.859a10 10 0 0 1 14 0" /><path d="M8.5 16.429a5 5 0 0 1 7 0" />
-                            </svg>
-
-                            <h2>Serviços de Automação</h2>
-
-                            <p> Crie soluções de integência espacial IoT  de ultima geração replicando espaços físicos reais e criando ambientes conectados</p>
-
-                            <Link
-                                to="/tutorial"
-                                className={styles.botaoInicial}
-                            >
-                                Saiba Mais
-                            </Link>
-                        </div>
-                    </SwiperSlide>
-
-                    <SwiperSlide>
-                        <div className={`${styles.divCarrousel}`}>
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                color="#cf1313"
-                                className="lucide lucide-wifi">
-                                <path d="M12 20h.01" />
-                                <path d="M2 8.82a15 15 0 0 1 20 0" />
-                                <path d="M5 12.859a10 10 0 0 1 14 0" /><path d="M8.5 16.429a5 5 0 0 1 7 0" />
-                            </svg>
-
-                            <h2>Serviços de Automação</h2>
-
-                            <p> Crie soluções de integência espacial IoT  de ultima geração replicando espaços físicos reais e criando ambientes conectados</p>
-
-                            <Link
-                                to="/tutorial"
-                                className={styles.botaoInicial}
-                            >
-                                Saiba Mais
-                            </Link>
-                        </div>
-                    </SwiperSlide>
-
-                    <SwiperSlide>
-                        <div className={`${styles.divCarrousel}`}>
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                color="#cf1313"
-                                className="lucide lucide-wifi">
-                                <path d="M12 20h.01" />
-                                <path d="M2 8.82a15 15 0 0 1 20 0" />
-                                <path d="M5 12.859a10 10 0 0 1 14 0" /><path d="M8.5 16.429a5 5 0 0 1 7 0" />
-                            </svg>
-
-                            <h2>Serviços de Automação</h2>
-
-                            <p> Crie soluções de integência espacial IoT  de ultima geração replicando espaços físicos reais e criando ambientes conectados</p>
-
-                            <Link
-                                to="/tutorial"
-                                className={styles.botaoInicial}
-                            >
-                                Saiba Mais
-                            </Link>
-                        </div>
-                    </SwiperSlide>
-
-                    <SwiperSlide>
-                        <div className={`${styles.divCarrousel}`}>
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                color="#cf1313"
-                                className="lucide lucide-wifi">
-                                <path d="M12 20h.01" />
-                                <path d="M2 8.82a15 15 0 0 1 20 0" />
-                                <path d="M5 12.859a10 10 0 0 1 14 0" /><path d="M8.5 16.429a5 5 0 0 1 7 0" />
-                            </svg>
-
-                            <h2>Serviços de Automação</h2>
-
-                            <p> Crie soluções de integência espacial IoT  de ultima geração replicando espaços físicos reais e criando ambientes conectados</p>
-
-                            <Link
-                                to="/tutorial"
-                                className={styles.botaoInicial}
-                            >
-                                Saiba Mais
-                            </Link>
-                        </div>
-                    </SwiperSlide>
-
-                    <SwiperSlide>
-                        <div className={`${styles.divCarrousel}`}>
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                color="#cf1313"
-                                className="lucide lucide-wifi">
-                                <path d="M12 20h.01" />
-                                <path d="M2 8.82a15 15 0 0 1 20 0" />
-                                <path d="M5 12.859a10 10 0 0 1 14 0" /><path d="M8.5 16.429a5 5 0 0 1 7 0" />
-                            </svg>
-
-                            <h2>Serviços de Automação</h2>
-
-                            <p> Crie soluções de integência espacial IoT  de ultima geração replicando espaços físicos reais e criando ambientes conectados</p>
-
-                            <Link
-                                to="/tutorial"
-                                className={styles.botaoInicial}
-                            >
-                                Saiba Mais
-                            </Link>
-                        </div>
-                    </SwiperSlide>
-
-
-
-
-                </Swiper>
-
-
-            </section>
-        </>
-    )
+      <Swiper
+        modules={[Navigation, Pagination, Autoplay]}
+        loop={true}
+        autoplay={{
+          delay: 5000,
+          disableOnInteraction: false,
+        }}
+        navigation={true}
+        pagination={{ clickable: true }}
+        centeredSlides={true}
+        breakpoints={{
+          640: {
+            slidesPerView: 1.5,
+            spaceBetween: 16,
+          },
+          1024: {
+            slidesPerView: 3,
+            spaceBetween: 20,
+          },
+        }}
+        className={styles.Carrousel}
+      >
+        {recursos.map(({ titulo, descricao, Icone }) => (
+          <SwiperSlide key={titulo}>
+            <article className={styles.divCarrousel}>
+              <Icone size={28} strokeWidth={1.8} aria-hidden="true" />
+              <h2>{titulo}</h2>
+              <p>{descricao}</p>
+              <Link to="/produtos" className={styles.botaoInicial}>
+                Conheça o recurso
+              </Link>
+            </article>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </section>
+  );
 }

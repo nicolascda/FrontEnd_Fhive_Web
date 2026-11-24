@@ -304,7 +304,7 @@ export function BarraNavegacaoOficial() {
                         </button>
                     ) : (
                         <Link to="/login" className={`${styles['menu-item']} ${styles['logar']}`}>
-                            <span>Logar</span>
+                            <span>Entrar</span>
                         </Link>
                     )}
                 </div>

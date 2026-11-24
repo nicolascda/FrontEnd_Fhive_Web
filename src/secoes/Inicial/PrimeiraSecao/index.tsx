@@ -25,8 +25,8 @@ export function PrimeiraSecaoInicial() {
                     </h2>
 
                     <p className={styles.SubtituloCard}>
-                        Libere seus dados na borda, proteja e gerencie com a eficiência,
-                        ajudando a sua empresa com a melhor gestão do planeta
+                        Acompanhe dispositivos conectados, consulte informações e organize
+                        as atividades da sua equipe em uma interface intuitiva.
                     </p>
 
                     <div className={styles.BotoesGestao}>

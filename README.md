@@ -1,37 +1,57 @@
-# React + TypeScript + Vite
+# FHIVE Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Interface web da plataforma **Fhive**, um projeto voltado à organização e ao acompanhamento de dispositivos conectados (IoT).
 
-Currently, two official plugins are available:
+O front-end reúne páginas institucionais e um ambiente de demonstração com recursos para:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- organizar equipamentos por equipe;
+- consultar informações e indicadores dos dispositivos;
+- comparar dados por equipamento e período;
+- criar rotinas com dias, horários e ações em sequência;
+- visualizar cenários e equipamentos em ambientes tridimensionais;
+- gerenciar integrantes, permissões e configurações das equipes.
 
-## React Compiler
+## Tecnologias
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React
+- TypeScript
+- Vite
+- React Router
+- Three.js e React Three Fiber
+- Swiper
+- Lucide React e React Icons
 
-## Expanding the Oxlint configuration
+## Executar o projeto
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+Instale as dependências:
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
-"# FrontEnd_Fhive_Web" 
+Inicie o servidor de desenvolvimento:
 
+```bash
+npm run dev
+```
+
+Gere a versão de produção:
+
+```bash
+npm run build
+```
+
+Execute a análise estática:
+
+```bash
+npm run lint
+```
+
+## Integração com o backend
+
+As telas que exigem autenticação, persistência ou dados de equipamentos utilizam chamadas HTTP para rotas relativas da aplicação. Para utilizar essas funções com dados reais, o backend correspondente deve estar disponível e configurado no ambiente de execução.
+
+Quando não há equipamentos cadastrados, algumas áreas exibem informações demonstrativas locais para apresentar a interface. Esses valores servem apenas para demonstração e não representam medições de dispositivos físicos.
 
 # Créditos e licenças dos modelos 3D
 

@@ -161,7 +161,7 @@ export function TelaConfiguracoesEquipe() {
                                 type="button"
                                 onClick={() => {
                                     setMenuConfiguracaoAberto(false);
-                                    navigate('/automacoes');
+                                    navigate('/rotinas');
                                 }}
                             >
                                 Automações

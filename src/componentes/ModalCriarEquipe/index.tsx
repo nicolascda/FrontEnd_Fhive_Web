@@ -37,7 +37,6 @@ export function ModalCriarEquipe({ onFechar, onCriada }: ModalCriarEquipeProps) 
 
     const [informacaoAberta, setInformacaoAberta] = useState(false);
     const [botaoSelecionado, setBotaoSelecionado] = useState<number>(1);
-    const [planoSelecionado, setPlanoSelecionado] = useState<number>(1);
     const [integrantes, setIntegrantes] = useState(25);
     const [nome, setNome] = useState("");
     const [descricao, setDescricao] = useState("");
@@ -153,6 +152,7 @@ export function ModalCriarEquipe({ onFechar, onCriada }: ModalCriarEquipeProps) 
                                 value={nome}
                                 onChange={(evento) => setNome(evento.target.value)}
                                 maxLength={80}
+                                placeholder="Ex.: Equipe de manutenção"
                                 required
                             />
 
@@ -164,6 +164,7 @@ export function ModalCriarEquipe({ onFechar, onCriada }: ModalCriarEquipeProps) 
                                 value={descricao}
                                 onChange={(evento) => setDescricao(evento.target.value)}
                                 maxLength={1000}
+                                placeholder="Descreva o objetivo da equipe e os equipamentos que ela acompanha."
                             />
                         </div>
 
@@ -219,7 +220,7 @@ export function ModalCriarEquipe({ onFechar, onCriada }: ModalCriarEquipeProps) 
 
                         <div className={`${styles.blocos} ${styles.Planos}`}>
                             <div className={styles.TituloPlano}>
-                                <h2>Planos</h2>
+                                <h2>Plano da equipe</h2>
                                 <button
                                     type="button"
                                     onClick={() => setInformacaoAberta(!informacaoAberta)}
@@ -230,36 +231,28 @@ export function ModalCriarEquipe({ onFechar, onCriada }: ModalCriarEquipeProps) 
 
                                 {informacaoAberta && (
                                     <div className={styles.botaoAtivar}>
-                                        <p>Os planos influenciam na quantidade de<br />integrantes permitidos na equipe</p>
+                                        <p>Nesta versão, as equipes utilizam o Plano Básico. Defina abaixo o limite de integrantes.</p>
                                     </div>
                                 )}
                             </div>
 
                             <div className={styles.PlanoComprar}>
-                                {[1, 2, 3].map((plano) => (
-                                    <button
-                                        type="button"
-                                        className={`${styles.PlanoComprarIndividual} ${planoSelecionado === plano ? styles.PlanoComprarSelecionado : ""}`}
-                                        key={plano}
-                                        onClick={() => setPlanoSelecionado(plano)}
-                                        aria-pressed={planoSelecionado === plano}
-                                    >
-                                        <h3>Básico</h3>
-                                        <p>Feito para iniciar projetos escolares ou esboços de modelos</p>
-                                        <h3>Características</h3>
-                                        <ul>
-                                            <li>Todas as funções iniciais</li>
-                                            <li>Acesso ao modelo de espaço 3d</li>
-                                            <li>Comparação de dados</li>
-                                            <li>Espaço máximo de 30 integrantes</li>
-                                        </ul>
-                                        <h3>Preço: R$89,90</h3>
-                                    </button>
-                                ))}
+                                <article className={`${styles.PlanoComprarIndividual} ${styles.PlanoComprarSelecionado}`}>
+                                    <h3>Plano Básico</h3>
+                                    <p>Recursos disponíveis nesta versão demonstrativa da Fhive.</p>
+                                    <h3>Características</h3>
+                                    <ul>
+                                        <li>Gestão de equipes e equipamentos</li>
+                                        <li>Visualização dos ambientes 3D disponíveis</li>
+                                        <li>Análise das informações cadastradas</li>
+                                        <li>Limite configurável de 5 a 35 integrantes</li>
+                                    </ul>
+                                    <p className={styles.avisoPlano}>Valores e condições comerciais ainda não definidos.</p>
+                                </article>
                             </div>
 
                             <div className={styles.escolhaIntegrantes}>
-                                <label htmlFor="integrantes">Total de Integrantes - Plano Básico</label>
+                                <label htmlFor="integrantes">Limite de integrantes da equipe</label>
                                 <div className={styles.MinimoMaximo}>
                                     <span>Mínimo</span>
                                     <span>Máximo</span>
