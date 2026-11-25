@@ -158,3 +158,189 @@
 .CardCompraBotao:hover {
     filter: brightness(110%);
 }
+
+/* Download do aplicativo mobile FHIVE */
+.SecaoDownload {
+    width: min(94%, 78rem);
+    min-height: 21rem;
+    margin: 3rem auto;
+    padding: 1.8rem clamp(1.3rem, 5vw, 4.2rem) 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 1.1rem;
+    background-color: #fff1d5;
+    font-family: var(--fonte-texto);
+    box-sizing: border-box;
+}
+
+.TituloDownload {
+    margin: 0;
+    color: #090909;
+    font-size: clamp(1.2rem, 2vw, 1.75rem);
+    line-height: 1.25;
+    font-weight: 700;
+    text-align: center;
+}
+
+.TituloDownload span {
+    color: #f0780a;
+}
+
+.ConteudoDownload {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: stretch;
+    gap: 2rem;
+    min-height: 14rem;
+}
+
+.TextoDownload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    min-width: 0;
+    min-height: 25rem;
+    height: 100%;
+    padding: clamp(2.8rem, 5vw, 4.2rem) 0 0.2rem;
+    box-sizing: border-box;
+}
+
+.TextoDownload p {
+    width: 100%;
+    max-width: 36rem;
+    margin: 0;
+    font-weight: normal;
+    font-size: clamp(1rem, 1.15rem, 1.25rem);
+    line-height: 1.5;
+    text-align: left;
+}
+
+.BotaoDownload {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    width: 100%;
+    min-height: 3.15rem;
+    padding: 0.75rem 1rem;
+    border: 0;
+    border-radius: 0.45rem;
+    background-color: #ed7100;
+    color: #ffffff;
+    font-family: var(--fonte-texto);
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.15;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.BotaoDownload:hover {
+    background-color: #d96300;
+    transform: translateY(-2px);
+}
+
+.BotaoDownload:focus-visible {
+    outline: 3px solid #964900;
+    outline-offset: 3px;
+}
+
+.ImagensDownload {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1.2rem, 3vw, 2.3rem);
+    min-width: 0;
+    height: 100%;
+    margin-top: 3rem;
+}
+
+.ImagemCelular {
+    display: block;
+    width: auto;
+    height: clamp(15rem, 22rem, 25rem);
+    max-width: 47%;
+    object-fit: contain;
+}
+
+@media (max-width: 640px) {
+    .SecaoDownload {
+        width: 94%;
+        min-height: 17.5rem;
+        margin: 2rem auto;
+        padding: 1.25rem 0.9rem 1.2rem;
+        gap: 0.9rem;
+    }
+
+    .TituloDownload {
+        font-size: clamp(1rem, 4vw, 1.35rem);
+    }
+
+    .ConteudoDownload {
+        grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+        gap: 0.55rem;
+        min-height: 13.5rem;
+    }
+
+    .TextoDownload {
+        min-height: 13.5rem;
+        height: 100%;
+        gap: 1rem;
+        padding: 0.8rem 0 0.15rem;
+    }
+
+    .TextoDownload p {
+        font-size: clamp(0.9rem, 3.1vw, 1.1rem);
+        line-height: 1.35;
+    }
+
+    .BotaoDownload {
+        width: 8.8rem;
+        min-height: 2.55rem;
+        padding: 0.55rem 0.7rem;
+        font-size: 0.9rem;
+    }
+
+    .ImagensDownload {
+        gap: clamp(0.35rem, 2vw, 0.8rem);
+        margin-top: 0;
+        align-self: center;
+    }
+
+    .ImagemCelular {
+        height: clamp(9.5rem, 31vw, 11.5rem);
+        max-width: 48%;
+    }
+}
+
+@media (max-width: 360px) {
+    .SecaoDownload {
+        padding-right: 0.65rem;
+        padding-left: 0.65rem;
+    }
+
+    .ConteudoDownload {
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        gap: 0.25rem;
+    }
+
+    .TextoDownload p {
+        font-size: 0.82rem;
+    }
+
+    .BotaoDownload {
+        width: 7.5rem;
+        min-height: 2.35rem;
+        font-size: 0.82rem;
+    }
+
+    .ImagemCelular {
+        height: 9.25rem;
+    }
+}
