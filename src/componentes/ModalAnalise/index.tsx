@@ -3,7 +3,7 @@ import { Activity, BarChart3, Check, CheckCircle2, X } from "lucide-react";
 import type { MaquinaLocal, StatusMaquina } from "../../paginas/ambienteAparelhos/tipos";
 import styles from "./styles.module.css";
 
-/** Define os dois modos disponíveis para a análise de máquinas. */
+/** Define os dois modos disponíveis para a análise de equipamentos. */
 export type ModoComparacao = "individual" | "multipla";
 
 type ModalSelecaoMaquinasProps = {
@@ -25,7 +25,7 @@ function rotuloStatus(status: StatusMaquina, erro?: string | null) {
 }
 
 /**
- * Modal independente para selecionar uma máquina ou várias.
+ * Modal independente para selecionar um equipamento ou vários.
  * A seleção em edição é temporária e só é devolvida à página quando o usuário confirma.
  */
 export function ModalSelecaoMaquinas({
@@ -92,7 +92,7 @@ export function ModalSelecaoMaquinas({
         <div className={styles.topoModalSelecao}>
           <div>
             <span className={styles.miniTituloComparacao}>ANÁLISE DOS DADOS · {equipeNome}</span>
-            <h2 id="titulo-modal-selecao">Selecionar máquinas</h2>
+            <h2 id="titulo-modal-selecao">Selecionar equipamentos</h2>
             <p>Escolha como quer comparar os equipamentos da equipe.</p>
           </div>
           <button type="button" className={styles.botaoFecharModal} aria-label="Fechar seletor" onClick={onFechar}>
@@ -107,7 +107,7 @@ export function ModalSelecaoMaquinas({
             onClick={() => mudarModo("individual")}
             aria-pressed={modoRascunho === "individual"}
           >
-            <Activity size={16} /> Uma máquina
+            <Activity size={16} /> Um equipamento
           </button>
           <button
             type="button"
@@ -121,8 +121,8 @@ export function ModalSelecaoMaquinas({
 
         <div className={styles.instrucaoSelecao}>
           {modoRascunho === "individual"
-            ? "Selecione uma máquina. A escolha substitui a máquina analisada atualmente."
-            : "Marque todas as máquinas que deseja comparar antes de confirmar."}
+            ? "Selecione um equipamento. A escolha substituirá o item analisado atualmente."
+            : "Marque os equipamentos que deseja comparar antes de confirmar."}
         </div>
 
         <div className={styles.listaModalMaquinas}>
@@ -156,7 +156,7 @@ export function ModalSelecaoMaquinas({
 
         {modoRascunho === "multipla" && (
           <div className={styles.rodapeSelecaoModal}>
-            <span>{idsRascunho.length} de {maquinas.length} máquinas selecionadas</span>
+            <span>{idsRascunho.length} de {maquinas.length} equipamentos selecionados</span>
             <button type="button" onClick={() => setIdsRascunho(maquinas.map((maquina) => maquina.id))}>
               Selecionar todas
             </button>

@@ -280,7 +280,7 @@ export function TelaRotinas() {
   };
 
   const excluirRotina = async (rotina: RotinaLocal) => {
-    const confirmacao = window.confirm(`Excluir a rotina "${rotina.nome}"? Ela também será removida das máquinas em que estiver aplicada.`);
+    const confirmacao = window.confirm(`Excluir a rotina "${rotina.nome}"? Ela também será removida dos equipamentos em que estiver aplicada.`);
     if (!confirmacao) return;
 
     try {
@@ -302,7 +302,7 @@ export function TelaRotinas() {
       <header className={styles.cabecalho}>
         <div>
           <span className={styles.miniTitulo}>GESTÃO DE ROTINAS · {equipeId}</span>
-          <h1>Rotina dos aparelhos</h1>
+          <h1>Rotinas da equipe</h1>
         </div>
         <div className={styles.acoesCabecalho}>
           <Link to={`/ambiente-aparelhos/${encodeURIComponent(equipeId)}`} className={styles.botaoAmbiente}>
@@ -318,7 +318,7 @@ export function TelaRotinas() {
         <div className={styles.introducao}>
           <div>
             <h2>Rotinas da equipe</h2>
-            <p>Crie sequências de trabalho e depois selecione uma rotina para aplicá-la a cada máquina no ambiente 3D.</p>
+            <p>Crie rotinas com dias, horários e ações organizadas. Depois, aplique cada rotina aos equipamentos correspondentes no ambiente 3D.</p>
           </div>
           <span className={styles.contadorRotinas}>{rotinas.length} {rotinas.length === 1 ? "rotina" : "rotinas"}</span>
         </div>
@@ -344,14 +344,14 @@ export function TelaRotinas() {
           <section className={styles.estadoVazio}>
             <span className={styles.iconeVazio}><Layers3 size={30} /></span>
             <h2>Nenhuma rotina cadastrada</h2>
-            <p>Crie sua primeira rotina para definir dias, horários e a ordem das ações que deverão compor o trabalho do equipamento.</p>
+            <p>Crie sua primeira rotina para definir dias, horários e ações programadas para os equipamentos da equipe.</p>
             <button type="button" className={styles.botaoVazio} onClick={abrirCriacao}><Plus size={18} /> Criar primeira rotina</button>
           </section>
         )}
 
         <div className={styles.avisoLocal}>
           <Info size={17} />
-          <span>{equipeId === "demo-equipe" ? "A equipe de demonstração utiliza dados locais." : "As rotinas são salvas no banco de dados e vinculadas a esta equipe. O cadastro ainda não envia comandos para máquinas físicas."}</span>
+          <span>{equipeId === "demo-equipe" ? "A equipe de demonstração utiliza dados locais." : "As rotinas são salvas no banco de dados e vinculadas a esta equipe. O cadastro ainda não envia comandos aos equipamentos físicos."}</span>
         </div>
       </main>
 
@@ -374,7 +374,7 @@ export function TelaRotinas() {
             <form className={styles.formulario} onSubmit={salvarFormulario}>
               <label className={styles.campo}>
                 Nome da rotina
-                <input value={formulario.nome} onChange={(evento) => setFormulario((atual) => ({ ...atual, nome: evento.target.value }))} placeholder="Ex.: Manufaturamento" maxLength={80} required />
+                <input value={formulario.nome} onChange={(evento) => setFormulario((atual) => ({ ...atual, nome: evento.target.value }))} placeholder="Ex.: Funcionamento diário" maxLength={80} required />
               </label>
               <label className={styles.campo}>
                 Descrição
@@ -424,8 +424,8 @@ export function TelaRotinas() {
                     </div>
                     <div className={styles.camposAcao}>
                       <label className={styles.campo}>Horário<input type="time" value={acao.horario} onChange={(evento) => atualizarAcao(acao.id, { horario: evento.target.value })} required /></label>
-                      <label className={styles.campo}>Nome da ação<input value={acao.nome} onChange={(evento) => atualizarAcao(acao.id, { nome: evento.target.value })} placeholder="Ex.: Iniciar esteira" maxLength={80} required /></label>
-                      <label className={`${styles.campo} ${styles.campoDescricaoAcao}`}>Instrução (opcional)<input value={acao.descricao} onChange={(evento) => atualizarAcao(acao.id, { descricao: evento.target.value })} placeholder="Ex.: Conferir proteção e iniciar ciclo" maxLength={160} /></label>
+                      <label className={styles.campo}>Nome da ação<input value={acao.nome} onChange={(evento) => atualizarAcao(acao.id, { nome: evento.target.value })} placeholder="Ex.: Ligar equipamento" maxLength={80} required /></label>
+                      <label className={`${styles.campo} ${styles.campoDescricaoAcao}`}>Instrução (opcional)<input value={acao.descricao} onChange={(evento) => atualizarAcao(acao.id, { descricao: evento.target.value })} placeholder="Ex.: Verificar o estado do equipamento." maxLength={160} /></label>
                     </div>
                     <button type="button" className={styles.botaoRemoverAcao} aria-label={`Remover ação ${indice + 1}`} title="Remover ação" onClick={() => setFormulario((atual) => ({ ...atual, acoes: atual.acoes.filter((item) => item.id !== acao.id) }))}><Trash2 size={16} /></button>
                   </article>
@@ -433,7 +433,7 @@ export function TelaRotinas() {
               </section>
 
               {mensagemErro && <p className={styles.erroFormulario} role="alert">{mensagemErro}</p>}
-              <div className={styles.avisoFormulario}><Info size={16} /> {equipeId === "demo-equipe" ? "A equipe de demonstração salva os dados somente neste navegador." : "A rotina será salva no banco de dados desta equipe. O cadastro ainda não envia comandos para máquinas físicas."}</div>
+              <div className={styles.avisoFormulario}><Info size={16} /> {equipeId === "demo-equipe" ? "A equipe de demonstração salva os dados somente neste navegador." : "A rotina será salva no banco de dados desta equipe. O cadastro ainda não envia comandos aos equipamentos físicos."}</div>
               <div className={styles.botoesModal}>
                 <button type="button" className={styles.botaoCancelar} onClick={() => setModalAberto(false)}>Cancelar</button>
                 <button type="submit" className={styles.botaoSalvar} disabled={salvando}><Save size={17} /> {salvando ? "Salvando..." : "Salvar rotina"}</button>

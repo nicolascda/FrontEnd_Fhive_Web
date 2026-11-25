@@ -24,6 +24,14 @@
   font-weight: bold;
 }
 
+.footerLogo p {
+  max-width: 230px;
+  margin: 0.45rem 0 0;
+  color: var(--cor-cinza);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
 .footerLinksGrid {
   display: flex;
   gap: 4rem; 

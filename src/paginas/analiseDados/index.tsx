@@ -218,7 +218,7 @@ export function TelaAnaliseDados() {
     <div className={styles.pagina}>
 
       <header className={styles.cabecalhoPagina}>
-        <div className={`${styles.tituloCabecalho}`}><h1>Análise dos Dados</h1>  <span> - {equipeNome}</span></div>
+        <div className={`${styles.tituloCabecalho}`}><h1>Análise de dados</h1>  <span> - {equipeNome}</span></div>
         <Link to={`/ambiente-aparelhos/${encodeURIComponent(equipeId)}`} className={styles.linkAmbiente}>Abrir ambiente 3D</Link>
       </header>
 
@@ -227,7 +227,7 @@ export function TelaAnaliseDados() {
           <aside className={styles.colunaMaquinas}>
 
             <div className={styles.tituloColuna}>
-              <h2>{selecionadas.length > 1 ? "Máquinas comparadas" : "Máquina selecionada"}</h2>
+              <h2>{selecionadas.length > 1 ? "Equipamentos comparados" : "Equipamento selecionado"}</h2>
               <span>{selecionadas.length}</span>
             </div>
 
@@ -265,7 +265,7 @@ export function TelaAnaliseDados() {
             )}
 
             <div className={styles.resumoConsumo}>
-              <span><Activity size={15} /> Consumo estimado no período</span>
+              <span><Activity size={15} /> Consumo demonstrativo no período</span>
               <strong>{series.reduce((total, serie) => total + serie.valores.reduce((soma, valor) => soma + valor, 0), 0).toLocaleString("pt-BR", { maximumFractionDigits: 1 })} <small>kWh</small></strong>
             </div>
           </aside>
@@ -275,7 +275,7 @@ export function TelaAnaliseDados() {
             <div className={styles.cabecalhoComparacao}>
               <div>
                 <span className={styles.miniTituloComparacao}>TIPO DE COMPARAÇÃO</span>
-                <h2>{modo === "individual" ? "Análise de uma máquina" : "Comparação entre máquinas"}</h2>
+                <h2>{modo === "individual" ? "Análise de um equipamento" : "Comparação entre equipamentos"}</h2>
                 <p>{selecionadas.length === 1 ? selecionadas[0].nome : `${selecionadas.length} equipamentos da equipe`}</p>
               </div>
               <button type="button" className={styles.botaoAlterarComparacao} onClick={abrirModalSelecao}>
@@ -299,7 +299,7 @@ export function TelaAnaliseDados() {
             </div>
 
             {selecionadas.length === 0 ? (
-              <div className={styles.semMaquinas}><Info size={18} /> Selecione pelo menos uma máquina para visualizar os dados.</div>
+              <div className={styles.semMaquinas}><Info size={18} /> Selecione pelo menos um equipamento para visualizar os dados.</div>
             ) : (
               <GraficoEnergia
                 tipo={tipoGrafico}

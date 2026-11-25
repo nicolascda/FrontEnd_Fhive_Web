@@ -21,12 +21,12 @@ export function PrimeiraSecaoInicial() {
                 <div className={styles.TextoGestao}>
 
                     <h2 className={styles.TituloCard}>
-                        Gestão inteligente de aparelhos e produtos IoT
+                        Gestão inteligente de dispositivos IoT
                     </h2>
 
                     <p className={styles.SubtituloCard}>
-                        Libere seus dados na borda, proteja e gerencie com a eficiência,
-                        ajudando a sua empresa com a melhor gestão do planeta
+                        Acompanhe dispositivos conectados, consulte informações e organize
+                        as atividades da sua equipe em uma interface intuitiva.
                     </p>
 
                     <div className={styles.BotoesGestao}>

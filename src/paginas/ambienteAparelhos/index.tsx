@@ -575,7 +575,7 @@ export function TelaRotinaAparelhos() {
 
           <div className={styles.avisoDadosLocais}>
             <Info size={18} />
-            <span>Arraste uma máquina para reposicioná-la ou arraste o espaço vazio para girar a câmera. Com uma máquina selecionada, pressione E para subir, Q para descer e R para girar (Shift + R gira ao contrário). Cada toque move 0,25 unidade ou gira 15°; altura e rotação são salvas por equipe neste navegador.</span>
+            <span>Arraste um equipamento para reposicioná-lo ou arraste o espaço vazio para girar a câmera. Com um equipamento selecionado, pressione E para subir, Q para descer e R para girar (Shift + R gira no sentido contrário). Cada toque move 0,25 unidade ou gira 15°; altura e rotação são salvas por equipe neste navegador.</span>
           </div>
 
           {painelLateral === "detalhes" && maquinaSelecionada && (
@@ -606,21 +606,21 @@ export function TelaRotinaAparelhos() {
               )}
 
               <section className={styles.blocoInformacao}>
-                <h3>Função sendo exercida</h3>
+                <h3>Finalidade do equipamento</h3>
                 <p>{maquinaSelecionada.funcao}</p>
               </section>
 
               <section className={styles.gradeIndicadores}>
                 <article className={styles.indicadorCard}>
-                  <span><Zap size={16} /> Potência atual</span>
+                  <span><Zap size={16} /> Potência nominal</span>
                   <strong>{formatarNumero(maquinaSelecionada.potenciaKw)} <small>kW</small></strong>
                 </article>
                 <article className={styles.indicadorCard}>
-                  <span><Gauge size={16} /> Energia hoje</span>
+                  <span><Gauge size={16} /> Consumo de energia hoje</span>
                   <strong>{formatarNumero(maquinaSelecionada.energiaHojeKwh)} <small>kWh</small></strong>
                 </article>
                 <article className={styles.indicadorCard}>
-                  <span><Clock3 size={16} /> Horas hoje</span>
+                  <span><Clock3 size={16} /> Horas de uso hoje</span>
                   <strong>{formatarNumero(maquinaSelecionada.horasHoje)} <small>h</small></strong>
                 </article>
                 <article className={styles.indicadorCard}>
@@ -676,7 +676,7 @@ export function TelaRotinaAparelhos() {
                 </button>
               </div>
 
-              <p className={styles.notaPainel}>Os indicadores são exemplos locais. Eles não representam telemetria real nem comandos enviados à máquina.</p>
+              <p className={styles.notaPainel}>Os indicadores são demonstrativos e não representam medições reais nem comandos enviados ao equipamento.</p>
             </aside>
           )}
 
@@ -685,8 +685,8 @@ export function TelaRotinaAparelhos() {
               <div className={styles.topoPainel}>
                 <div>
                   <span className={styles.miniTituloPainel}>AMBIENTE DA EQUIPE</span>
-                  <h2>Adicionar modelos</h2>
-                  <p>Escolha um modelo para posicionar no ambiente.</p>
+                  <h2>Adicionar equipamento</h2>
+                  <p>Selecione um modelo e informe os dados para posicioná-lo no ambiente.</p>
                 </div>
                 <button type="button" className={styles.botaoFechar} aria-label="Fechar painel" onClick={() => setPainelLateral(null)}>
                   <X size={22} />
@@ -725,7 +725,7 @@ export function TelaRotinaAparelhos() {
                   <input
                     value={formularioMaquina.funcao}
                     onChange={(evento) => setFormularioMaquina((atual) => ({ ...atual, funcao: evento.target.value }))}
-                    placeholder="Ex.: Soldagem de estruturas metálicas"
+                    placeholder={ambiente === "escolar" ? "Ex.: Apoio às atividades em sala" : ambiente === "saude" ? "Ex.: Monitoramento de sinais vitais" : "Ex.: Soldagem de estruturas metálicas"}
                     maxLength={120}
                   />
                 </label>
@@ -791,7 +791,7 @@ export function TelaRotinaAparelhos() {
 
             {maquinaSelecionada.rotina && (
               <button type="button" className={styles.botaoExcluir} onClick={() => aplicarRotinaSelecionada(null)}>
-                <Trash2 size={16} /> Remover rotina desta máquina
+                <Trash2 size={16} /> Remover rotina deste equipamento
               </button>
             )}
 
@@ -801,7 +801,7 @@ export function TelaRotinaAparelhos() {
               </button>
               <button type="button" className={styles.botaoPrimario} onClick={() => setModalRotinaAberto(false)}>Concluir</button>
             </div>
-            <p className={styles.notaPainel}>As definições das rotinas são carregadas do banco de dados. Neste protótipo, a associação da rotina à máquina e a execução de comandos físicos ainda são demonstrativas e permanecem locais.</p>
+            <p className={styles.notaPainel}>As rotinas são vinculadas à equipe. Neste protótipo, a associação aos equipamentos e o envio de comandos físicos ainda são demonstrativos e permanecem locais.</p>
           </section>
         </div>
       )}

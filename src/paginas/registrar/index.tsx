@@ -145,7 +145,7 @@ export function TelaDeRegistrar() {
         titulo: "Cadastro confirmado!",
         mensagem:
           dados.mensagem ||
-          "Seu e-mail foi confirmado e sua conta está pronta para ser acessada.",
+          "Seu e-mail foi confirmado e sua conta está pronta para uso.",
         textoBotao: "Ir para o login",
         aoFechar: () => navigate("/login"),
       });
@@ -180,7 +180,7 @@ export function TelaDeRegistrar() {
   };
 
   const titulo = {
-    dados: "Registrar",
+    dados: "Criar conta",
     codigo: "Confirmar e-mail",
     concluido: "Cadastro concluído",
   }[etapa];
@@ -214,7 +214,7 @@ export function TelaDeRegistrar() {
               <LabelPadrao
                 id="email"
                 textoLabel="Digite seu e-mail"
-                textoTitulo="Email"
+                textoTitulo="E-mail"
                 tipo="email"
                 value={email}
                 onChange={(evento) =>
@@ -248,7 +248,7 @@ export function TelaDeRegistrar() {
                   }
                 />
 
-                <p>Concordo com os termos</p>
+                <p>Concordo com os termos de uso.</p>
               </label>
             </>
           )}
@@ -257,7 +257,7 @@ export function TelaDeRegistrar() {
             <>
               <p className={styles.textoEtapa}>
                 Informe o código de 6 dígitos enviado para{" "}
-                <strong>{email}</strong>O código expira em 10 minutos.
+                <strong>{email}</strong>. Use o código para confirmar seu endereço de e-mail.
               </p>
 
               <label

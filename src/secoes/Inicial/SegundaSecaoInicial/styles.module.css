@@ -15,10 +15,10 @@
 }
 
 .divCarrousel {
-    margin-top: 2rem;
     display: flex;
     flex-direction: column;
-    height: 17rem;
+    height: auto;
+    min-height: 16rem;
     width: 100%;
     background-color: white;
     border-radius: 15px;
@@ -47,35 +47,13 @@
     height: 3rem;
 }
 
-.botaoInicial {
-    font-size: 1.2rem;
-    width: fit-content;
-    margin-top: 1.5rem;
-    padding: 0.55rem 1rem;
-    border-radius: 0.45rem;
-    background-color: #EA7303;
-    color: #ffffff;
-    text-decoration: none;
-    font-weight: 600;
-    transition: transform 0.5s ease, filter 1s ease;
-}
-
-.botaoInicial:hover {
-    transform: translateY(-1px);
-    filter: brightness(110%);
-}
-
-.divCarrousel .botaoInicial {
-    border-radius: 10px;
-    width: 10rem;
-    height: 3rem;
-    text-align: center;
-    font-family: var(--fonte-texto);
-    font-weight: normal;
-}
-
 .Carrousel {
     margin-top: 3rem;
+}
+
+.Carrousel :global(.swiper-slide) {
+    height: auto;
+    display: flex;
 }
 :global(.swiper-button-prev) {
     color: #96520e !important;

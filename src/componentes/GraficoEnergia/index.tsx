@@ -150,7 +150,7 @@ export function GraficoEnergia({
         <div className={styles.topoGrafico}>
           <div>
             <h3>Distribuição do consumo</h3>
-            <p>Consumo demonstrativo por equipamento ou período</p>
+            <p>Valores ilustrativos; não representam medições reais.</p>
           </div>
 
           <button
