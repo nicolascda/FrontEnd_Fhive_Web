@@ -1,5 +1,4 @@
 import styles from "./styles.module.css";
-import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import { BarChart3, Boxes, CalendarClock, Wifi } from "lucide-react";
@@ -11,7 +10,7 @@ const recursos = [
   {
     titulo: "Gestão de dispositivos",
     descricao:
-      "Organize os aparelhos cadastrados por equipe e consulte suas principais informações em uma interface centralizada.",
+      "Organize os dispositivos cadastrados por equipe e consulte suas principais informações em uma interface centralizada.",
     Icone: Wifi,
   },
   {
@@ -47,6 +46,8 @@ export function SegundaSecaoInicial() {
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         loop={true}
+        slidesPerView={1}
+        slidesPerGroup={1}
         autoplay={{
           delay: 5000,
           disableOnInteraction: false,
@@ -60,7 +61,7 @@ export function SegundaSecaoInicial() {
             spaceBetween: 16,
           },
           1024: {
-            slidesPerView: 3,
+            slidesPerView: 2,
             spaceBetween: 20,
           },
         }}
@@ -72,9 +73,6 @@ export function SegundaSecaoInicial() {
               <Icone size={28} strokeWidth={1.8} aria-hidden="true" />
               <h2>{titulo}</h2>
               <p>{descricao}</p>
-              <Link to="/produtos" className={styles.botaoInicial}>
-                Conheça o recurso
-              </Link>
             </article>
           </SwiperSlide>
         ))}

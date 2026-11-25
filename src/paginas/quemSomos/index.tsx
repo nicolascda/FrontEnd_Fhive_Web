@@ -15,7 +15,7 @@ const perguntas: PerguntaFrequente[] = [
   {
     pergunta: "O que é a Fhive?",
     resposta:
-      "A Fhive é uma proposta de solução para controlar e acompanhar dispositivos conectados (IoT) de forma centralizada. A ideia é reunir os aparelhos e suas informações em uma interface simples de utilizar.",
+      "A Fhive é uma proposta de solução para controlar e acompanhar dispositivos conectados (IoT) de forma centralizada. A ideia é reunir os equipamentos e suas informações em uma interface simples de utilizar.",
   },
   {
     pergunta: "Quem idealizou a Fhive?",
@@ -30,7 +30,7 @@ const perguntas: PerguntaFrequente[] = [
   {
     pergunta: "Qual é o nosso objetivo?",
     resposta:
-      "Nosso objetivo é tornar o controle de dispositivos inteligentes mais acessível, ajudando as pessoas a configurar aparelhos, acompanhar informações e utilizar recursos de automação sem depender de conhecimentos técnicos avançados.",
+      "Nosso objetivo é tornar o controle de dispositivos inteligentes mais acessível, ajudando as pessoas a configurar dispositivos, acompanhar informações e utilizar recursos de automação sem depender de conhecimentos técnicos avançados.",
   },
 ];
 
@@ -93,11 +93,11 @@ export function TelaQuemSomos() {
           <article className={styles.infoCopy}>
             <div className={styles.sectionTitleRow}>
               <Target aria-hidden="true" />
-              <h2>Nosso objetivo?</h2>
+              <h2>Nosso objetivo</h2>
             </div>
             <p>
               Identificamos que controlar diferentes dispositivos e acompanhar
-              suas informações pode ser complicado quando cada aparelho utiliza
+              suas informações pode ser complicado quando cada dispositivo utiliza
               um caminho diferente. A Fhive propõe reunir esse controle em uma
               experiência simples, intuitiva e acessível.
             </p>
@@ -109,11 +109,11 @@ export function TelaQuemSomos() {
           <article className={styles.infoCopy}>
             <div className={styles.sectionTitleRow}>
               <Users aria-hidden="true" />
-              <h2>O público que queremos atingir?</h2>
+              <h2>Para quem é a Fhive?</h2>
             </div>
             <p>
               Queremos atender pessoas e famílias que buscam praticidade para
-              controlar aparelhos conectados, incluindo quem não tem familiaridade
+              controlar dispositivos conectados, incluindo quem não tem familiaridade
               com sistemas tecnológicos complexos. Nossa proposta é oferecer
               recursos claros, informações organizadas e uma navegação intuitiva.
             </p>

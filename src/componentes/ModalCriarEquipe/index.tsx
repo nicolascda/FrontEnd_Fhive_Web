@@ -141,12 +141,12 @@ export function ModalCriarEquipe({ onFechar, onCriada }: ModalCriarEquipeProps) 
             <div className={styles.fundoBlur} aria-hidden="true" />
 
             <div className={styles.FundoMarrom}>
-                <h1>Criação de Equipe</h1>
+                <h1>Criar equipe</h1>
 
                 <div className={styles.modalEquipe}>
                     <form className={styles.areaRolagem} onSubmit={handleCriarEquipe}>
                         <div className={`${styles.blocos} ${styles.NomeDescricaoEquipe}`}>
-                            <h2>Nome da Equipe</h2>
+                            <h2>Nome da equipe</h2>
                             <input
                                 type="text"
                                 value={nome}
@@ -156,7 +156,7 @@ export function ModalCriarEquipe({ onFechar, onCriada }: ModalCriarEquipeProps) 
                                 required
                             />
 
-                            <h2>Descrição da Equipe</h2>
+                            <h2>Descrição da equipe</h2>
                             <textarea
                                 cols={30}
                                 rows={3}
@@ -293,7 +293,7 @@ export function ModalCriarEquipe({ onFechar, onCriada }: ModalCriarEquipeProps) 
                         </div>
 
                         <div className={`${styles.blocos} ${styles.setores}`}>
-                            <h2>Setor Escolhido</h2>
+                            <h2>Setor da equipe</h2>
                             <div className={styles.setoresDiv}>
                                 <div className={styles.setorIndividual}>
                                     <button type="button" className={botaoSelecionado === 1 ? styles.botaoSelecionado : styles.botaoNaoSelecionado} onClick={() => setBotaoSelecionado(1)}>
@@ -323,12 +323,12 @@ export function ModalCriarEquipe({ onFechar, onCriada }: ModalCriarEquipeProps) 
                         </div>
 
                         <div className={`${styles.blocos} ${styles.InformacaoExtra}`}>
-                            <h2>Informações Adicionais</h2>
+                            <h2>Antes de criar</h2>
                             <ul>
-                                <li>O máximo de integrantes é 20, porém esse limite pode aumentar conforme mais melhorias são feitas no plano.</li>
-                                <li>Quando criar a equipe, será gerado um código que poderá ser utilizado para entrar nessa equipe.</li>
+                                <li>O limite pode ser definido entre 5 e 35 pessoas e ajustado posteriormente nas configurações da equipe.</li>
+                                <li>Após a criação, será gerado um código de convite para compartilhar com os integrantes.</li>
                             </ul>
-                            <p>Caso enfrente algum problema, mande mensagem para nossa <span className={styles.centralAjuda}>central de ajuda.</span></p>
+                            
 
                             <label className={styles.divCheckBox}>
                                 <input
@@ -338,7 +338,7 @@ export function ModalCriarEquipe({ onFechar, onCriada }: ModalCriarEquipeProps) 
                                     onChange={(evento) => setAceitouTermos(evento.target.checked)}
                                     required
                                 />
-                                <p>Concordo com os termos presentes</p>
+                                <p>Concordo com os termos de uso.</p>
                             </label>
                         </div>
 

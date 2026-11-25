@@ -30,7 +30,7 @@ export function TelaDeLogin() {
       mostrarMensagem({
         tipo: "erro",
         titulo: "Campos obrigatórios",
-        mensagem: "Preencha o nome ou e-mail e a senha.",
+        mensagem: "Informe seu e-mail e sua senha para continuar.",
       });
       return;
     }
@@ -76,7 +76,7 @@ export function TelaDeLogin() {
 
       mostrarMensagem({
         tipo: "sucesso",
-        titulo: "Login realizado!",
+        titulo: "Acesso realizado!",
         mensagem:
           dados.mensagem ||
           "Acesso realizado com sucesso. Seja bem-vindo ao Fhive!",
@@ -111,8 +111,8 @@ export function TelaDeLogin() {
 
           <LabelPadrao
             id="email"
-            textoLabel="Nome ou Email"
-            textoTitulo="Email"
+            textoLabel="Digite seu e-mail"
+            textoTitulo="E-mail"
             tipo="email"
             value={usuarioDados}
             onChange={(evento) =>

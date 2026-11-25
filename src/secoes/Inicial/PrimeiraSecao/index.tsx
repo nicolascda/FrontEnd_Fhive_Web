@@ -21,7 +21,7 @@ export function PrimeiraSecaoInicial() {
                 <div className={styles.TextoGestao}>
 
                     <h2 className={styles.TituloCard}>
-                        Gestão inteligente de aparelhos e produtos IoT
+                        Gestão inteligente de dispositivos IoT
                     </h2>
 
                     <p className={styles.SubtituloCard}>

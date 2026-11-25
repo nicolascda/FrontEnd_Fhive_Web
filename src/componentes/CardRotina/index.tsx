@@ -85,7 +85,7 @@ export function CardRotina({
           )}
 
           <div className={styles.rodapeGerenciamento}>
-            <span className={styles.maquinasAssociadas}>{maquinasAssociadas} {maquinasAssociadas === 1 ? "máquina vinculada" : "máquinas vinculadas"}</span>
+            <span className={styles.maquinasAssociadas}>{maquinasAssociadas} {maquinasAssociadas === 1 ? "equipamento vinculado" : "equipamentos vinculados"}</span>
             <div className={styles.acoesCard}>
               {aoEditar && (
                 <button type="button" className={styles.botaoEditar} onClick={() => aoEditar(rotina)} aria-label={`Editar rotina ${rotina.nome}`}>

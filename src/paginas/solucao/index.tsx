@@ -46,7 +46,7 @@ export function TelaSolucao() {
               informações disponíveis em uma única área de trabalho.
             </p>
             <p>
-              A visualização por ambiente ajuda a localizar aparelhos e acompanhar
+              A visualização por ambiente ajuda a localizar equipamentos e acompanhar
               seus estados sem perder de vista o contexto da operação.
             </p>
             <ul className={styles.featureList}>
@@ -65,7 +65,7 @@ export function TelaSolucao() {
               registros por diferentes intervalos de tempo.
             </p>
             <p>
-              A comparação entre máquinas e períodos ajuda a observar variações,
+              A comparação entre equipamentos e períodos ajuda a observar variações,
               identificar padrões e apoiar decisões com base nos dados disponíveis.
             </p>
           </article>

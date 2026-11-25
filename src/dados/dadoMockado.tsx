@@ -17,7 +17,7 @@ export const dadosGestao = [
         id: 2,
         titulo: "Acompanhamento das informações",
         texto:
-          "Consulte os dados disponíveis de cada aparelho e acompanhe indicadores importantes para entender o funcionamento dos equipamentos ao longo do tempo.",
+          "Consulte os dados disponíveis de cada equipamento e acompanhe indicadores importantes para entender seu funcionamento ao longo do tempo.",
       },
       {
         id: 3,
@@ -40,7 +40,7 @@ export const dadosGestao = [
         id: 2,
         titulo: "Informações preparadas para análise",
         texto:
-          "Os dados reunidos podem ser consultados em painéis e gráficos. A visualização por equipamento e período ajuda a identificar variações e comparar o comportamento dos aparelhos.",
+          "Os dados reunidos podem ser consultados em painéis e gráficos. A visualização por equipamento e período ajuda a identificar variações e comparar seu comportamento.",
       },
     ],
   },
@@ -55,7 +55,7 @@ export const dadosProdutos = [
         id: 1,
         titulo: "Visão centralizada",
         texto:
-          "Acesse os equipamentos vinculados à equipe em uma interface organizada. Consulte informações e status sem precisar procurar cada aparelho em áreas diferentes.",
+          "Acesse os equipamentos vinculados à equipe em uma interface organizada. Consulte informações e status sem precisar procurar cada equipamento em áreas diferentes.",
       },
       {
         id: 2,
@@ -101,7 +101,7 @@ export const dadosProdutos = [
         id: 3,
         titulo: "Acompanhamento da operação",
         texto:
-          "Visualize as rotinas cadastradas, consulte as máquinas associadas e mantenha as atividades organizadas em um único painel.",
+          "Visualize as rotinas cadastradas, consulte os equipamentos associados e mantenha as atividades organizadas em um único painel.",
       },
     ],
   },
