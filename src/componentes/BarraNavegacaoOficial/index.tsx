@@ -212,7 +212,7 @@ export function BarraNavegacaoOficial() {
                         <>
                             <NavLink to="/configuracoes-equipe" className={styles['menu-item']}>
                                 <span className={styles['equipe-texto']}>
-                                    <span className={styles['equipe-legenda']}>Equipe Atual</span>
+                                    <span className={styles['equipe-legenda']}>Equipe atual</span>
                                     <span className={styles['equipe-nome']}>{equipeAtual?.nome || 'Carregando equipe...'}</span>
                                 </span>
                                 <span className={styles['seta']} aria-hidden="true" />
@@ -229,7 +229,7 @@ export function BarraNavegacaoOficial() {
                                 to={`/rotinas/${encodeURIComponent(equipeId || '')}`}
                                 className={({ isActive }) => classeLinkAtivo(isActive)}
                             >
-                                Rotinas dos aparelhos
+                                Rotinas
                             </NavLink>
                         </>
                     ) : estaNaTelaDeEquipes ? (
@@ -248,7 +248,7 @@ export function BarraNavegacaoOficial() {
                                     aria-expanded={extraAberto}
                                     aria-haspopup="menu"
                                 >
-                                    Extra <ChevronDown size={15} aria-hidden="true" />
+                                    Sobre <ChevronDown size={15} aria-hidden="true" />
                                 </button>
                                 {extraAberto && (
                                     <div className={styles['extra-menu']} role="menu">
@@ -266,7 +266,7 @@ export function BarraNavegacaoOficial() {
                         <>
                             {autenticado && (
                                 <NavLink to="/configuracoes-equipe" className={({ isActive }) => classeLinkAtivo(isActive)}>
-                                    Entrar no Ambiente
+                                    Minhas equipes
                                 </NavLink>
                             )}
                             <NavLink to="/produtos" className={({ isActive }) => classeLinkAtivo(isActive)}>
@@ -304,7 +304,7 @@ export function BarraNavegacaoOficial() {
                         </button>
                     ) : (
                         <Link to="/login" className={`${styles['menu-item']} ${styles['logar']}`}>
-                            <span>Logar</span>
+                            <span>Entrar</span>
                         </Link>
                     )}
                 </div>

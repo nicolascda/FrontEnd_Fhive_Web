@@ -432,7 +432,7 @@ export function ModalGerenciarIntegrantes({ equipe, onFechar }: ModalGerenciarIn
                             <section className={styles.conviteCodigo}>
                                 <div className={styles.conviteTexto}>
                                     <strong>Convide pelo código da equipe</strong>
-                                    <p>Compartilhe este código. A pessoa deverá entrar em “Entrar numa equipe” e informar o código na própria conta.</p>
+                                    <p>Compartilhe este código. A pessoa deverá entrar em “Entrar em uma equipe” e informar o código na própria conta.</p>
                                 </div>
                                 <div className={styles.codigoLinha}>
                                     <code>{codigo || 'Código indisponível'}</code>
@@ -454,7 +454,7 @@ export function ModalGerenciarIntegrantes({ equipe, onFechar }: ModalGerenciarIn
                                 {carregando ? (
                                     <p className={styles.estadoLista}>Carregando integrantes...</p>
                                 ) : integrantes.length === 0 ? (
-                                    <p className={styles.estadoLista}>Nenhum integrante foi retornado para esta equipe.</p>
+                                    <p className={styles.estadoLista}>Ainda não há integrantes nesta equipe.</p>
                                 ) : (
                                     <div className={styles.listaIntegrantes}>
                                         {integrantes.map((integrante) => {
@@ -534,7 +534,7 @@ export function ModalGerenciarIntegrantes({ equipe, onFechar }: ModalGerenciarIn
                                     {carregando ? (
                                         <p className={styles.estadoLista}>Carregando cargos...</p>
                                     ) : cargos.length === 0 ? (
-                                        <p className={styles.estadoLista}>Nenhum cargo cadastrado.</p>
+                                        <p className={styles.estadoLista}>Ainda não há cargos cadastrados para esta equipe.</p>
                                     ) : cargos.map((cargo) => (
                                         <article className={styles.cargoItem} key={cargo.id}>
                                             <span className={styles.bolinhaCargo} style={{ backgroundColor: cargo.cor }} />

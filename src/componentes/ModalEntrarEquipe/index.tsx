@@ -114,7 +114,7 @@ export function ModalEntrarEquipe({ onFechar, onEntrou }: ModalEntrarEquipeProps
                             />
                             <span className={styles.contador}>{codigo.length}/8</span>
                         </div>
-                        <p className={styles.ajuda}>O código é fornecido pelo líder ou por um administrador da equipe.</p>
+                        <p className={styles.ajuda}>O código é compartilhado pelo líder ou por um administrador da equipe.</p>
                     </div>
 
                     {erro && <p className={styles.erro} role="alert">{erro}</p>}

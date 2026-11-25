@@ -124,7 +124,7 @@ export function TelaConfiguracoesEquipe() {
         <div className={styles['pagina-equipe']}>
 
             <section className={styles['barra-titulo']}>
-                <h1>Configurações de Equipe</h1>
+                <h1>Minhas equipes</h1>
 
                 <div className={styles['configuracao-container']}>
                     <button
@@ -149,25 +149,25 @@ export function TelaConfiguracoesEquipe() {
                                     setModalCriarEquipeAberto(true);
                                 }}
                             >
-                                Criar uma Equipe
+                                Criar uma equipe
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setMenuConfiguracaoAberto(false)}
                             >
-                                Configurações de Equipe
+                                Configurações da equipe
                             </button>
                             <button
                                 type="button"
                                 onClick={() => {
                                     setMenuConfiguracaoAberto(false);
-                                    navigate('/automacoes');
+                                    navigate('/rotinas');
                                 }}
                             >
                                 Automações
                             </button>
                             <button type="button" onClick={abrirModalEntrarEquipe}>
-                                Entrar numa equipe
+                                Entrar em uma equipe
                             </button>
                         </div>
                     )}
@@ -186,8 +186,8 @@ export function TelaConfiguracoesEquipe() {
                         {equipes.length === 0 && (
                             <section className={`${styles['estado-vazio']} ${styles['estado-vazio-compacto']}`}>
                                 <div className={styles['estado-vazio-conteudo']}>
-                                    <h2>Você ainda não possui uma equipe</h2>
-                                    <p>Crie uma equipe ou entre em uma existente usando o código de convite.</p>
+                                    <h2>Você ainda não faz parte de uma equipe</h2>
+                                    <p>Crie uma equipe ou entre em uma equipe existente com um código de convite.</p>
                                     <button type="button" onClick={() => setModalCriarEquipeAberto(true)}>
                                         Criar minha equipe
                                     </button>

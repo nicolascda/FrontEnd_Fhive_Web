@@ -1,86 +1,56 @@
 import styles from "./styles.module.css";
 import { useState } from "react";
-import { dadosProdutos } from "../../../dados/dadoMockado.tsx";
+import { dadosProdutos } from "../../../dados/dadoMockado";
 import { BotaoMutavel } from "../../../componentes/BotaoMutavel";
 
+const categorias = [
+  "Gestão de dispositivos",
+  "Integrações e dados",
+  "Rotinas e automações",
+  "Ambientes 3D",
+];
 
 export function ProdutosPrimeiraSecao() {
+  const [botaoSelecionado, setBotaoSelecionado] = useState(0);
+  const dadosAtuais = dadosProdutos[botaoSelecionado];
 
-    const [botaoSelecionado, setBotaoSelecionado] = useState(0);
-    const [itemAtivo, setItemAtivo] = useState<number | null>(1);
+  return (
+    <section className={styles.SecaoProdutos}>
+      <h2 className={styles.TituloCard}>Recursos da Fhive</h2>
+      <p className={styles.SubtituloCard}>
+        Ferramentas para visualizar equipamentos, acompanhar informações e organizar atividades.
+      </p>
 
-    const alternarItem = (id: number) => {
-        setItemAtivo(itemAtivo === id ? null : id);
-    };
+      <div className={styles.BotoesGestao} aria-label="Categorias de recursos">
+        {categorias.map((categoria, indice) => (
+          <BotaoMutavel
+            key={categoria}
+            textoBotao={categoria}
+            pressionado={botaoSelecionado === indice}
+            onClick={() => setBotaoSelecionado(indice)}
+            aria-pressed={botaoSelecionado === indice}
+          />
+        ))}
+      </div>
 
-    const dadosAtuais = dadosProdutos[botaoSelecionado];
+      {dadosAtuais && (
+        <div className={styles.CardMutavel}>
+          <div className={styles.CardControleTexto}>
+            {dadosAtuais.itens.map((item) => (
+              <article key={item.id} className={styles.CardProtudosTexto}>
+                <h3>{item.titulo}</h3>
+                <p>{item.texto}</p>
+              </article>
+            ))}
+          </div>
 
-    return (
-        <>
-            <section className={styles.SecaoProdutos}>
-
-
-
-                <h2 className={styles.TituloCard}>
-                    Funções do Fhive
-                </h2>
-
-                <p className={styles.SubtituloCard}>
-                    Um aplicativo em que os usuários podem confiar
-                </p>
-
-                <div className={styles.BotoesGestao}>
-
-                    <BotaoMutavel
-                        textoBotao="Local e privado"
-                        pressionado={botaoSelecionado === 0}
-                        onClick={() => setBotaoSelecionado(0)}
-                    />
-
-                    <BotaoMutavel
-                        textoBotao="Apis e agente"
-                        pressionado={botaoSelecionado === 1}
-                        onClick={() => setBotaoSelecionado(1)}
-                    />
-
-                    <BotaoMutavel
-                        textoBotao="Ferramentas"
-                        pressionado={botaoSelecionado === 2}
-                        onClick={() => setBotaoSelecionado(2)}
-                    />
-
-                    <BotaoMutavel
-                        textoBotao="Modelo 3D"
-                        pressionado={botaoSelecionado === 3}
-                        onClick={() => setBotaoSelecionado(3)}
-                    />
-
-                </div>
-
-
-                {/* Conteudo dos botões */}
-                {dadosAtuais && (
-
-                    <div className={styles.CardMutavel}>
-                        <div className={styles.CardControleTexto}>
-                            {dadosAtuais.itens.map((item) => (
-                            <div
-                                key={item.id}
-                                className={styles.CardProtudosTexto}
-                            >
-                                <h3> {item.titulo}</h3>
-                                <p> {item.texto} </p>
-                            </div>
-
-                            ))}
-
-                        </div>
-
-                        <img src={dadosAtuais.imagem} className={styles.ImgProdutos} alt="Imagem de ambientes virtuais" />
-                    </div>
-                )}
-
-            </section >
-        </>
-    )
+          <img
+            src={dadosAtuais.imagem}
+            className={styles.ImgProdutos}
+            alt={`Ilustração relacionada a ${categorias[botaoSelecionado].toLowerCase()}`}
+          />
+        </div>
+      )}
+    </section>
+  );
 }

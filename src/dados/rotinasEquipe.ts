@@ -9,16 +9,16 @@ export const CHAVE_EQUIPE = "fhive:equipe-ambiente:";
 export function criarRotinaDemonstracao(equipeId: string): RotinaLocal {
   return {
     id: `${equipeId}-rotina-robo-inicial`,
-    nome: "Manufaturamento",
-    descricao: "Ciclo de fabricação e movimentação de peças metálicas.",
+    nome: "Rotina de funcionamento",
+    descricao: "Sequência demonstrativa para organizar o funcionamento do equipamento.",
     horarioInicial: "08:00",
     horarioFinal: "17:00",
     diasSemana: ["Seg", "Ter", "Qua", "Qui", "Sex"],
     acoes: [
-      { id: `${equipeId}-acao-iniciar`, horario: "08:00", nome: "Iniciar produção", descricao: "Conferir a área e iniciar o ciclo." },
-      { id: `${equipeId}-acao-inspecao`, horario: "12:00", nome: "Inspeção intermediária", descricao: "Conferir a qualidade das peças." },
-      { id: `${equipeId}-acao-retomar`, horario: "13:00", nome: "Retomar produção", descricao: "Retomar o ciclo após a inspeção." },
-      { id: `${equipeId}-acao-finalizar`, horario: "17:00", nome: "Encerrar produção", descricao: "Finalizar o ciclo e preparar o equipamento." },
+      { id: `${equipeId}-acao-iniciar`, horario: "08:00", nome: "Verificar equipamento", descricao: "Conferir as condições iniciais e a conexão." },
+      { id: `${equipeId}-acao-inspecao`, horario: "12:00", nome: "Verificação intermediária", descricao: "Conferir o estado e o funcionamento do equipamento." },
+      { id: `${equipeId}-acao-retomar`, horario: "13:00", nome: "Retomar operação", descricao: "Retomar as atividades após a verificação." },
+      { id: `${equipeId}-acao-finalizar`, horario: "17:00", nome: "Encerrar operação", descricao: "Finalizar o uso e registrar eventuais observações." },
     ],
   };
 }
